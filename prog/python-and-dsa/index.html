@@ -1651,28 +1651,41 @@ function appendOutput(chunk) {
 }
 
 // ═════════════════════ SKULPT (pure-JS Python) ═════════════════════
+function showLoadError(msg) {
+  // Show error inside the loading screen so it's always visible
+  const el = document.getElementById('loading');
+  if (el) el.innerHTML = `
+    <div style="color:#ff6b6b;font-family:monospace;font-size:13px;max-width:600px;text-align:left;padding:24px;background:#1a0000;border:1px solid #ff6b6b;border-radius:8px;">
+      <b>Python failed to start</b><br><br>${msg.replace(/\n/g,'<br>')}
+    </div>`;
+}
+
 function initPyodide() {
   try {
+    // Verify Skulpt actually loaded
+    if (typeof Sk === 'undefined') throw new Error('Sk is not defined — skulpt.min.js did not load');
+    if (typeof Sk.configure !== 'function') throw new Error('Sk.configure missing — wrong Skulpt version?');
+
     Sk.configure({
       output: (text) => appendOutput(text),
-      read:   (filename) => {
+      read: (filename) => {
         if (Sk.builtinFiles && Sk.builtinFiles.files && Sk.builtinFiles.files[filename] !== undefined)
           return Sk.builtinFiles.files[filename];
         throw new Error("File not found: '" + filename + "'");
       },
-      __future__: Sk.python3,
       execLimit: 10000,
     });
+
     pyEngine = true;
-    const statusEl   = document.getElementById('editorStatus');
-    const statusText = document.getElementById('editorStatusText');
-    statusEl.classList.add('ready');
-    statusText.textContent = 'Python ready';
+    document.getElementById('editorStatus').classList.add('ready');
+    document.getElementById('editorStatusText').textContent = 'Python ready';
     document.getElementById('runBtn').disabled = false;
     document.getElementById('loading').classList.add('hidden');
     return Promise.resolve();
   } catch (err) {
-    return Promise.reject(err);  // ensures .catch() on the caller side works
+    const msg = (err && err.message) ? err.message : String(err);
+    showLoadError(msg);
+    return Promise.reject(err);
   }
 }
 
