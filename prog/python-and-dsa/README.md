@@ -19,23 +19,22 @@ A self-contained learning playground that runs entirely in your browser. Clone t
 
 Browse to the GitHub Pages URL once it's live:
 
-> https://siddhant-rajhans.github.io/learn-ml/prog/python-and-dsa/ *(coming)*
+> https://siddhant-rajhans.github.io/learn-ml/prog/python-and-dsa/
 
 ### Locally (recommended for practice)
 
 ```bash
 git clone https://github.com/siddhant-rajhans/learn-ml.git
 cd learn-ml/prog/python-and-dsa
-# Option 1 — open the file directly
-open index.html        # macOS
-xdg-open index.html    # Linux
-start index.html       # Windows
-# Option 2 — serve with a tiny local server (most reliable across browsers)
-python -m http.server 8000
-# then visit http://localhost:8000
+python server.py
+# then open http://localhost:8000
 ```
 
-On first load, Pyodide downloads ~10 MB of WASM Python. After that, your browser caches it. Subsequent loads are instant.
+That's it. `server.py` is a tiny script (no dependencies) that sends the right cross-origin headers so Pyodide can use SharedArrayBuffer for the fast load path — meaningfully snappier than a plain `python -m http.server`.
+
+On first load, Pyodide downloads ~10 MB of WASM Python from CDN. After that your browser caches it; subsequent loads are instant.
+
+If the load hangs for more than a minute, the page shows an actionable error pointing you back here — usually means the CDN is unreachable or you opened the file directly without a server.
 
 ## Curriculum
 
