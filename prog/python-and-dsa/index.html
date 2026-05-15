@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python & DSA · Practice Playground · Siddhant Rajhans</title>
+<meta name="description" content="Real Python in your browser. Real algorithms, animated. Type, run, see. No setup, no signup.">
+<meta property="og:title" content="Python & DSA · Practice Playground">
+<meta property="og:description" content="Real Python in your browser. Real algorithms, animated. By Siddhant Rajhans.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:        #050510;
+  --bg-1:      #0A0A18;
+  --bg-2:      #11112A;
+  --surface:   #0E0E22;
+  --ink:       #F0F0F8;
+  --ink-dim:   #8A8AA0;
+  --ink-faint: #4A4A5E;
+  --line:      rgba(255, 255, 255, 0.08);
+  --line-2:    rgba(255, 255, 255, 0.14);
+  --cyan:      #00E5FF;
+  --purple:    #7C4DFF;
+  --pink:      #FF4081;
+  --gold:      #FFD27F;
+  --green:     #00E676;
+  --warning:   #FFAB00;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); height: 100vh; overflow: hidden; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+::selection { background: var(--cyan); color: var(--bg); }
+button { font-family: inherit; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+
+/* Background ambient glow */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(124, 77, 255, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 88% 80%, rgba(0, 229, 255, 0.06) 0%, transparent 40%);
+}
+
+/* ─────────────────── TOP BAR ─────────────────── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+  display: flex; align-items: center; gap: 18px;
+  padding: 14px 24px;
+  background: linear-gradient(180deg, rgba(5,5,16,0.92) 0%, rgba(5,5,16,0.72) 100%);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--ink);
+}
+.brand .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--cyan); box-shadow: 0 0 12px var(--cyan);
+  animation: pulse-brand 2.6s ease-in-out infinite;
+}
+@keyframes pulse-brand { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.brand-sep {
+  width: 1px; height: 18px;
+  background: var(--line-2);
+}
+.brand-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px; font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.brand-title em {
+  font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+  background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-right: 2px;
+}
+.topbar-spacer { flex: 1; }
+.progress-summary {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.2em;
+  color: var(--ink-dim); text-transform: uppercase;
+}
+.progress-bar-mini {
+  width: 120px; height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px; overflow: hidden;
+}
+.progress-bar-mini-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+.topbar-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+.topbar-btn:hover { color: var(--cyan); border-color: var(--cyan); background: rgba(0, 229, 255, 0.05); }
+
+/* ─────────────────── LAYOUT ─────────────────── */
+.layout {
+  position: fixed; top: 56px; left: 0; right: 0; bottom: 0;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  overflow: hidden;
+}
+
+/* ─────────────────── SIDEBAR ─────────────────── */
+.sidebar {
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg) 100%);
+  border-right: 1px solid var(--line);
+  padding: 24px 18px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-faint) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--ink-faint); border-radius: 2px; }
+.sidebar h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 14px;
+}
+.chapter {
+  margin-bottom: 18px;
+}
+.chapter-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.05em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+.chapter-header:hover { background: rgba(255, 255, 255, 0.03); }
+.chapter-header .caret {
+  display: inline-block;
+  width: 10px;
+  transition: transform 0.25s ease;
+  color: var(--ink-faint);
+}
+.chapter.collapsed .caret { transform: rotate(-90deg); }
+.chapter.collapsed .lesson-list { display: none; }
+.lesson-list {
+  list-style: none;
+  padding: 4px 0 0 12px;
+  margin-left: 4px;
+  border-left: 1px solid var(--line);
+}
+.lesson-item {
+  padding: 7px 12px;
+  margin: 1px 0;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--ink-dim);
+  cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+  user-select: none;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+.lesson-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  transform: translateX(2px);
+}
+.lesson-item.active {
+  background: rgba(0, 229, 255, 0.08);
+  color: var(--cyan);
+  font-weight: 600;
+  border-left: 2px solid var(--cyan);
+  margin-left: -2px;
+  padding-left: 10px;
+}
+.lesson-item .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-faint);
+  flex-shrink: 0;
+  width: 18px;
+}
+.lesson-item.active .num { color: var(--cyan); }
+.lesson-item .status {
+  margin-left: auto;
+  width: 14px; height: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 10px;
+}
+.lesson-item.completed .status::after {
+  content: '✓';
+  color: var(--green);
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
+}
+.lesson-item.active.completed { color: var(--ink); background: rgba(0, 230, 118, 0.08); border-left-color: var(--green); }
+.lesson-item.active.completed .num { color: var(--green); }
+
+/* ─────────────────── MAIN PANE ─────────────────── */
+.main {
+  overflow-y: auto;
+  padding: 32px 56px 60px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-faint) transparent;
+  position: relative;
+  z-index: 1;
+}
+.main::-webkit-scrollbar { width: 6px; }
+.main::-webkit-scrollbar-thumb { background: var(--ink-faint); border-radius: 3px; }
+
+.lesson-header {
+  margin-bottom: 24px;
+}
+.lesson-chip {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 12px;
+}
+.lesson-chip .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+.lesson-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.lesson-title em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.lesson-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--ink-faint);
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.lesson-time::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: var(--ink-faint);
+}
+
+.lesson-intro {
+  margin: 28px 0 22px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink);
+  max-width: 720px;
+}
+.lesson-intro p { margin-bottom: 14px; }
+.lesson-intro p:last-child { margin-bottom: 0; }
+.lesson-intro code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  background: rgba(0, 229, 255, 0.08);
+  color: var(--cyan);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 229, 255, 0.15);
+}
+.lesson-intro strong { color: var(--ink); font-weight: 600; }
+.lesson-intro em { font-style: italic; color: var(--ink-dim); }
+
+/* ─────────────────── EDITOR ─────────────────── */
+.editor-wrap {
+  background: var(--surface);
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  margin-bottom: 16px;
+}
+.editor-chrome {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid var(--line);
+}
+.editor-dots { display: inline-flex; gap: 6px; }
+.editor-dots span {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.editor-dots span:nth-child(1) { background: #FF5F56; }
+.editor-dots span:nth-child(2) { background: #FFBD2E; }
+.editor-dots span:nth-child(3) { background: #27C93F; }
+.editor-filename {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-dim);
+  letter-spacing: 0.1em;
+}
+.editor-status {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.editor-status .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--warning);
+  transition: background 0.3s ease;
+}
+.editor-status.ready .dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.editor-status.busy .dot { background: var(--cyan); animation: pulse-busy 0.8s ease-in-out infinite; }
+@keyframes pulse-busy { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+#editor {
+  height: 220px;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 14px;
+}
+.ace_editor { font-family: 'JetBrains Mono', monospace !important; }
+
+/* ─────────────────── ACTIONS ─────────────────── */
+.action-row {
+  display: flex; gap: 10px; align-items: center;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.run-btn {
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  padding: 14px 28px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex; align-items: center; gap: 10px;
+  box-shadow: 0 0 0 0 rgba(0, 229, 255, 0);
+}
+.run-btn:hover {
+  background: var(--cyan);
+  box-shadow: 0 8px 28px rgba(0, 229, 255, 0.35), 0 0 0 1px var(--cyan);
+  transform: translateY(-2px);
+}
+.run-btn:disabled {
+  background: rgba(255, 255, 255, 0.10);
+  color: var(--ink-faint);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.run-btn .arrow { font-size: 14px; }
+.run-btn .shortcut {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  opacity: 0.6;
+  margin-left: 4px;
+  padding: 2px 6px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-dim);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 13px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  border-color: var(--line-2);
+}
+
+/* ─────────────────── OUTPUT ─────────────────── */
+.output-wrap {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.output-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid var(--line);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.output-header .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+}
+.output-wrap.has-output .output-header .dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.output-wrap.has-error .output-header .dot { background: var(--pink); box-shadow: 0 0 6px var(--pink); }
+.output-wrap.has-error .output-header { color: var(--pink); }
+.output-clear {
+  margin-left: auto;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+  background: transparent;
+  border: none;
+}
+.output-clear:hover { color: var(--ink); }
+.output {
+  padding: 16px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 48px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.output.has-content { color: var(--ink); }
+.output .err { color: var(--pink); }
+.output .ok { color: var(--green); }
+
+/* ─────────────────── DSA VISUALIZATION ─────────────────── */
+.viz-wrap {
+  display: none;
+  background: linear-gradient(180deg, rgba(0, 229, 255, 0.03), rgba(124, 77, 255, 0.02));
+  border: 1px solid rgba(0, 229, 255, 0.20);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.viz-wrap.show { display: block; }
+.viz-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap; gap: 12px;
+}
+.viz-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--cyan);
+  text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.viz-title .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+.viz-controls {
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.viz-btn {
+  width: 36px; height: 36px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease;
+}
+.viz-btn:hover:not(:disabled) {
+  background: rgba(0, 229, 255, 0.08);
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.viz-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.viz-speed {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+.viz-speed input[type=range] {
+  width: 100px;
+  accent-color: var(--cyan);
+}
+.viz-stage {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 26px;
+  padding: 18px 0 8px;
+}
+.viz-bars {
+  display: flex; gap: 6px;
+  align-items: flex-end;
+  position: relative;
+}
+.viz-bar {
+  width: 38px; height: 60px;
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; font-weight: 600;
+  color: var(--ink);
+  transition: background 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease, color 0.35s ease;
+  position: relative;
+}
+.viz-bar.lo { background: rgba(124, 77, 255, 0.45); color: var(--ink); box-shadow: inset 0 0 0 2px var(--purple); }
+.viz-bar.hi { background: rgba(255, 64, 129, 0.45); color: var(--ink); box-shadow: inset 0 0 0 2px var(--pink); }
+.viz-bar.mid {
+  background: rgba(0, 229, 255, 0.55);
+  color: var(--bg);
+  transform: translateY(-10px) scale(1.08);
+  box-shadow: 0 0 24px rgba(0, 229, 255, 0.4), inset 0 0 0 2px var(--cyan);
+}
+.viz-bar.found {
+  background: var(--green);
+  color: var(--bg);
+  transform: translateY(-14px) scale(1.12);
+  box-shadow: 0 0 32px rgba(0, 230, 118, 0.6);
+}
+.viz-bar.out {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink-faint);
+}
+.viz-bar-label {
+  position: absolute;
+  top: -22px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.viz-bar.show-label .viz-bar-label { opacity: 1; }
+.viz-bar.lo .viz-bar-label { color: var(--purple); }
+.viz-bar.hi .viz-bar-label { color: var(--pink); }
+.viz-bar.mid .viz-bar-label { color: var(--cyan); }
+.viz-bar.found .viz-bar-label { color: var(--green); }
+
+.viz-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  color: var(--ink-dim);
+  text-align: center;
+  padding: 12px 18px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  min-width: 360px;
+  max-width: 90%;
+}
+.viz-status .target { color: var(--cyan); font-weight: 600; }
+.viz-status .ok { color: var(--green); font-weight: 600; }
+.viz-status .err { color: var(--pink); font-weight: 600; }
+
+/* ─────────────────── HINT + FOOTER ─────────────────── */
+.hint-section {
+  margin-bottom: 24px;
+}
+.hint-btn {
+  background: transparent;
+  border: 1px dashed var(--line-2);
+  border-radius: 8px;
+  color: var(--ink-dim);
+  padding: 10px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  transition: all 0.2s ease;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.hint-btn:hover {
+  border-color: var(--warning); color: var(--warning); border-style: solid;
+}
+.hint-content {
+  display: none;
+  margin-top: 12px;
+  padding: 16px 20px;
+  background: rgba(255, 171, 0, 0.06);
+  border-left: 3px solid var(--warning);
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.hint-content.show { display: block; }
+.hint-content code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1px 6px;
+  border-radius: 3px;
+  color: var(--gold);
+}
+
+.lesson-footer {
+  display: flex; align-items: center; gap: 12px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.complete-btn {
+  background: rgba(0, 230, 118, 0.06);
+  border: 1px solid rgba(0, 230, 118, 0.30);
+  color: var(--green);
+  border-radius: 8px;
+  padding: 11px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.complete-btn:hover { background: rgba(0, 230, 118, 0.14); }
+.complete-btn.done {
+  background: rgba(0, 230, 118, 0.20);
+  box-shadow: 0 0 16px rgba(0, 230, 118, 0.30);
+}
+.footer-spacer { flex: 1; }
+.nav-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  border-radius: 8px;
+  padding: 11px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  transition: all 0.2s ease;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.nav-btn:hover:not(:disabled) {
+  border-color: var(--cyan); color: var(--cyan); background: rgba(0, 229, 255, 0.06);
+}
+.nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+/* ─────────────────── LOADING OVERLAY ─────────────────── */
+.loading {
+  position: fixed; inset: 0; z-index: 100;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 24px;
+  transition: opacity 0.5s ease;
+}
+.loading.hidden { opacity: 0; pointer-events: none; }
+.loading-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px; font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.loading-title em {
+  font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+  background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.loading-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  max-width: 480px;
+  text-align: center;
+  line-height: 1.6;
+}
+.loading-dots { display: inline-flex; gap: 10px; }
+.loading-dots span {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--cyan);
+  animation: bounce 1.2s ease-in-out infinite;
+}
+.loading-dots span:nth-child(2) { animation-delay: 0.15s; background: var(--purple); }
+.loading-dots span:nth-child(3) { animation-delay: 0.30s; background: var(--pink); }
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.4); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* ─────────────────── KEYBOARD SHORTCUT HINT ─────────────────── */
+.shortcut-hint {
+  position: fixed; bottom: 18px; right: 24px; z-index: 40;
+  background: rgba(5, 5, 16, 0.85);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+.shortcut-hint kbd {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  color: var(--ink-dim);
+  margin: 0 2px;
+}
+
+/* ─────────────────── RESPONSIVE ─────────────────── */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .main { padding: 24px 18px 80px; }
+  .lesson-title { font-size: 32px; }
+}
+@media (max-width: 600px) {
+  .topbar { padding: 12px 14px; gap: 10px; flex-wrap: wrap; }
+  .progress-summary { font-size: 10px; padding: 4px 10px; }
+  .progress-bar-mini { width: 80px; }
+  .lesson-title { font-size: 28px; }
+  #editor { height: 180px; }
+  .shortcut-hint { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Loading overlay -->
+<div class="loading" id="loading">
+  <h1 class="loading-title">Python &amp; <em>DSA</em></h1>
+  <div class="loading-dots"><span></span><span></span><span></span></div>
+  <div class="loading-text">Booting Python in your browser ·  ~10 MB · first load takes a sec</div>
+</div>
+
+<!-- Top bar -->
+<header class="topbar">
+  <a class="brand" href="../../" title="Back to learn-ml">
+    <span class="dot"></span>
+    <span>SR · LEARN</span>
+  </a>
+  <span class="brand-sep"></span>
+  <div class="brand-title">Python &amp; <em>DSA</em></div>
+  <div class="topbar-spacer"></div>
+  <div class="progress-summary" id="progressSummary">
+    <span id="progressText">0 / 10 done</span>
+    <div class="progress-bar-mini"><div class="progress-bar-mini-fill" id="progressFill" style="width:0%;"></div></div>
+  </div>
+  <a class="topbar-btn" href="https://github.com/siddhant-rajhans/learn-ml" target="_blank" rel="noopener">
+    GitHub
+  </a>
+</header>
+
+<!-- Main layout -->
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <h2>Curriculum</h2>
+    <!-- chapters populated by JS -->
+  </aside>
+
+  <!-- Main pane -->
+  <main class="main">
+
+    <div class="lesson-header">
+      <div class="lesson-chip" id="lessonChip"><span class="dot"></span><span id="lessonChipText">FOUNDATIONS · LESSON 01</span></div>
+      <h2 class="lesson-title" id="lessonTitle">Hello, <em>World</em>.</h2>
+      <div class="lesson-time" id="lessonTime">~5 min</div>
+    </div>
+
+    <div class="lesson-intro" id="lessonIntro"></div>
+
+    <div class="editor-wrap">
+      <div class="editor-chrome">
+        <div class="editor-dots"><span></span><span></span><span></span></div>
+        <div class="editor-filename" id="editorFilename">lesson.py</div>
+        <div class="editor-status" id="editorStatus"><span class="dot"></span><span id="editorStatusText">Loading Python…</span></div>
+      </div>
+      <div id="editor"></div>
+    </div>
+
+    <div class="action-row">
+      <button class="run-btn" id="runBtn" disabled>
+        <span class="arrow">▶</span>
+        <span>Run code</span>
+        <span class="shortcut">⌘↵</span>
+      </button>
+      <button class="btn-ghost" id="resetBtn" title="Reset code to starter (⌘+.)">
+        ↻ Reset
+      </button>
+    </div>
+
+    <div class="output-wrap" id="outputWrap">
+      <div class="output-header">
+        <span class="dot"></span>
+        <span>OUTPUT</span>
+        <button class="output-clear" id="outputClear">Clear</button>
+      </div>
+      <pre class="output" id="output">// run your code to see what happens</pre>
+    </div>
+
+    <!-- DSA viz (only shown for DSA lessons) -->
+    <div class="viz-wrap" id="vizWrap">
+      <div class="viz-header">
+        <div class="viz-title"><span class="dot"></span><span id="vizTitle">VISUALIZATION</span></div>
+        <div class="viz-controls">
+          <button class="viz-btn" id="vizPrev" title="Step back" disabled>⏮</button>
+          <button class="viz-btn" id="vizPlay" title="Play / pause" disabled>▶</button>
+          <button class="viz-btn" id="vizNext" title="Step forward" disabled>⏭</button>
+          <button class="viz-btn" id="vizReset" title="Reset" disabled>↻</button>
+        </div>
+      </div>
+      <div class="viz-stage" id="vizStage">
+        <div class="viz-bars" id="vizBars"></div>
+        <div class="viz-status" id="vizStatus">click <strong>Run code</strong> above to watch the algorithm</div>
+      </div>
+      <div style="display:flex; justify-content:center; margin-top:12px;">
+        <div class="viz-speed">
+          <span>SPEED</span>
+          <input type="range" id="vizSpeed" min="200" max="1600" step="100" value="700">
+        </div>
+      </div>
+    </div>
+
+    <div class="hint-section">
+      <button class="hint-btn" id="hintBtn">💡 Show hint</button>
+      <div class="hint-content" id="hintContent"></div>
+    </div>
+
+    <div class="lesson-footer">
+      <button class="complete-btn" id="completeBtn">✓ Mark complete</button>
+      <div class="footer-spacer"></div>
+      <button class="nav-btn" id="prevBtn">← Previous</button>
+      <button class="nav-btn" id="nextBtn">Next →</button>
+    </div>
+
+  </main>
+
+</div>
+
+<!-- Keyboard shortcut hint -->
+<div class="shortcut-hint">
+  <kbd>⌘</kbd><kbd>↵</kbd> run · <kbd>J</kbd> next · <kbd>K</kbd> prev
+</div>
+
+<!-- Ace Editor + Pyodide via CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ace.min.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+
+<script>
+// ═════════════════════ LESSONS DATA ═════════════════════
+const LESSONS = [
+  // ─── FOUNDATIONS ───
+  {
+    id: 'hello',
+    chapter: 'foundations',
+    chapterLabel: 'Foundations',
+    num: '01',
+    title: 'Hello, <em>World</em>.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>Every program starts somewhere. Yours starts here.</p>
+      <p>The <code>print()</code> function is how Python talks to you. Whatever you put inside the parentheses, Python writes it to the output panel below.</p>
+      <p>Hit <strong>Run code</strong>. Then <em>change the message</em>, and run it again.</p>
+    `,
+    code: `# Your first line of Python. Hit Run.
+print("Hello, World!")
+
+# Try changing the message and run again.
+# Try printing TWO things.
+`,
+    hint: 'Add another <code>print("…")</code> on its own line. Each <code>print</code> writes a new line. <code>print(2 + 2)</code> works too — you can print math.',
+  },
+
+  {
+    id: 'variables',
+    chapter: 'foundations',
+    chapterLabel: 'Foundations',
+    num: '02',
+    title: 'Variables.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>A <strong>variable</strong> is a name you give to a value so you can use it later. Like labeling a jar.</p>
+      <p>You assign with <code>=</code>. The <em>left</em> is the name, the <em>right</em> is the value.</p>
+      <p>Python figures out the type automatically — strings, numbers, lists, you don't have to declare anything.</p>
+    `,
+    code: `name = "Siddhant"
+age = 25
+is_learning = True
+
+print(name)
+print(age)
+print(is_learning)
+
+# f-strings let you mix values into a sentence:
+print(f"Hi, I'm {name}, and I'm {age}.")
+`,
+    hint: 'An f-string starts with <code>f"…"</code>. Anything in <code>{curly braces}</code> gets replaced with the value of that variable. Try <code>f"Next year I\\'ll be {age + 1}."</code>',
+  },
+
+  {
+    id: 'numbers',
+    chapter: 'foundations',
+    chapterLabel: 'Foundations',
+    num: '03',
+    title: 'Numbers &amp; <em>math</em>.',
+    timeLabel: '~4 min',
+    intro: `
+      <p>Python knows two main number kinds: <code>int</code> (whole numbers) and <code>float</code> (decimals).</p>
+      <p>The math operators are mostly what you'd expect: <code>+ - * /</code>. Two extras worth knowing:</p>
+      <p><code>//</code> is <strong>integer division</strong> (drops the remainder), <code>%</code> is <strong>modulo</strong> (the remainder), <code>**</code> is <strong>exponent</strong> (2 ** 10 → 1024).</p>
+    `,
+    code: `# Basic math
+print(2 + 3)
+print(10 / 3)        # regular division — gives a float
+print(10 // 3)       # integer division — drops the remainder
+print(10 % 3)        # modulo — what's left over
+print(2 ** 10)       # 2 to the 10th power
+
+# Math chains the way you'd expect
+total = (4 + 6) * 3 - 1
+print(f"Total: {total}")
+`,
+    hint: 'Use <code>**</code> for powers, not <code>^</code>. <code>^</code> in Python is bitwise XOR — not what you want. Try printing <code>2 ** 0.5</code> — that\'s the square root of 2.',
+  },
+
+  {
+    id: 'strings',
+    chapter: 'foundations',
+    chapterLabel: 'Foundations',
+    num: '04',
+    title: 'Strings.',
+    timeLabel: '~6 min',
+    intro: `
+      <p>A <strong>string</strong> is text. Single quotes <code>'…'</code> and double quotes <code>"…"</code> both work the same.</p>
+      <p>Add strings together with <code>+</code>. Repeat them with <code>*</code>. Slice them like an array.</p>
+      <p>f-strings (the <code>f"…"</code> ones) are how you mix variables into text — far cleaner than concatenating with <code>+</code>.</p>
+    `,
+    code: `greeting = "hello"
+target = "world"
+
+# Concatenate with +
+print(greeting + ", " + target + "!")
+
+# Repeat with *
+print("ha" * 3)
+
+# Index and slice — strings are sequences
+word = "transformer"
+print(word[0])      # 't' — first character
+print(word[-1])     # 'r' — last
+print(word[0:5])    # 'trans'
+print(len(word))    # 11
+
+# Useful methods
+print(greeting.upper())
+print(word.replace("former", "PARENT"))
+`,
+    hint: 'Strings are <em>immutable</em> — methods like <code>.upper()</code> return a new string, they don\'t change the original. Slicing is <code>[start:stop]</code> and <code>stop</code> is exclusive. <code>word[0:5]</code> gives indices 0, 1, 2, 3, 4 — not 5.',
+  },
+
+  {
+    id: 'ifelse',
+    chapter: 'foundations',
+    chapterLabel: 'Foundations',
+    num: '05',
+    title: 'If, <em>else</em>.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>This is how your program makes decisions. <code>if condition:</code> runs a block only when the condition is <strong>truthy</strong>.</p>
+      <p>Indentation matters — Python uses whitespace to define blocks. Four spaces is the convention.</p>
+      <p>Comparisons: <code>==</code> (equal), <code>!=</code> (not equal), <code>&lt; &gt; &lt;= &gt;=</code>. Combine with <code>and</code>, <code>or</code>, <code>not</code>.</p>
+    `,
+    code: `score = 87
+
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+elif score >= 70:
+    grade = "C"
+else:
+    grade = "F"
+
+print(f"Score: {score} → Grade: {grade}")
+
+# Logical operators
+age = 22
+has_id = True
+
+if age >= 18 and has_id:
+    print("Entry granted.")
+else:
+    print("Sorry, not today.")
+`,
+    hint: 'Indent with 4 spaces (or a tab). The <code>elif</code> is short for "else if" — Python checks each condition in order and stops at the first match. <code>and</code> requires both sides true; <code>or</code> requires either.',
+  },
+
+  {
+    id: 'loops',
+    chapter: 'foundations',
+    chapterLabel: 'Foundations',
+    num: '06',
+    title: '<em>Loops</em>.',
+    timeLabel: '~6 min',
+    intro: `
+      <p>Loops do the same thing many times, with the value changing each round.</p>
+      <p><code>for x in something:</code> iterates over a sequence. <code>range(n)</code> gives you the numbers 0, 1, 2, …, n−1.</p>
+      <p><code>while condition:</code> keeps going while the condition is true. Make sure the condition eventually becomes false, or you'll have an infinite loop.</p>
+    `,
+    code: `# Count to 5
+for i in range(5):
+    print(i)
+
+print("---")
+
+# Iterate over a list
+fruits = ["apple", "banana", "cherry"]
+for fruit in fruits:
+    print(f"I like {fruit}.")
+
+print("---")
+
+# While loop — countdown
+n = 3
+while n > 0:
+    print(f"T-minus {n}")
+    n -= 1
+print("Liftoff!")
+`,
+    hint: 'Both <code>range(5)</code> and <code>range(0, 5)</code> give 0–4. <code>range(start, stop, step)</code> lets you skip: <code>range(0, 10, 2)</code> gives evens. Use <code>break</code> to exit a loop early, <code>continue</code> to skip to the next iteration.',
+  },
+
+  {
+    id: 'functions',
+    chapter: 'foundations',
+    chapterLabel: 'Foundations',
+    num: '07',
+    title: 'Functions.',
+    timeLabel: '~7 min',
+    intro: `
+      <p>A function is a named, reusable block of code. Define with <code>def</code>, call by name.</p>
+      <p><strong>Parameters</strong> are the inputs. <code>return</code> sends a value back. If you don't <code>return</code>, the function returns <code>None</code>.</p>
+      <p>Functions let you DRY up your code — Don't Repeat Yourself. Write something once, call it a hundred times.</p>
+    `,
+    code: `def greet(name):
+    return f"Hello, {name}!"
+
+def area_of_circle(radius):
+    pi = 3.14159
+    return pi * radius * radius
+
+# Call them
+print(greet("Siddhant"))
+print(greet("World"))
+
+# Default parameter values
+def power(base, exp=2):
+    return base ** exp
+
+print(power(5))          # uses default exp=2 → 25
+print(power(5, 3))       # 125
+
+print(f"Area of a circle r=10: {area_of_circle(10):.2f}")
+`,
+    hint: 'Default values let you skip a parameter. <code>power(5)</code> uses the default <code>exp=2</code>. The <code>{value:.2f}</code> format spec rounds to 2 decimals. Try a function that takes two numbers and returns the larger one.',
+  },
+
+  // ─── DATA STRUCTURES ───
+  {
+    id: 'lists',
+    chapter: 'data',
+    chapterLabel: 'Data Structures',
+    num: '08',
+    title: 'Lists.',
+    timeLabel: '~7 min',
+    intro: `
+      <p>A list is an <strong>ordered</strong>, <strong>mutable</strong> collection of values. Square brackets, comma-separated.</p>
+      <p>Index from <code>0</code>. Negative indices count from the end (<code>-1</code> is the last).</p>
+      <p>Lists are the workhorse of Python — everything from a row of pixels to a sequence of tokens.</p>
+    `,
+    code: `# Create a list
+nums = [3, 1, 4, 1, 5, 9, 2, 6]
+
+# Inspect
+print(nums)
+print(len(nums))
+print(nums[0])      # first
+print(nums[-1])     # last
+print(nums[2:5])    # slice — indices 2, 3, 4
+
+# Modify
+nums.append(5)      # add to end
+nums.insert(0, 100) # insert at index 0
+nums.remove(1)      # remove first occurrence of value 1
+print(nums)
+
+# Useful operations
+print(sum(nums))
+print(min(nums), max(nums))
+print(sorted(nums))     # sorted COPY
+nums.sort()             # sorts IN PLACE
+print(nums)
+`,
+    hint: '<code>sorted(nums)</code> returns a new sorted list and leaves the original alone. <code>nums.sort()</code> changes the original. Same pattern for <code>reversed()</code> / <code>.reverse()</code>. List comprehensions are next: <code>[x*x for x in nums]</code> squares every element.',
+  },
+
+  {
+    id: 'dicts',
+    chapter: 'data',
+    chapterLabel: 'Data Structures',
+    num: '09',
+    title: 'Dictionaries.',
+    timeLabel: '~6 min',
+    intro: `
+      <p>A dictionary maps <strong>keys</strong> to <strong>values</strong>. Like a phone book: name → number, with O(1) lookup.</p>
+      <p>Curly braces, colons between key and value. Access with <code>d[key]</code>. Add or update with <code>d[key] = value</code>.</p>
+      <p>Iterating gives you the keys by default. Use <code>.items()</code> to get both.</p>
+    `,
+    code: `# A house, as a dict
+house = {
+    "sqft": 1800,
+    "beds": 3,
+    "price_k": 450,
+}
+
+# Access
+print(house["sqft"])
+print(house.get("baths", "unknown"))  # .get with default
+
+# Modify
+house["baths"] = 2
+house["price_k"] = 475
+print(house)
+
+# Iterate
+for key, value in house.items():
+    print(f"{key}: {value}")
+
+# Check membership
+print("sqft" in house)
+print("garage" in house)
+`,
+    hint: '<code>d[k]</code> raises an error if <code>k</code> isn\'t there. <code>d.get(k)</code> returns <code>None</code>. <code>d.get(k, default)</code> returns your default. Keys must be <em>hashable</em> — strings, numbers, tuples work; lists don\'t.',
+  },
+
+  // ─── ALGORITHMS ───
+  {
+    id: 'binary_search',
+    chapter: 'algorithms',
+    chapterLabel: 'Algorithms',
+    num: '10',
+    title: 'Binary <em>search</em>.',
+    timeLabel: '~10 min',
+    intro: `
+      <p>You have a <strong>sorted</strong> list and a target. How fast can you find it?</p>
+      <p>A linear scan checks every element — O(n). <strong>Binary search</strong> cuts the problem in half every step — O(log n). For a list of a million items, that's 20 comparisons instead of a million.</p>
+      <p>Watch the algorithm work below — <code>lo</code> and <code>hi</code> mark the live search range, <code>mid</code> is the midpoint being compared. Each step throws away half the remaining space.</p>
+    `,
+    code: `# Pre-defined sorted array (the bars below show this)
+arr = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31]
+target = 23
+
+def binary_search(arr, target):
+    lo = 0
+    hi = len(arr) - 1
+    steps = 0
+    viz.init(lo, hi)
+    while lo <= hi:
+        steps += 1
+        mid = (lo + hi) // 2
+        viz.mid(mid)
+        if arr[mid] == target:
+            viz.found(mid)
+            return mid, steps
+        elif arr[mid] < target:
+            lo = mid + 1
+            viz.lo(lo)
+        else:
+            hi = mid - 1
+            viz.hi(hi)
+    viz.not_found()
+    return -1, steps
+
+idx, steps = binary_search(arr, target)
+if idx == -1:
+    print(f"{target} not in array (took {steps} steps).")
+else:
+    print(f"Found {target} at index {idx} after {steps} steps.")
+    print(f"Linear search would have taken up to {len(arr)} steps.")
+`,
+    hint: 'Try changing <code>target = 23</code> to a value not in the array (say 22) — the search will narrow until <code>lo &gt; hi</code> and return -1. Try the worst case: search for 1 or 31. Notice it\'s still ≤ log₂(16) = 4 steps.',
+    viz: 'binary_search',
+  },
+];
+
+// Group lessons by chapter
+const CHAPTERS = [
+  { id: 'foundations', label: 'Foundations' },
+  { id: 'data',        label: 'Data Structures' },
+  { id: 'algorithms',  label: 'Algorithms' },
+];
+
+// ═════════════════════ STATE ═════════════════════
+let currentLessonIdx = 0;
+let pyEngine = null;
+let editor = null;
+let outputBuffer = '';
+let progress = loadProgress();
+
+const PROGRESS_KEY = 'python-and-dsa-progress-v1';
+const LESSON_KEY   = 'python-and-dsa-last-lesson-v1';
+
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(PROGRESS_KEY)) || { completed: {} }; }
+  catch { return { completed: {} }; }
+}
+function saveProgress() {
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress)); } catch {}
+}
+
+// ═════════════════════ DSA VIZ MODULE ═════════════════════
+const Viz = (() => {
+  const wrap   = document.getElementById('vizWrap');
+  const barsEl = document.getElementById('vizBars');
+  const statusEl = document.getElementById('vizStatus');
+  const titleEl  = document.getElementById('vizTitle');
+  const playBtn  = document.getElementById('vizPlay');
+  const prevBtn  = document.getElementById('vizPrev');
+  const nextBtn  = document.getElementById('vizNext');
+  const resetBtn = document.getElementById('vizReset');
+  const speedEl  = document.getElementById('vizSpeed');
+
+  let events = [];
+  let arr = [];
+  let target = null;
+  let stepIdx = 0;
+  let playing = false;
+  let timer = null;
+  let state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null };
+
+  function show() { wrap.classList.add('show'); }
+  function hide() { wrap.classList.remove('show'); }
+
+  function reset() {
+    events = [];
+    arr = [];
+    stepIdx = 0;
+    playing = false;
+    if (timer) { clearTimeout(timer); timer = null; }
+    state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null };
+    barsEl.innerHTML = '';
+    statusEl.innerHTML = 'click <strong>Run code</strong> above to watch the algorithm';
+    playBtn.disabled = true;
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    resetBtn.disabled = true;
+    playBtn.textContent = '▶';
+  }
+
+  function renderBars(applyState = true) {
+    barsEl.innerHTML = '';
+    arr.forEach((v, i) => {
+      const bar = document.createElement('div');
+      bar.className = 'viz-bar';
+      bar.textContent = v;
+      bar.dataset.idx = String(i);
+      const label = document.createElement('span');
+      label.className = 'viz-bar-label';
+      bar.appendChild(label);
+      barsEl.appendChild(bar);
+    });
+    if (applyState) applyStateToBars();
+  }
+
+  function applyStateToBars() {
+    const bars = Array.from(barsEl.children);
+    bars.forEach((b, i) => {
+      b.classList.remove('lo', 'hi', 'mid', 'found', 'out', 'show-label');
+      const label = b.querySelector('.viz-bar-label');
+      label.textContent = '';
+      // Out of search range
+      if (i < state.lo || i > state.hi) {
+        if (state.found < 0) b.classList.add('out');
+      }
+    });
+    // Apply markers
+    if (state.lo >= 0 && state.lo < bars.length) {
+      bars[state.lo].classList.add('lo', 'show-label');
+      bars[state.lo].querySelector('.viz-bar-label').textContent = 'LO';
+    }
+    if (state.hi >= 0 && state.hi < bars.length) {
+      bars[state.hi].classList.add('hi', 'show-label');
+      bars[state.hi].querySelector('.viz-bar-label').textContent = 'HI';
+    }
+    if (state.mid >= 0 && state.mid < bars.length) {
+      bars[state.mid].classList.add('mid', 'show-label');
+      bars[state.mid].querySelector('.viz-bar-label').textContent = 'MID';
+    }
+    if (state.found >= 0 && state.found < bars.length) {
+      bars.forEach(b => b.classList.remove('lo', 'hi', 'mid', 'out'));
+      bars[state.found].classList.add('found', 'show-label');
+      bars[state.found].querySelector('.viz-bar-label').textContent = 'FOUND';
+    }
+  }
+
+  function describeStep(ev) {
+    if (!ev) return '';
+    if (ev.kind === 'init') {
+      return `Searching for <span class="target">${target}</span> · range [${ev.lo}, ${ev.hi}] · 16 candidates`;
+    }
+    if (ev.kind === 'mid') {
+      const v = arr[ev.i];
+      return `mid = ${ev.i} → arr[mid] = ${v} · ${v === target ? '<span class="ok">match!</span>' : v < target ? `${v} &lt; ${target} → search the right half` : `${v} &gt; ${target} → search the left half`}`;
+    }
+    if (ev.kind === 'lo')  return `lo ← ${ev.i} · range narrows to [${ev.i}, ${state.hi}]`;
+    if (ev.kind === 'hi')  return `hi ← ${ev.i} · range narrows to [${state.lo}, ${ev.i}]`;
+    if (ev.kind === 'found') return `<span class="ok">Found ${target} at index ${ev.i}</span>`;
+    if (ev.kind === 'not_found') return `<span class="err">${target} not in array</span>`;
+    return '';
+  }
+
+  function applyEvent(ev) {
+    if (!ev) return;
+    if (ev.kind === 'init')      { state.lo = ev.lo; state.hi = ev.hi; state.mid = -1; state.found = -1; }
+    else if (ev.kind === 'mid')   { state.mid = ev.i; }
+    else if (ev.kind === 'lo')    { state.lo = ev.i; state.mid = -1; }
+    else if (ev.kind === 'hi')    { state.hi = ev.i; state.mid = -1; }
+    else if (ev.kind === 'found') { state.found = ev.i; state.ok = true; }
+    else if (ev.kind === 'not_found') { state.ok = false; state.mid = -1; }
+    applyStateToBars();
+    statusEl.innerHTML = describeStep(ev);
+  }
+
+  function stepForward() {
+    if (stepIdx >= events.length) return;
+    applyEvent(events[stepIdx]);
+    stepIdx++;
+    updateButtons();
+  }
+
+  function stepBackward() {
+    if (stepIdx <= 0) return;
+    // Rewind by replaying from 0 up to stepIdx-1
+    stepIdx--;
+    state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null };
+    applyStateToBars();
+    for (let i = 0; i < stepIdx; i++) applyEvent(events[i]);
+    if (stepIdx > 0) statusEl.innerHTML = describeStep(events[stepIdx - 1]);
+    else statusEl.innerHTML = 'ready · press play to start';
+    updateButtons();
+  }
+
+  function play() {
+    if (stepIdx >= events.length) {
+      // Restart
+      stepIdx = 0;
+      state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null };
+      applyStateToBars();
+    }
+    playing = true;
+    playBtn.textContent = '⏸';
+    const speed = parseInt(speedEl.value, 10);
+    function tick() {
+      if (!playing) return;
+      if (stepIdx >= events.length) { playing = false; playBtn.textContent = '▶'; updateButtons(); return; }
+      stepForward();
+      timer = setTimeout(tick, speed);
+    }
+    tick();
+  }
+
+  function pause() {
+    playing = false;
+    playBtn.textContent = '▶';
+    if (timer) { clearTimeout(timer); timer = null; }
+  }
+
+  function updateButtons() {
+    prevBtn.disabled = stepIdx <= 0;
+    nextBtn.disabled = stepIdx >= events.length;
+    resetBtn.disabled = stepIdx === 0;
+  }
+
+  // Pyodide will call these via window.__viz
+  function init(lo, hi) {
+    if (!arr.length) return;
+    events.push({ kind: 'init', lo, hi });
+  }
+  function setLo(i) { events.push({ kind: 'lo', i }); }
+  function setHi(i) { events.push({ kind: 'hi', i }); }
+  function setMid(i) { events.push({ kind: 'mid', i }); }
+  function setFound(i) { events.push({ kind: 'found', i }); }
+  function notFound() { events.push({ kind: 'not_found' }); }
+
+  function loadFromCode(arrayValues, targetValue) {
+    reset();
+    arr = arrayValues;
+    target = targetValue;
+    renderBars(false);
+    state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null };
+    applyStateToBars();
+    statusEl.innerHTML = `Ready to search for <span class="target">${target}</span> in the array above. Press ▶ to play.`;
+  }
+
+  function start() {
+    if (!events.length) return;
+    stepIdx = 0;
+    state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null };
+    applyStateToBars();
+    playBtn.disabled = false;
+    resetBtn.disabled = false;
+    updateButtons();
+    play();
+  }
+
+  // Bind viz controls
+  playBtn.addEventListener('click', () => { playing ? pause() : play(); });
+  prevBtn.addEventListener('click', () => { pause(); stepBackward(); });
+  nextBtn.addEventListener('click', () => { pause(); stepForward(); });
+  resetBtn.addEventListener('click', () => {
+    pause();
+    stepIdx = 0;
+    state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null };
+    applyStateToBars();
+    statusEl.innerHTML = `Reset. Searching for <span class="target">${target}</span>. Press ▶ to play.`;
+    updateButtons();
+  });
+
+  return {
+    show, hide, reset, loadFromCode, start,
+    init, setLo, setHi, setMid, setFound, notFound,
+    getState: () => ({ playing, stepIdx, total: events.length }),
+  };
+})();
+
+// Expose viz hooks for Python code (via Pyodide's `from js import viz`)
+window.viz = {
+  init: (lo, hi)   => Viz.init(lo, hi),
+  lo:   (i)        => Viz.setLo(i),
+  hi:   (i)        => Viz.setHi(i),
+  mid:  (i)        => Viz.setMid(i),
+  found:(i)        => Viz.setFound(i),
+  not_found:() => Viz.notFound(),
+};
+
+// ═════════════════════ SIDEBAR ═════════════════════
+function renderSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  // Keep the h2 title
+  const existing = sidebar.querySelectorAll('.chapter');
+  existing.forEach(el => el.remove());
+
+  CHAPTERS.forEach(ch => {
+    const chapter = document.createElement('div');
+    chapter.className = 'chapter';
+    chapter.dataset.chapter = ch.id;
+
+    const header = document.createElement('div');
+    header.className = 'chapter-header';
+    header.innerHTML = `<span class="caret">▼</span> ${ch.label}`;
+    header.addEventListener('click', () => chapter.classList.toggle('collapsed'));
+    chapter.appendChild(header);
+
+    const list = document.createElement('ol');
+    list.className = 'lesson-list';
+
+    LESSONS.forEach((lesson, idx) => {
+      if (lesson.chapter !== ch.id) return;
+      const item = document.createElement('li');
+      item.className = 'lesson-item';
+      if (progress.completed[lesson.id]) item.classList.add('completed');
+      item.dataset.idx = String(idx);
+      item.innerHTML = `
+        <span class="num">${lesson.num}</span>
+        <span class="label">${lesson.title.replace(/<\/?em>/g, '')}</span>
+        <span class="status"></span>
+      `;
+      item.addEventListener('click', () => loadLesson(idx));
+      list.appendChild(item);
+    });
+
+    chapter.appendChild(list);
+    sidebar.appendChild(chapter);
+  });
+}
+
+function refreshSidebarActive() {
+  document.querySelectorAll('.lesson-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.idx === String(currentLessonIdx));
+    const lesson = LESSONS[parseInt(el.dataset.idx, 10)];
+    el.classList.toggle('completed', !!progress.completed[lesson.id]);
+  });
+}
+
+// ═════════════════════ PROGRESS BAR ═════════════════════
+function refreshProgress() {
+  const total = LESSONS.length;
+  const done = LESSONS.filter(l => progress.completed[l.id]).length;
+  document.getElementById('progressText').textContent = `${done} / ${total} done`;
+  document.getElementById('progressFill').style.width = (100 * done / total).toFixed(1) + '%';
+}
+
+// ═════════════════════ LOAD LESSON ═════════════════════
+function loadLesson(idx) {
+  if (idx < 0 || idx >= LESSONS.length) return;
+  currentLessonIdx = idx;
+  const lesson = LESSONS[idx];
+
+  document.getElementById('lessonChipText').textContent = `${lesson.chapterLabel.toUpperCase()} · LESSON ${lesson.num}`;
+  document.getElementById('lessonTitle').innerHTML = lesson.title;
+  document.getElementById('lessonTime').textContent = lesson.timeLabel;
+  document.getElementById('lessonIntro').innerHTML = lesson.intro;
+  document.getElementById('editorFilename').textContent = `lesson-${lesson.num}-${lesson.id}.py`;
+
+  if (editor) {
+    editor.session.setValue(lesson.code, 1);
+    editor.clearSelection();
+    editor.gotoLine(1, 0);
+  }
+
+  // Output reset
+  setOutput('// run your code to see what happens', 'idle');
+
+  // Hint
+  const hintBtn = document.getElementById('hintBtn');
+  const hintContent = document.getElementById('hintContent');
+  hintBtn.textContent = '💡 Show hint';
+  hintContent.classList.remove('show');
+  hintContent.innerHTML = lesson.hint || '';
+  if (!lesson.hint) {
+    hintBtn.style.display = 'none';
+  } else {
+    hintBtn.style.display = '';
+  }
+
+  // Viz
+  if (lesson.viz === 'binary_search') {
+    Viz.show();
+    document.getElementById('vizTitle').textContent = 'BINARY SEARCH · LIVE';
+    // Set up the initial array (matches the lesson code)
+    Viz.loadFromCode([1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31], 23);
+  } else {
+    Viz.hide();
+    Viz.reset();
+  }
+
+  // Mark-complete button state
+  const completeBtn = document.getElementById('completeBtn');
+  completeBtn.classList.toggle('done', !!progress.completed[lesson.id]);
+  completeBtn.textContent = progress.completed[lesson.id] ? '✓ Completed' : '✓ Mark complete';
+
+  // Nav buttons
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === LESSONS.length - 1;
+
+  refreshSidebarActive();
+
+  try { localStorage.setItem(LESSON_KEY, String(idx)); } catch {}
+  // Scroll main to top
+  document.querySelector('.main').scrollTop = 0;
+}
+
+// ═════════════════════ OUTPUT ═════════════════════
+function setOutput(text, kind = 'normal') {
+  const out = document.getElementById('output');
+  const wrap = document.getElementById('outputWrap');
+  out.textContent = text;
+  out.classList.remove('has-content');
+  wrap.classList.remove('has-output', 'has-error');
+  if (kind === 'normal' && text && !text.startsWith('//')) {
+    out.classList.add('has-content');
+    wrap.classList.add('has-output');
+  }
+  if (kind === 'error') {
+    wrap.classList.add('has-error');
+    out.classList.add('has-content');
+  }
+}
+
+function appendOutput(chunk) {
+  outputBuffer += chunk;
+  const out = document.getElementById('output');
+  const wrap = document.getElementById('outputWrap');
+  out.textContent = outputBuffer;
+  out.classList.add('has-content');
+  wrap.classList.add('has-output');
+}
+
+// ═════════════════════ PYODIDE ═════════════════════
+async function initPyodide() {
+  const statusEl = document.getElementById('editorStatus');
+  const statusText = document.getElementById('editorStatusText');
+  statusEl.classList.remove('ready', 'busy');
+  statusText.textContent = 'Loading Python…';
+
+  pyEngine = await window.loadPyodide({
+    indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/',
+    stdout: (s) => appendOutput(s + '\n'),
+    stderr: (s) => appendOutput(s + '\n'),
+  });
+
+  statusEl.classList.add('ready');
+  statusText.textContent = 'Python ready';
+  document.getElementById('runBtn').disabled = false;
+  document.getElementById('loading').classList.add('hidden');
+}
+
+async function runCode() {
+  if (!pyEngine) return;
+  const code = editor.getValue();
+  const statusEl = document.getElementById('editorStatus');
+  const statusText = document.getElementById('editorStatusText');
+  statusEl.classList.remove('ready');
+  statusEl.classList.add('busy');
+  statusText.textContent = 'Running…';
+  outputBuffer = '';
+  setOutput('', 'normal');
+
+  // Reset viz events if applicable
+  const lesson = LESSONS[currentLessonIdx];
+  if (lesson.viz === 'binary_search') {
+    Viz.reset();
+    Viz.loadFromCode([1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31], 23);
+  }
+
+  try {
+    // Auto-import the viz module so DSA lessons can call viz.init(), viz.mid(), etc.
+    // without forcing users to write `from js import viz` themselves.
+    await pyEngine.runPythonAsync('from js import viz');
+    await pyEngine.runPythonAsync(code);
+    if (!outputBuffer.trim()) {
+      setOutput('// (no output)', 'idle');
+    }
+    // Start viz playback if recorded
+    if (lesson.viz === 'binary_search') {
+      Viz.start();
+    }
+  } catch (e) {
+    const msg = String(e.message || e);
+    // Trim long Pyodide tracebacks to the useful tail
+    const lines = msg.split('\n');
+    const tail = lines.slice(Math.max(0, lines.length - 6)).join('\n');
+    setOutput(tail, 'error');
+  } finally {
+    statusEl.classList.remove('busy');
+    statusEl.classList.add('ready');
+    statusText.textContent = 'Python ready';
+  }
+}
+
+// ═════════════════════ EDITOR ═════════════════════
+function initEditor() {
+  editor = ace.edit('editor');
+  editor.setTheme('ace/theme/dracula');
+  editor.session.setMode('ace/mode/python');
+  editor.session.setUseSoftTabs(true);
+  editor.session.setTabSize(4);
+  editor.setOptions({
+    fontSize: '14px',
+    showPrintMargin: false,
+    showGutter: true,
+    highlightActiveLine: true,
+    enableLiveAutocompletion: false,
+    enableBasicAutocompletion: true,
+    cursorStyle: 'smooth',
+  });
+  editor.commands.addCommand({
+    name: 'run',
+    bindKey: { win: 'Ctrl-Enter', mac: 'Cmd-Enter' },
+    exec: runCode,
+  });
+}
+
+// ═════════════════════ EVENTS ═════════════════════
+function bindEvents() {
+  document.getElementById('runBtn').addEventListener('click', runCode);
+  document.getElementById('outputClear').addEventListener('click', () => {
+    outputBuffer = '';
+    setOutput('// run your code to see what happens', 'idle');
+  });
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    const lesson = LESSONS[currentLessonIdx];
+    if (editor) {
+      editor.session.setValue(lesson.code, 1);
+      editor.clearSelection();
+    }
+  });
+  document.getElementById('hintBtn').addEventListener('click', () => {
+    const content = document.getElementById('hintContent');
+    const btn = document.getElementById('hintBtn');
+    const isOpen = content.classList.toggle('show');
+    btn.textContent = isOpen ? '× Hide hint' : '💡 Show hint';
+  });
+  document.getElementById('completeBtn').addEventListener('click', () => {
+    const lesson = LESSONS[currentLessonIdx];
+    const wasDone = !!progress.completed[lesson.id];
+    if (wasDone) delete progress.completed[lesson.id];
+    else progress.completed[lesson.id] = Date.now();
+    saveProgress();
+    refreshSidebarActive();
+    refreshProgress();
+    const completeBtn = document.getElementById('completeBtn');
+    completeBtn.classList.toggle('done', !wasDone);
+    completeBtn.textContent = !wasDone ? '✓ Completed' : '✓ Mark complete';
+  });
+  document.getElementById('prevBtn').addEventListener('click', () => loadLesson(currentLessonIdx - 1));
+  document.getElementById('nextBtn').addEventListener('click', () => loadLesson(currentLessonIdx + 1));
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
+    // Cmd/Ctrl + . → reset
+    if ((e.metaKey || e.ctrlKey) && e.key === '.') {
+      e.preventDefault();
+      const lesson = LESSONS[currentLessonIdx];
+      if (editor) editor.session.setValue(lesson.code, 1);
+      return;
+    }
+    if (e.key === 'j' || e.key === 'J') {
+      if (currentLessonIdx < LESSONS.length - 1) loadLesson(currentLessonIdx + 1);
+    } else if (e.key === 'k' || e.key === 'K') {
+      if (currentLessonIdx > 0) loadLesson(currentLessonIdx - 1);
+    }
+  });
+}
+
+// ═════════════════════ INIT ═════════════════════
+function init() {
+  renderSidebar();
+  refreshProgress();
+  initEditor();
+  bindEvents();
+
+  // Restore last visited lesson (or default to 0)
+  let startIdx = 0;
+  try {
+    const saved = parseInt(localStorage.getItem(LESSON_KEY) || '0', 10);
+    if (!Number.isNaN(saved) && saved >= 0 && saved < LESSONS.length) startIdx = saved;
+  } catch {}
+  loadLesson(startIdx);
+
+  initPyodide().catch(err => {
+    const statusEl = document.getElementById('editorStatus');
+    const statusText = document.getElementById('editorStatusText');
+    statusEl.classList.remove('busy', 'ready');
+    statusText.textContent = 'Python failed to load';
+    setOutput('Pyodide failed to load.\n' + String(err && err.message || err) + '\n\nIf you opened this with file:// directly, some browsers block CDN scripts. Try running a local server:\n  python -m http.server 8000', 'error');
+    document.getElementById('loading').classList.add('hidden');
+  });
+}
+
+init();
+</script>
+
+</body>
+</html>
