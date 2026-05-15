@@ -1,0 +1,52 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+.envrc
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# Data
+data/raw/
+data/processed/
+data/external/
+*.csv
+*.parquet
+*.tsv
+!data/sample/*.csv
+
+# Models / checkpoints
+checkpoints/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+
+# Logs
+runs/
+wandb/
+mlruns/
+lightning_logs/
+logs/
+
+# Local notes
+SCRATCH.md
+TODO.local.md
