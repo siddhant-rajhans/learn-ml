@@ -1656,11 +1656,24 @@ async function initPyodide() {
   statusEl.classList.remove('ready', 'busy');
   statusText.textContent = 'Loading Python…';
 
-  pyEngine = await window.loadPyodide({
-    indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.29.4/full/',
-    stdout: (s) => appendOutput(s + '\n'),
-    stderr: (s) => appendOutput(s + '\n'),
-  });
+  // 60-second timeout — if CDN is unreachable, show a useful error instead of hanging
+  const loadTimeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error(
+      'Pyodide took too long to load.\n\n' +
+      'Run the page with the proper server:\n' +
+      '  python server.py\n\n' +
+      'Then open http://localhost:8000'
+    )), 60000)
+  );
+
+  pyEngine = await Promise.race([
+    window.loadPyodide({
+      indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.29.4/full/',
+      stdout: (s) => appendOutput(s + '\n'),
+      stderr: (s) => appendOutput(s + '\n'),
+    }),
+    loadTimeout,
+  ]);
 
   statusEl.classList.add('ready');
   statusText.textContent = 'Python ready';
