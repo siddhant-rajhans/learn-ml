@@ -1652,26 +1652,28 @@ function appendOutput(chunk) {
 
 // ═════════════════════ SKULPT (pure-JS Python) ═════════════════════
 function initPyodide() {
-  // Skulpt needs no async init — configure it and mark ready immediately
-  Sk.configure({
-    output: (text) => appendOutput(text),
-    read:   (filename) => {
-      if (Sk.builtinFiles?.files?.[filename] !== undefined)
-        return Sk.builtinFiles.files[filename];
-      throw new Error("File not found: '" + filename + "'");
-    },
-    __future__: Sk.python3,
-    execLimit: 10000,   // 10-second CPU limit per run
-  });
-
-  pyEngine = true;  // signal that engine is ready
-  const statusEl   = document.getElementById('editorStatus');
-  const statusText = document.getElementById('editorStatusText');
-  statusEl.classList.add('ready');
-  statusText.textContent = 'Python ready';
-  document.getElementById('runBtn').disabled = false;
-  document.getElementById('loading').classList.add('hidden');
-  return Promise.resolve();
+  try {
+    Sk.configure({
+      output: (text) => appendOutput(text),
+      read:   (filename) => {
+        if (Sk.builtinFiles && Sk.builtinFiles.files && Sk.builtinFiles.files[filename] !== undefined)
+          return Sk.builtinFiles.files[filename];
+        throw new Error("File not found: '" + filename + "'");
+      },
+      __future__: Sk.python3,
+      execLimit: 10000,
+    });
+    pyEngine = true;
+    const statusEl   = document.getElementById('editorStatus');
+    const statusText = document.getElementById('editorStatusText');
+    statusEl.classList.add('ready');
+    statusText.textContent = 'Python ready';
+    document.getElementById('runBtn').disabled = false;
+    document.getElementById('loading').classList.add('hidden');
+    return Promise.resolve();
+  } catch (err) {
+    return Promise.reject(err);  // ensures .catch() on the caller side works
+  }
 }
 
 async function runCode() {
@@ -1714,6 +1716,7 @@ async function runCode() {
 
 // ═════════════════════ EDITOR ═════════════════════
 function initEditor() {
+  ace.config.set('basePath', '/vendor');  // load modes/themes from local vendor/
   editor = ace.edit('editor');
   editor.setTheme('ace/theme/dracula');
   editor.session.setMode('ace/mode/python');

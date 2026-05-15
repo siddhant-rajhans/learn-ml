@@ -12,8 +12,7 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 class CoopCoepHandler(SimpleHTTPRequestHandler):
     def end_headers(self):
-        self.send_header("Cross-Origin-Opener-Policy",   "same-origin")
-        self.send_header("Cross-Origin-Embedder-Policy", "credentialless")
+        # No special COEP/COOP headers — they cause reload loops in Arc
         super().end_headers()
 
     def log_message(self, fmt, *args):
