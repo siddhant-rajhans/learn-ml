@@ -1742,7 +1742,7 @@ async function runCode() {
 function initEditor() {
   ace.config.set('basePath', '/vendor');  // load modes/themes from local vendor/
   editor = ace.edit('editor');
-  editor.setTheme('ace/theme/dracula');
+  editor.setTheme('ace/theme/one_dark');  // VSCode Dark+ equivalent
   editor.session.setMode('ace/mode/python');
   editor.session.setUseSoftTabs(true);
   editor.session.setTabSize(4);
