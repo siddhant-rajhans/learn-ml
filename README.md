@@ -9,27 +9,35 @@
 
 ## Why this exists
 
-Most ML learning paths are a Google doc of links. This one is a curriculum:
+Most ML learning paths are a Google doc of links. This is a curriculum:
 
-- **Visual-first.** Every concept has a 3D / animated explanation, not just formulas. Built on top of [ml-visuals](https://github.com/siddhant-rajhans/ml-visuals) (the open-source asset library I maintain for both this repo and my videos).
-- **Graph-shaped.** You can see *what depends on what* before you commit weeks to a topic.
-- **From true zero.** No prereqs. We start with high-school math and end at frontier ML research.
-- **Companioned by video.** Each phase is paired with a YouTube series so you can watch *or* read.
+- **Visual-first.** Every concept has a 3D / animated explanation, not just formulas. Powered by [ml-visuals](https://github.com/siddhant-rajhans/ml-visuals) (the open-source asset library that backs this repo and the companion videos).
+- **Graph-shaped.** The full [interactive map](https://siddhant-rajhans.github.io/ml-roadmap/roadmap.html) shows *what depends on what* before you commit weeks to a topic.
+- **From true zero to research.** No prereqs. High-school math through frontier ML.
+- **Three paths, one map.** Pick *Literacy* (3 mo), *Builder* (8 mo), or *Researcher* (18+ mo). Same curriculum, different stopping points — see [`paths/`](paths/).
 
 ## The map
 
-The full graph-and-node curriculum lives in [`ROADMAP.md`](ROADMAP.md). The eight phases:
+The single source of truth is the **interactive 3D roadmap**:
 
-| Phase | Topic | Time (~10h/wk) |
+> 🗺️ **[siddhant-rajhans.github.io/ml-roadmap/roadmap.html](https://siddhant-rajhans.github.io/ml-roadmap/roadmap.html)**
+
+Drag to orbit. Click any node to drill in. Three audience paths.
+
+## The seven categories
+
+| Folder | What it covers | Typical time |
 |---|---|---|
-| 0 | Foundations — HS math + Python from zero | 6–10 weeks |
-| 1 | Math for ML — linear algebra, calc, prob, info theory | 4–6 months |
-| 2 | Programming for ML — NumPy, Pandas, git, Linux | 2–3 months |
-| 3 | Classical ML — regression, trees, clustering, eval | 3–4 months |
-| 4 | Deep Learning — NNs, CNNs, RNNs, Transformers, generative | 4–6 months |
-| 5 | Specializations — NLP / CV / RL / GNN / multimodal | 3–6 months each |
-| 6 | ML Engineering — MLOps, deployment, distributed training | 3–4 months |
-| 7 | ML Scientist — papers, frontier, advanced math, research | ongoing |
+| [`math/`](math/) | Linear algebra, calculus, probability, info theory, optimization | 3–5 months |
+| [`prog/`](prog/) | Python, NumPy, PyTorch, data stack, GPU/systems, MLOps | 3–5 months |
+| [`data/`](data/) | Collection, labeling, quality, feature engineering, data-centric AI | 2–3 months |
+| [`classical/`](classical/) | Supervised, kernel, unsupervised, graphical models, RL, time series, evaluation | 5–7 months |
+| [`dl/`](dl/) | NN theory, backprop, CNNs, sequence models, transformers, generative, diffusion | 4–6 months |
+| [`llm/`](llm/) | LLM architecture, pre-training, alignment, multimodal, RAG/agents | 3–4 months |
+| [`frontier/`](frontier/) | Scaling laws, mech interp, SSMs, MoE, safety, causal, GNNs | ongoing |
+| [`paths/`](paths/) | The three navigation paths through the above | reference |
+
+Each category folder has its own README with topics, time bands, the "what this unlocks" framing, and external resources. Folders are not strictly sequential — see [`paths/`](paths/) for how to order them by role.
 
 ## How to use this repo
 
@@ -38,36 +46,28 @@ git clone https://github.com/siddhant-rajhans/learn-ml.git
 cd learn-ml
 ```
 
-Each `phase-N-*/` folder contains:
-- `README.md` — what you'll learn, prereqs, time budget
-- `notes/` — written explanations matched to companion videos
-- `notebooks/` — runnable Jupyter notebooks (Colab links inside)
-- `exercises/` — problems to solve before moving on
-- `solutions/` — work them yourself first; solutions in a collapsed section
-
-Start at [`phase-0-foundations/`](phase-0-foundations/) regardless of your background. Even if you know Python, the math refresh sets up notation we use throughout.
+1. **Open the interactive map** at [siddhant-rajhans.github.io/ml-roadmap/roadmap.html](https://siddhant-rajhans.github.io/ml-roadmap/roadmap.html). Pick a path.
+2. **Read the category README** for whichever bucket your path enters first (usually `math/`).
+3. **Notebooks, exercises, and worked solutions** ship per topic — they land in each category folder as I write them. Tracked in issues.
 
 ## Companion content
 
-- **YouTube — broad track:** roadmap-style videos, career advice, project walkthroughs.
-- **YouTube — math track:** deep visual essays on the math behind ML models.
-- **Newsletter:** weekly digest of what dropped + commentary.
-- **Portfolio:** [siddhant-rajhans.github.io](https://siddhant-rajhans.github.io/)
-
-All links land at the portfolio above; subscribe there for the channels and newsletter.
+- **The slide system:** [siddhant-rajhans.github.io/ml-roadmap/](https://siddhant-rajhans.github.io/ml-roadmap/) — the interactive 3D roadmap, episode 01 "What a Vector Actually Is," and the Linear Algebra 3D Transformation Engine.
+- **The asset library:** [github.com/siddhant-rajhans/ml-visuals](https://github.com/siddhant-rajhans/ml-visuals) — R3F + Manim components you can embed in your own notes.
+- **Portfolio + newsletter + YouTube:** [siddhant-rajhans.github.io](https://siddhant-rajhans.github.io/).
 
 ## Contributing
 
-This is being built in public. PRs welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md). The cleanest contributions:
+PRs welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md). Best contributions:
 
-- **Typo / clarity fixes** in any phase's notes.
-- **Better exercises** with worked solutions.
-- **Additional notebook examples** that explain a concept I've muddled.
-- **Translations.** Especially Hindi, Spanish, Mandarin.
+- Typo / clarity fixes in any category README.
+- Worked exercises with solutions.
+- Better notebook examples for a topic.
+- Translations — especially Hindi, Spanish, Mandarin.
 
 ## Citing
 
-If this curriculum helped you, a star is the easiest way to give back. If you're publishing material that references this:
+If this curriculum helped you, a star is the easiest way to give back. If you reference it:
 
 ```bibtex
 @misc{rajhans2026learnml,
@@ -80,4 +80,4 @@ If this curriculum helped you, a star is the easiest way to give back. If you're
 
 ## License
 
-[MIT](LICENSE). Use the material however you want — teach with it, fork it, translate it, ship it inside your bootcamp. Attribution is appreciated, not required.
+[MIT](LICENSE). Use it however you want — teach, fork, translate, ship inside your bootcamp. Attribution appreciated, not required.
