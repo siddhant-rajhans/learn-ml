@@ -905,9 +905,10 @@ body::before {
   <kbd>⌘</kbd><kbd>↵</kbd> run · <kbd>J</kbd> next · <kbd>K</kbd> prev
 </div>
 
-<!-- Ace Editor + Pyodide via CDN -->
+<!-- Ace Editor + Skulpt (pure-JS Python, loads instantly — no WASM) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ace.min.js"></script>
-<script src="https://cdn.pyodide.org/v0.29.4/full/pyodide.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"></script>
 
 <script>
 // ═════════════════════ LESSONS DATA ═════════════════════
@@ -1649,36 +1650,28 @@ function appendOutput(chunk) {
   wrap.classList.add('has-output');
 }
 
-// ═════════════════════ PYODIDE ═════════════════════
-async function initPyodide() {
-  const statusEl = document.getElementById('editorStatus');
+// ═════════════════════ SKULPT (pure-JS Python) ═════════════════════
+function initPyodide() {
+  // Skulpt needs no async init — configure it and mark ready immediately
+  Sk.configure({
+    output: (text) => appendOutput(text),
+    read:   (filename) => {
+      if (Sk.builtinFiles?.files?.[filename] !== undefined)
+        return Sk.builtinFiles.files[filename];
+      throw new Error("File not found: '" + filename + "'");
+    },
+    __future__: Sk.python3,
+    execLimit: 10000,   // 10-second CPU limit per run
+  });
+
+  pyEngine = true;  // signal that engine is ready
+  const statusEl   = document.getElementById('editorStatus');
   const statusText = document.getElementById('editorStatusText');
-  statusEl.classList.remove('ready', 'busy');
-  statusText.textContent = 'Loading Python…';
-
-  // 60-second timeout — if CDN is unreachable, show a useful error instead of hanging
-  const loadTimeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error(
-      'Pyodide took too long to load.\n\n' +
-      'Run the page with the proper server:\n' +
-      '  python server.py\n\n' +
-      'Then open http://localhost:8000'
-    )), 60000)
-  );
-
-  pyEngine = await Promise.race([
-    window.loadPyodide({
-      indexURL: 'https://cdn.pyodide.org/v0.29.4/full/',
-      stdout: (s) => appendOutput(s + '\n'),
-      stderr: (s) => appendOutput(s + '\n'),
-    }),
-    loadTimeout,
-  ]);
-
   statusEl.classList.add('ready');
   statusText.textContent = 'Python ready';
   document.getElementById('runBtn').disabled = false;
   document.getElementById('loading').classList.add('hidden');
+  return Promise.resolve();
 }
 
 async function runCode() {
@@ -1700,23 +1693,18 @@ async function runCode() {
   }
 
   try {
-    // Auto-import the viz module so DSA lessons can call viz.init(), viz.mid(), etc.
-    // without forcing users to write `from js import viz` themselves.
-    await pyEngine.runPythonAsync('from js import viz');
-    await pyEngine.runPythonAsync(code);
+    await Sk.misceval.asyncToPromise(() =>
+      Sk.importMainWithBody('<stdin>', false, code, true)
+    );
     if (!outputBuffer.trim()) {
       setOutput('// (no output)', 'idle');
     }
-    // Start viz playback if recorded
     if (lesson.viz === 'binary_search') {
       Viz.start();
     }
   } catch (e) {
-    const msg = String(e.message || e);
-    // Trim long Pyodide tracebacks to the useful tail
-    const lines = msg.split('\n');
-    const tail = lines.slice(Math.max(0, lines.length - 6)).join('\n');
-    setOutput(tail, 'error');
+    const msg = e.toString ? e.toString() : String(e);
+    setOutput(msg, 'error');
   } finally {
     statusEl.classList.remove('busy');
     statusEl.classList.add('ready');
