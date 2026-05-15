@@ -911,6 +911,17 @@ body::before {
 <script src="vendor/skulpt-stdlib.js"></script>
 
 <script>
+// Early error trap — catches parse errors and crashes anywhere in the page
+window.addEventListener('error', function(e) {
+  var d = document.getElementById('loading');
+  if (d) d.innerHTML = '<div style="color:#ff6b6b;font:13px monospace;padding:24px;background:#1a0000;border:1px solid #ff6b6b;border-radius:8px;max-width:700px;text-align:left;"><b>JS Error</b><br><br>' + e.message + '<br>at ' + e.filename + ':' + e.lineno + '</div>';
+});
+window.addEventListener('unhandledrejection', function(e) {
+  var d = document.getElementById('loading');
+  if (d) d.innerHTML = '<div style="color:#ff6b6b;font:13px monospace;padding:24px;background:#1a0000;border:1px solid #ff6b6b;border-radius:8px;max-width:700px;text-align:left;"><b>Promise Error</b><br><br>' + String(e.reason) + '</div>';
+});
+</script>
+<script>
 // ═════════════════════ LESSONS DATA ═════════════════════
 const LESSONS = [
   // ─── FOUNDATIONS ───
