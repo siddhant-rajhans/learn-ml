@@ -907,7 +907,7 @@ body::before {
 
 <!-- Ace Editor + Pyodide via CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ace.min.js"></script>
-<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.29.4/full/pyodide.js"></script>
 
 <script>
 // ═════════════════════ LESSONS DATA ═════════════════════
@@ -1657,7 +1657,7 @@ async function initPyodide() {
   statusText.textContent = 'Loading Python…';
 
   pyEngine = await window.loadPyodide({
-    indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/',
+    indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.29.4/full/',
     stdout: (s) => appendOutput(s + '\n'),
     stderr: (s) => appendOutput(s + '\n'),
   });
