@@ -359,13 +359,13 @@ body::before {
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 14px;
 }
-/* Match editor bg to page, kill the grey active-line highlight */
+/* Pure black background, keep Dracula syntax colours */
 .ace_editor,
 .ace_editor .ace_content,
-.ace_editor .ace_scroller { background: #0d0d1f !important; }
-.ace_editor .ace_active-line { background: rgba(255,255,255,0.04) !important; }
-.ace_editor .ace_gutter { background: #0d0d1f !important; border-right: 1px solid #1e1e35 !important; }
-.ace_editor .ace_gutter-active-line { background: rgba(255,255,255,0.04) !important; }
+.ace_editor .ace_scroller { background: #000 !important; }
+.ace_editor .ace_gutter         { background: #000 !important; border-right: 1px solid #222 !important; }
+.ace_editor .ace_active-line    { background: rgba(255,255,255,0.05) !important; }
+.ace_editor .ace_gutter-active-line { background: rgba(255,255,255,0.05) !important; }
 .ace_editor { font-family: 'JetBrains Mono', monospace !important; }
 
 /* ─────────────────── ACTIONS ─────────────────── */
@@ -1747,9 +1747,9 @@ async function runCode() {
 
 // ═════════════════════ EDITOR ═════════════════════
 function initEditor() {
-  ace.config.set('basePath', '/vendor');  // load modes/themes from local vendor/
+  ace.config.set('basePath', '/vendor');
   editor = ace.edit('editor');
-  editor.setTheme('ace/theme/one_dark');  // VSCode Dark+ equivalent
+  editor.setTheme('ace/theme/dracula');
   editor.session.setMode('ace/mode/python');
   editor.session.setUseSoftTabs(true);
   editor.session.setTabSize(4);
