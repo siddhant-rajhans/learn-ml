@@ -50,3 +50,6 @@ logs/
 # Local notes
 SCRATCH.md
 TODO.local.md
+
+# Local tooling (preview / agent configs that don't belong in the repo)
+.claude/
