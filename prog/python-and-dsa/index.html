@@ -359,6 +359,13 @@ body::before {
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 14px;
 }
+/* Match editor bg to page, kill the grey active-line highlight */
+.ace_editor,
+.ace_editor .ace_content,
+.ace_editor .ace_scroller { background: #0d0d1f !important; }
+.ace_editor .ace_active-line { background: rgba(255,255,255,0.04) !important; }
+.ace_editor .ace_gutter { background: #0d0d1f !important; border-right: 1px solid #1e1e35 !important; }
+.ace_editor .ace_gutter-active-line { background: rgba(255,255,255,0.04) !important; }
 .ace_editor { font-family: 'JetBrains Mono', monospace !important; }
 
 /* ─────────────────── ACTIONS ─────────────────── */
