@@ -963,20 +963,25 @@ print("Hello, World!")
     intro: `
       <p>A <strong>variable</strong> is a name you give to a value so you can use it later. Like labeling a jar.</p>
       <p>You assign with <code>=</code>. The <em>left</em> is the name, the <em>right</em> is the value.</p>
-      <p>Python figures out the type automatically — strings, numbers, lists, you don't have to declare anything.</p>
+      <p>Python figures out the type automatically — numbers, strings, booleans, even a whole vector. You don't have to declare anything.</p>
     `,
-    code: `name = "Siddhant"
-age = 25
-is_learning = True
+    code: `# A few different types of values
+brightness = 0.7              # float — a decimal
+pixel_count = 1024            # int   — a whole number
+is_cat_photo = True           # bool  — True or False
+label = "transformer"         # str   — text
+embedding = [0.2, -0.5, 0.8]  # list  — a vector. Yes, you're already touching ML.
 
-print(name)
-print(age)
-print(is_learning)
+print(brightness)
+print(pixel_count)
+print(is_cat_photo)
+print(label)
+print(embedding)
 
-# f-strings let you mix values into a sentence:
-print(f"Hi, I'm {name}, and I'm {age}.")
+# f-strings let you mix values into a sentence
+print(f"The vector has {len(embedding)} dimensions.")
 `,
-    hint: 'An f-string starts with <code>f"…"</code>. Anything in <code>{curly braces}</code> gets replaced with the value of that variable. Try <code>f"Next year I\\\'ll be {age + 1}."</code>',
+    hint: `An f-string starts with <code>f"…"</code>. Anything in <code>{curly braces}</code> gets replaced with the value. <code>len(embedding)</code> tells you how many numbers are in the vector — in ML this is called the <em>dimension</em>.`,
   },
 
   {
@@ -1001,8 +1006,16 @@ print(2 ** 10)       # 2 to the 10th power
 # Math chains the way you'd expect
 total = (4 + 6) * 3 - 1
 print(f"Total: {total}")
+
+# A tiny taste of the math you'll do in ML.
+# This is a "dot product" of two 3-d vectors — sum of pairwise products.
+# It tells you how aligned two vectors are.
+a0, a1, a2 = 0.2, -0.5, 0.8
+b0, b1, b2 = 0.1,  0.3, 0.9
+dot = a0 * b0 + a1 * b1 + a2 * b2
+print(f"dot product: {dot:.3f}")
 `,
-    hint: 'Use <code>**</code> for powers, not <code>^</code>. <code>^</code> in Python is bitwise XOR — not what you want. Try printing <code>2 ** 0.5</code> — that\'s the square root of 2.',
+    hint: `Use <code>**</code> for powers, not <code>^</code>. <code>^</code> in Python is bitwise XOR — not what you want. Try <code>2 ** 0.5</code> — the square root of 2. The dot product above is the single most-used operation in deep learning; in Lesson 7 you'll wrap it in a function.`,
   },
 
   {
@@ -1052,29 +1065,31 @@ print(word.replace("former", "PARENT"))
       <p>Indentation matters — Python uses whitespace to define blocks. Four spaces is the convention.</p>
       <p>Comparisons: <code>==</code> (equal), <code>!=</code> (not equal), <code>&lt; &gt; &lt;= &gt;=</code>. Combine with <code>and</code>, <code>or</code>, <code>not</code>.</p>
     `,
-    code: `score = 87
+    code: `# A model just looked at a photo. Here's its confidence it's a cat.
+confidence = 0.87
 
-if score >= 90:
-    grade = "A"
-elif score >= 80:
-    grade = "B"
-elif score >= 70:
-    grade = "C"
+if confidence >= 0.9:
+    label = "definitely a cat"
+elif confidence >= 0.5:
+    label = "probably a cat"
+elif confidence >= 0.2:
+    label = "probably not a cat"
 else:
-    grade = "F"
+    label = "definitely not a cat"
 
-print(f"Score: {score} → Grade: {grade}")
+print(f"Confidence: {confidence} → {label}")
 
-# Logical operators
-age = 22
-has_id = True
+# Logical operators — combine multiple checks
+score = 0.72
+above_threshold = score > 0.5
+human_reviewed   = True
 
-if age >= 18 and has_id:
-    print("Entry granted.")
+if above_threshold and human_reviewed:
+    print("Prediction accepted.")
 else:
-    print("Sorry, not today.")
+    print("Send to manual review.")
 `,
-    hint: 'Indent with 4 spaces (or a tab). The <code>elif</code> is short for "else if" — Python checks each condition in order and stops at the first match. <code>and</code> requires both sides true; <code>or</code> requires either.',
+    hint: `Indent with 4 spaces (or a tab). <code>elif</code> is short for "else if" — Python checks each condition in order and stops at the first match. <code>and</code> requires both sides true; <code>or</code> requires either. This pattern — "convert a continuous score into a discrete label" — is how every classifier ends.`,
   },
 
   {
@@ -1095,21 +1110,29 @@ for i in range(5):
 
 print("---")
 
-# Iterate over a list
-fruits = ["apple", "banana", "cherry"]
-for fruit in fruits:
-    print(f"I like {fruit}.")
+# Iterate over a list — and compute your first statistic.
+# These could be model confidence scores on 5 different photos.
+scores = [0.7, 0.4, 0.9, 0.2, 0.8]
+
+total = 0
+for s in scores:
+    total += s
+
+mean = total / len(scores)
+print(f"sum:  {total}")
+print(f"mean: {mean}")
+# You just averaged a list. That's the foundation of every metric in ML.
 
 print("---")
 
-# While loop — countdown
+# While loop — keep dropping the worst until we beat a threshold
 n = 3
 while n > 0:
-    print(f"T-minus {n}")
+    print(f"epoch {n}: still training…")
     n -= 1
-print("Liftoff!")
+print("done.")
 `,
-    hint: 'Both <code>range(5)</code> and <code>range(0, 5)</code> give 0–4. <code>range(start, stop, step)</code> lets you skip: <code>range(0, 10, 2)</code> gives evens. Use <code>break</code> to exit a loop early, <code>continue</code> to skip to the next iteration.',
+    hint: `<code>range(5)</code> gives 0–4. <code>range(start, stop, step)</code> lets you skip: <code>range(0, 10, 2)</code> gives evens. <code>break</code> exits early, <code>continue</code> jumps to the next iteration. The "loop and accumulate" pattern you just wrote is exactly what frameworks like PyTorch do under the hood for every training metric.`,
   },
 
   {
@@ -1124,27 +1147,38 @@ print("Liftoff!")
       <p><strong>Parameters</strong> are the inputs. <code>return</code> sends a value back. If you don't <code>return</code>, the function returns <code>None</code>.</p>
       <p>Functions let you DRY up your code — Don't Repeat Yourself. Write something once, call it a hundred times.</p>
     `,
-    code: `def greet(name):
-    return f"Hello, {name}!"
+    code: `# Your first ML function. ReLU returns x if positive, otherwise 0.
+# This is the most common "activation function" in deep learning —
+# every neural net uses some flavor of it.
+def relu(x):
+    if x > 0:
+        return x
+    return 0
 
-def area_of_circle(radius):
-    pi = 3.14159
-    return pi * radius * radius
+print(relu(1.5))    # 1.5
+print(relu(-2.0))   # 0
+print(relu(0))      # 0
 
-# Call them
-print(greet("Siddhant"))
-print(greet("World"))
+# Your second ML function. The dot product of two vectors.
+# Same math as Lesson 3, but now it works for vectors of any length.
+def dot_product(a, b):
+    total = 0
+    for i in range(len(a)):
+        total += a[i] * b[i]
+    return total
+
+v1 = [1.0, 2.0, 3.0]
+v2 = [0.5, 0.5, 0.5]
+print(f"dot(v1, v2) = {dot_product(v1, v2)}")
 
 # Default parameter values
-def power(base, exp=2):
-    return base ** exp
+def scale(vec, factor=2.0):
+    return [factor * x for x in vec]
 
-print(power(5))          # uses default exp=2 → 25
-print(power(5, 3))       # 125
-
-print(f"Area of a circle r=10: {area_of_circle(10):.2f}")
+print(scale(v1))           # uses default factor=2.0
+print(scale(v1, 0.5))      # half each element
 `,
-    hint: 'Default values let you skip a parameter. <code>power(5)</code> uses the default <code>exp=2</code>. The <code>{value:.2f}</code> format spec rounds to 2 decimals. Try a function that takes two numbers and returns the larger one.',
+    hint: `Default values let you skip a parameter — <code>scale(v1)</code> uses <code>factor=2.0</code>. The <code>[factor * x for x in vec]</code> bit is a <em>list comprehension</em> — a compact loop, you'll meet it formally later. Try writing a <code>mean(vec)</code> function that returns the average of a list.`,
   },
 
   // ─── DATA STRUCTURES ───
@@ -1158,32 +1192,35 @@ print(f"Area of a circle r=10: {area_of_circle(10):.2f}")
     intro: `
       <p>A list is an <strong>ordered</strong>, <strong>mutable</strong> collection of values. Square brackets, comma-separated.</p>
       <p>Index from <code>0</code>. Negative indices count from the end (<code>-1</code> is the last).</p>
-      <p>Lists are the workhorse of Python — everything from a row of pixels to a sequence of tokens.</p>
+      <p>Lists are the workhorse of Python — and in ML they're how you carry around a row of pixels, a sequence of tokens, or a single training example.</p>
     `,
-    code: `# Create a list
-nums = [3, 1, 4, 1, 5, 9, 2, 6]
+    code: `# A single row of a grayscale image — 8 pixel brightnesses (0 = black, 1 = white)
+pixels = [0.1, 0.3, 0.8, 0.9, 0.7, 0.4, 0.2, 0.1]
 
 # Inspect
-print(nums)
-print(len(nums))
-print(nums[0])      # first
-print(nums[-1])     # last
-print(nums[2:5])    # slice — indices 2, 3, 4
+print(pixels)
+print(len(pixels))      # 8 pixels
+print(pixels[0])        # first pixel (dark)
+print(pixels[3])        # brightest one
+print(pixels[-1])       # last pixel
+print(pixels[2:5])      # a "patch" — 3 middle pixels
 
-# Modify
-nums.append(5)      # add to end
-nums.insert(0, 100) # insert at index 0
-nums.remove(1)      # remove first occurrence of value 1
-print(nums)
+# Modify the row
+pixels.append(0.0)      # add a black pixel at the end
+pixels[0] = 1.0         # set the first pixel to white
+print(pixels)
 
-# Useful operations
-print(sum(nums))
-print(min(nums), max(nums))
-print(sorted(nums))     # sorted COPY
-nums.sort()             # sorts IN PLACE
-print(nums)
+# Statistics — every ML metric is built on these
+print(f"sum:  {sum(pixels):.2f}")
+print(f"min:  {min(pixels)}, max: {max(pixels)}")
+print(f"mean: {sum(pixels) / len(pixels):.3f}")  # average brightness
+
+# Sort — copy vs in-place
+print(sorted(pixels))   # returns a new sorted list
+pixels.sort()           # sorts IN PLACE
+print(pixels)
 `,
-    hint: '<code>sorted(nums)</code> returns a new sorted list and leaves the original alone. <code>nums.sort()</code> changes the original. Same pattern for <code>reversed()</code> / <code>.reverse()</code>. List comprehensions are next: <code>[x*x for x in nums]</code> squares every element.',
+    hint: `<code>sorted(pixels)</code> returns a new sorted list and leaves the original alone. <code>pixels.sort()</code> changes the original. Same pattern for <code>reversed()</code> / <code>.reverse()</code>. A real grayscale image is a <em>list of lists</em> — one inner list per row. You'll meet that in NumPy soon.`,
   },
 
   {
@@ -1196,33 +1233,39 @@ print(nums)
     intro: `
       <p>A dictionary maps <strong>keys</strong> to <strong>values</strong>. Like a phone book: name → number, with O(1) lookup.</p>
       <p>Curly braces, colons between key and value. Access with <code>d[key]</code>. Add or update with <code>d[key] = value</code>.</p>
-      <p>Iterating gives you the keys by default. Use <code>.items()</code> to get both.</p>
+      <p>In ML, dicts show up everywhere: <em>word → vector</em> lookups (embeddings), <em>label_id → label_name</em> tables, config bundles. Today we'll build a tiny one.</p>
     `,
-    code: `# A house, as a dict
-house = {
-    "sqft": 1800,
-    "beds": 3,
-    "price_k": 450,
+    code: `# A tiny "word embedding" — each word maps to a 3-d vector.
+# Real embeddings have hundreds of dimensions and millions of words.
+embeddings = {
+    "cat":   [0.8, 0.2, 0.1],
+    "dog":   [0.7, 0.3, 0.2],
+    "car":   [0.1, 0.9, 0.5],
 }
 
-# Access
-print(house["sqft"])
-print(house.get("baths", "unknown"))  # .get with default
+# Look up a word's vector
+print(embeddings["cat"])
+print(embeddings.get("fish", [0.0, 0.0, 0.0]))  # default if missing
 
-# Modify
-house["baths"] = 2
-house["price_k"] = 475
-print(house)
+# Add a new word
+embeddings["bird"] = [0.6, 0.4, 0.3]
 
-# Iterate
-for key, value in house.items():
-    print(f"{key}: {value}")
+# Iterate over keys + values
+for word, vec in embeddings.items():
+    print(f"{word}: {vec}")
 
 # Check membership
-print("sqft" in house)
-print("garage" in house)
+print("cat" in embeddings)
+print("airplane" in embeddings)
+
+# Bonus: count words in a sentence — a dict as a tally counter.
+sentence = "the cat sat on the mat with the dog"
+counts = {}
+for word in sentence.split():
+    counts[word] = counts.get(word, 0) + 1
+print(counts)
 `,
-    hint: '<code>d[k]</code> raises an error if <code>k</code> isn\'t there. <code>d.get(k)</code> returns <code>None</code>. <code>d.get(k, default)</code> returns your default. Keys must be <em>hashable</em> — strings, numbers, tuples work; lists don\'t.',
+    hint: `<code>d[k]</code> raises an error if <code>k</code> isn't there. <code>d.get(k)</code> returns <code>None</code>. <code>d.get(k, default)</code> returns your default. The "tally counter" pattern at the bottom is how every NLP tokenizer starts — counting how often each word shows up.`,
   },
 
   // ─── ALGORITHMS ───
@@ -1236,6 +1279,7 @@ print("garage" in house)
     intro: `
       <p>You have a <strong>sorted</strong> list and a target. How fast can you find it?</p>
       <p>A linear scan checks every element — O(n). <strong>Binary search</strong> cuts the problem in half every step — O(log n). For a list of a million items, that's 20 comparisons instead of a million.</p>
+      <p>You'll meet this exact algorithm in ML too: finding a token ID in a sorted vocabulary, locating a bucket in a histogram, or — at huge scale — searching nearest-neighbour indexes for embeddings.</p>
       <p>Watch the algorithm work below — <code>lo</code> and <code>hi</code> mark the live search range, <code>mid</code> is the midpoint being compared. Each step throws away half the remaining space.</p>
     `,
     code: `# Pre-defined sorted array (the bars below show this)
@@ -1515,15 +1559,36 @@ const Viz = (() => {
   };
 })();
 
-// Expose viz hooks for Python code (via Pyodide's `from js import viz`)
+// Expose viz hooks for Python code.
+// Lesson code calls `viz.init(...)`, `viz.mid(...)`, etc. with no import.
+// Under Skulpt that means `viz` must live in `Sk.builtins`. Install runs
+// after `Sk.configure(...)` in initPyodide(); keeping the JS-side mirror
+// for any non-Python callers.
 window.viz = {
   init: (lo, hi)   => Viz.init(lo, hi),
   lo:   (i)        => Viz.setLo(i),
   hi:   (i)        => Viz.setHi(i),
   mid:  (i)        => Viz.setMid(i),
   found:(i)        => Viz.setFound(i),
-  not_found:() => Viz.notFound(),
+  not_found:()     => Viz.notFound(),
 };
+
+function installVizBuiltin() {
+  if (typeof Sk === 'undefined' || !Sk.builtin) return;
+  const none = () => Sk.builtin.none.none$;
+  const toJs = (v) => (v === undefined ? undefined : Sk.ffi.remapToJs(v));
+  const mod  = new Sk.builtin.module();
+  mod.$d = {
+    __name__:  new Sk.builtin.str('viz'),
+    init:      new Sk.builtin.func((lo, hi) => { Viz.init(toJs(lo), toJs(hi)); return none(); }),
+    lo:        new Sk.builtin.func((i)      => { Viz.setLo(toJs(i));           return none(); }),
+    hi:        new Sk.builtin.func((i)      => { Viz.setHi(toJs(i));           return none(); }),
+    mid:       new Sk.builtin.func((i)      => { Viz.setMid(toJs(i));          return none(); }),
+    found:     new Sk.builtin.func((i)      => { Viz.setFound(toJs(i));        return none(); }),
+    not_found: new Sk.builtin.func(()       => { Viz.notFound();               return none(); }),
+  };
+  Sk.builtins['viz'] = mod;
+}
 
 // ═════════════════════ SIDEBAR ═════════════════════
 function renderSidebar() {
@@ -1693,6 +1758,9 @@ function initPyodide() {
       },
       execLimit: 10000,
     });
+
+    // Make `viz` available as a Python global for the binary-search lesson.
+    installVizBuiltin();
 
     pyEngine = true;
     document.getElementById('editorStatus').classList.add('ready');
