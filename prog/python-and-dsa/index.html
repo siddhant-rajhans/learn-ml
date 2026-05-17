@@ -587,6 +587,11 @@ body::before {
   background: rgba(255, 255, 255, 0.04);
   color: var(--ink-faint);
 }
+.viz-bar.visited {
+  background: rgba(0, 229, 255, 0.10);
+  color: var(--ink-faint);
+  box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.22);
+}
 .viz-bar-label {
   position: absolute;
   top: -22px;
@@ -619,6 +624,75 @@ body::before {
 }
 .viz-status .target { color: var(--cyan); font-weight: 600; }
 .viz-status .ok { color: var(--green); font-weight: 600; }
+
+/* ─── PLT (canvas-based plot panel) ─── */
+.plt-wrap {
+  display: none;
+  background: linear-gradient(180deg, rgba(0, 229, 255, 0.03), rgba(255, 64, 129, 0.02));
+  border: 1px solid rgba(0, 229, 255, 0.20);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 18px;
+  position: relative;
+}
+.plt-wrap.show { display: block; }
+.plt-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.plt-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--cyan);
+  text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.plt-title .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+.plt-charts {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.plt-figure {
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 12px;
+  position: relative;
+}
+.plt-figure-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.plt-figure canvas {
+  display: block;
+  width: 100%;
+  height: 240px;
+}
+.plt-legend {
+  display: flex; flex-wrap: wrap; gap: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 8px;
+}
+.plt-legend .swatch {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
 .viz-status .err { color: var(--pink); font-weight: 600; }
 
 /* ─────────────────── HINT + FOOTER ─────────────────── */
@@ -889,6 +963,14 @@ body::before {
           <input type="range" id="vizSpeed" min="200" max="1600" step="100" value="700">
         </div>
       </div>
+    </div>
+
+    <!-- PLT panel (only shown for Real ML lessons that import plt) -->
+    <div class="plt-wrap" id="pltWrap">
+      <div class="plt-header">
+        <div class="plt-title"><span class="dot"></span><span>PLOTS</span></div>
+      </div>
+      <div class="plt-charts" id="pltCharts"></div>
     </div>
 
     <div class="hint-section">
@@ -1317,6 +1399,395 @@ else:
     hint: 'Try changing <code>target = 23</code> to a value not in the array (say 22) — the search will narrow until <code>lo &gt; hi</code> and return -1. Try the worst case: search for 1 or 31. Notice it\'s still ≤ log₂(16) = 4 steps.',
     viz: 'binary_search',
   },
+
+  {
+    id: 'linear_search',
+    chapter: 'algorithms',
+    chapterLabel: 'Algorithms',
+    num: '11',
+    title: 'Linear <em>search</em>.',
+    timeLabel: '~6 min',
+    intro: `
+      <p>Binary search is fast — but it needs <strong>sorted</strong> data. Real life rarely hands you sorted data. So what's the alternative?</p>
+      <p><strong>Linear search</strong>: check element 0, then 1, then 2, until you find it (or run out). It works on <em>any</em> array. The cost is O(n) — for a million items, up to a million comparisons.</p>
+      <p>Watch it grind through the array below. The array is the same 16 elements as Lesson 10 — but <em>shuffled</em>. Binary search couldn't touch this; linear search will plow through.</p>
+    `,
+    code: `# Same elements as Lesson 10 — but UNSORTED.
+# Binary search wouldn't work here. Linear search will.
+arr = [4, 8, 15, 16, 42, 7, 11, 19, 25, 34, 50, 3, 9, 12, 23, 21]
+target = 23
+
+def linear_search(arr, target):
+    viz.init(0, len(arr) - 1)
+    for i in range(len(arr)):
+        viz.check(i)
+        if arr[i] == target:
+            viz.found(i)
+            return i, i + 1
+    viz.not_found()
+    return -1, len(arr)
+
+idx, steps = linear_search(arr, target)
+if idx == -1:
+    print(f"{target} not in array (took {steps} checks).")
+else:
+    print(f"Found {target} at index {idx} after {steps} checks.")
+    print(f"Binary search would have done log2(16) = 4 — but only if sorted.")
+`,
+    hint: 'Try a target that lives early in the array (say <code>target = 4</code>) vs late (<code>target = 21</code>). The early one wins in 1 check; the late one needs all 16. Linear search\'s cost depends on <em>where</em> the item is. Binary search\'s cost depends only on <em>how many</em> items exist.',
+    viz: 'linear_search',
+  },
+
+  // ─── PYTHON IDIOMS ───
+  {
+    id: 'tuples',
+    chapter: 'idioms',
+    chapterLabel: 'Python Idioms',
+    num: '12',
+    title: 'Tuples.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>A tuple is like a list — ordered, indexed — but <strong>immutable</strong>. Round brackets instead of square. Once made, you can't change it.</p>
+      <p>In ML, tuples show up everywhere: the <strong>shape</strong> of an image is <code>(height, width, channels)</code>. A function that needs to return two things returns them as a tuple. And Python lets you <em>unpack</em> tuples in one line.</p>
+    `,
+    code: `# A shape tuple — the size of a 28x28 grayscale image
+shape = (28, 28, 1)
+print(shape)
+print(shape[0], shape[1], shape[2])
+
+# Unpacking — assign all three at once
+height, width, channels = shape
+print(f"image is {height}x{width} with {channels} channel(s)")
+
+# Functions that return multiple values return a tuple
+def min_max(values):
+    return min(values), max(values)
+
+lo, hi = min_max([3, 1, 4, 1, 5, 9, 2, 6])
+print(f"lo = {lo}, hi = {hi}")
+
+# Swap two variables — Pythonic
+a, b = 5, 10
+print(f"before: a={a}, b={b}")
+a, b = b, a
+print(f"after:  a={a}, b={b}")
+
+# Tuples are immutable — this would error:
+# shape[0] = 100   # TypeError: 'tuple' object does not support item assignment
+`,
+    hint: 'Tuples can\'t be modified, but you can <em>re-bind</em> the whole variable: <code>shape = (32, 32, 3)</code> is fine. A one-element tuple needs a trailing comma — <code>(5,)</code> — otherwise Python thinks the parentheses are just grouping. <code>(5)</code> is just the integer 5.',
+  },
+
+  {
+    id: 'comprehensions',
+    chapter: 'idioms',
+    chapterLabel: 'Python Idioms',
+    num: '13',
+    title: 'List <em>comprehensions</em>.',
+    timeLabel: '~6 min',
+    intro: `
+      <p>The single most pythonic pattern. A <strong>list comprehension</strong> builds a new list from an existing one — in one line.</p>
+      <p>Shape: <code>[expression for item in iterable if condition]</code>. The <code>if</code> is optional.</p>
+      <p>In ML this is everywhere: normalize a batch, extract one feature, filter by label, build a dataset. It replaces three lines of loop with one line that reads almost like English.</p>
+    `,
+    code: `# The long way
+nums = [1, 2, 3, 4, 5]
+squares = []
+for n in nums:
+    squares.append(n * n)
+print(squares)
+
+# The pythonic way — one line
+squares = [n * n for n in nums]
+print(squares)
+
+# With a filter
+evens_squared = [n * n for n in nums if n % 2 == 0]
+print(evens_squared)
+
+# Normalize a list of scores to [0, 1]
+scores = [40, 70, 90, 30, 100]
+max_score = max(scores)
+normalized = [s / max_score for s in scores]
+print(normalized)
+
+# Dict comprehension — same idea, key:value pairs
+word_lengths = {w: len(w) for w in ["cat", "transformer", "ml"]}
+print(word_lengths)
+
+# Nested — build a 3x3 matrix of zeros
+matrix = [[0 for _ in range(3)] for _ in range(3)]
+print(matrix)
+`,
+    hint: 'The underscore <code>_</code> means "I don\'t care about the value." Use it when you need to repeat <em>n</em> times but don\'t need the loop variable. Comprehensions read fast and run fast — they\'re the standard way to transform a list in Python. Avoid them when the logic gets too dense; a regular loop is more readable then.',
+  },
+
+  {
+    id: 'enumerate_zip',
+    chapter: 'idioms',
+    chapterLabel: 'Python Idioms',
+    num: '14',
+    title: '<em>enumerate</em> &amp; <em>zip</em>.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>Two tiny built-ins you'll use in every training loop.</p>
+      <p><code>enumerate(seq)</code> gives you <em>(index, value)</em> pairs as you iterate — so you don't have to track <code>i</code> by hand.</p>
+      <p><code>zip(a, b)</code> walks two (or more) lists in parallel — pairing element 0 of <code>a</code> with element 0 of <code>b</code>, and so on. Perfect for inputs &amp; labels.</p>
+    `,
+    code: `# enumerate — get index and value together
+labels = ["cat", "dog", "bird", "fish"]
+for i, label in enumerate(labels):
+    print(f"class {i}: {label}")
+
+print("---")
+
+# zip — walk two lists in lockstep
+inputs  = [0.1, 0.4, 0.9, 0.2]
+targets = ["A", "B", "C", "D"]
+for x, y in zip(inputs, targets):
+    print(f"input {x} -> target {y}")
+
+print("---")
+
+# The training-loop pattern — enumerate + zip together
+for step, (x, y) in enumerate(zip(inputs, targets)):
+    print(f"step {step}: feed {x}, expect {y}")
+
+print("---")
+
+# zip with three lists, building a small dataset
+ids     = [101, 102, 103]
+names   = ["Ada", "Linus", "Grace"]
+scores  = [0.87, 0.74, 0.91]
+records = list(zip(ids, names, scores))
+print(records)
+`,
+    hint: 'Both <code>enumerate</code> and <code>zip</code> return <em>iterators</em>, not lists — wrap with <code>list(...)</code> if you want to see them all at once. <code>enumerate(seq, start=1)</code> starts the count at 1 instead of 0 — useful for human-readable output.',
+  },
+
+  // ─── REAL ML ───
+  {
+    id: 'numpy_intro',
+    chapter: 'real_ml',
+    chapterLabel: 'Real ML',
+    num: '15',
+    title: 'NumPy &mdash; <em>vectors at speed</em>.',
+    timeLabel: '~9 min',
+    intro: `
+      <p><strong>NumPy</strong> is the most-imported library in Python. Every ML framework — PyTorch, TensorFlow, scikit-learn — sits on top of it.</p>
+      <p>It gives you the <code>array</code>: a list-like thing that does math on every element at once. No loops. Faster than pure Python by 10–100×.</p>
+      <p class="note" style="background:rgba(255,171,0,0.10); border-left:3px solid #FFAB00; padding:8px 12px; border-radius:4px; margin-top:10px;">
+        <strong>Teaching shim:</strong> this playground uses a tiny pure-Python <code>np</code> that mirrors the real NumPy syntax. Real NumPy is a <code>pip install numpy</code> away — and your code will run unchanged.
+      </p>
+    `,
+    code: `import np
+
+# An array — like a list, but math works on every element at once
+a = np.array([1, 2, 3, 4, 5])
+print(a)
+print("shape:", a.shape)
+
+# Element-wise math — no loop needed
+print(a * 2)
+print(a + 10)
+print(a ** 2)
+
+# Two arrays interact element-wise
+b = np.array([10, 20, 30, 40, 50])
+print(a + b)
+print(a * b)
+
+# Reductions
+print("sum:", a.sum())
+print("mean:", a.mean())
+print("max:", a.max())
+
+# The dot product, in one line
+print("dot:", np.dot(a, b))
+
+# A 2-D array — like an image, or a matrix
+m = np.array([[1, 2, 3], [4, 5, 6]])
+print(m)
+print("shape:", m.shape)
+print("sum:", m.sum())
+
+# Useful constructors
+print(np.zeros(4))
+print(np.ones((2, 3)))
+print(np.arange(10))
+`,
+    hint: 'Every operation on a NumPy array returns a <em>new</em> array — the original isn\'t modified. The magic word here is <strong>vectorization</strong>: a single operation acts on all elements in parallel. That\'s how a gradient descent step on a million-parameter model fits in one line.',
+  },
+
+  {
+    id: 'load_csv',
+    chapter: 'real_ml',
+    chapterLabel: 'Real ML',
+    num: '16',
+    title: 'Load a <em>dataset</em>.',
+    timeLabel: '~7 min',
+    intro: `
+      <p>Every ML project starts the same way: <strong>load the data</strong>. The most common format is CSV — comma-separated values. A header row, then one row per example.</p>
+      <p>We've vendored a tiny classic dataset (<code>iris.csv</code>) right inside the playground. Three flower species, four measurements each — the "Hello, World" of classification.</p>
+      <p>You'll parse it with plain Python first. In Lesson 18 you'll use it to train a classifier.</p>
+    `,
+    code: `# Read the CSV (vendored inside the playground, available as 'iris.csv')
+with open('iris.csv') as f:
+    text = f.read()
+
+# Split into lines
+lines = text.strip().split("\\n")
+print(f"{len(lines)} lines, including a header")
+
+# Inspect the header
+header = lines[0].split(",")
+print("columns:", header)
+
+# Parse rows into (features, label) tuples
+data = []
+for line in lines[1:]:
+    parts = line.split(",")
+    features = [float(p) for p in parts[:4]]   # comprehension!
+    label    = parts[4]
+    data.append((features, label))
+
+print(f"{len(data)} rows parsed")
+print("first row:", data[0])
+print("last row:", data[-1])
+
+# Count examples per class — dict as a tally counter
+counts = {}
+for _, label in data:
+    counts[label] = counts.get(label, 0) + 1
+print("class counts:", counts)
+`,
+    hint: 'The <code>with open(...) as f:</code> pattern auto-closes the file when the block ends — no <code>f.close()</code> needed. <code>strip()</code> drops the trailing newline. The <code>[float(p) for p in parts[:4]]</code> turns the first four columns into numbers — comprehensions doing real ML work.',
+  },
+
+  {
+    id: 'plotting',
+    chapter: 'real_ml',
+    chapterLabel: 'Real ML',
+    num: '17',
+    title: 'Plot <em>something</em>.',
+    timeLabel: '~6 min',
+    intro: `
+      <p>Looking at numbers in a print statement only gets you so far. <strong>Plot</strong> them. Almost every ML insight starts with a chart.</p>
+      <p>Use <code>plt</code> exactly like Matplotlib: <code>plt.scatter</code>, <code>plt.plot</code>, <code>plt.bar</code>. Each call appears in the panel that just opened below the editor.</p>
+      <p class="note" style="background:rgba(255,171,0,0.10); border-left:3px solid #FFAB00; padding:8px 12px; border-radius:4px; margin-top:10px;">
+        <strong>Teaching shim:</strong> a canvas-based <code>plt</code> that mirrors the Matplotlib API on small datasets. Real Matplotlib is a <code>pip install matplotlib</code> away — same calls, same shape.
+      </p>
+    `,
+    code: `import plt
+import np
+
+# Generate some x values and a sine wave
+x = np.arange(40)
+y = np.array([0.5 + 0.45 * (n % 7) / 6 for n in range(40)])
+
+plt.figure()
+plt.title("a wavy line")
+plt.plot(x, y)
+plt.show()
+
+# Scatter — two features, color by class
+xs1 = np.array([1.2, 2.1, 1.5, 2.8, 1.9])
+ys1 = np.array([0.8, 1.4, 1.1, 1.8, 1.3])
+
+xs2 = np.array([3.5, 4.2, 3.8, 4.5, 3.2])
+ys2 = np.array([2.9, 3.4, 3.1, 3.7, 2.7])
+
+plt.figure()
+plt.title("two classes in a 2-d feature space")
+plt.scatter(xs1, ys1, color="cyan",  label="A")
+plt.scatter(xs2, ys2, color="pink",  label="B")
+plt.show()
+
+# Bar chart — class counts
+plt.figure()
+plt.title("how many of each class")
+plt.bar(["cat", "dog", "bird", "fish"], [42, 38, 27, 19])
+plt.show()
+`,
+    hint: 'Call <code>plt.figure()</code> before each new chart so they don\'t stack on top of each other. Call <code>plt.show()</code> at the end of each chart to render it. The shim supports <code>plot</code>, <code>scatter</code>, <code>bar</code>, <code>title</code>, <code>xlabel</code>, <code>ylabel</code>, and <code>legend</code> — enough for the next lesson.',
+  },
+
+  {
+    id: 'knn',
+    chapter: 'real_ml',
+    chapterLabel: 'Real ML',
+    num: '18',
+    title: 'Your first <em>classifier</em>.',
+    timeLabel: '~12 min',
+    intro: `
+      <p>Eighteen lessons in. Time to write actual ML.</p>
+      <p><strong>k-nearest neighbors</strong> is the simplest classifier that works. Given a new flower, look at its closest <em>k</em> neighbors in the training set, and vote. Whichever class wins, predict that.</p>
+      <p>No training. No gradients. No backprop. Just distance + voting. And on iris it gets ~95% accuracy. Welcome to ML.</p>
+    `,
+    code: `import np
+import plt
+
+# Load iris (from Lesson 16)
+with open('iris.csv') as f:
+    lines = f.read().strip().split("\\n")[1:]
+
+data = []
+for line in lines:
+    parts = line.split(",")
+    features = [float(p) for p in parts[:4]]
+    label    = parts[4]
+    data.append((features, label))
+
+# Split: every 3rd row → test, rest → train
+train = [r for i, r in enumerate(data) if i % 3 != 0]
+test  = [r for i, r in enumerate(data) if i % 3 == 0]
+print(f"train: {len(train)}, test: {len(test)}")
+
+# Distance between two feature vectors
+def distance(a, b):
+    s = 0.0
+    for i in range(len(a)):
+        d = a[i] - b[i]
+        s += d * d
+    return s ** 0.5
+
+# k-NN: predict the most common label among the k closest neighbors
+def predict(query, train, k=5):
+    dists = [(distance(query, feats), label) for feats, label in train]
+    dists.sort()
+    top_k = dists[:k]
+    votes = {}
+    for _, label in top_k:
+        votes[label] = votes.get(label, 0) + 1
+    return max(votes, key=votes.get)
+
+# Run on the test set
+correct = 0
+for feats, true_label in test:
+    pred = predict(feats, train, k=5)
+    if pred == true_label:
+        correct += 1
+
+acc = correct / len(test)
+print(f"accuracy: {correct} / {len(test)} = {acc * 100:.1f}%")
+
+# Plot two features (petal length vs petal width), colored by true class
+species = sorted(set(label for _, label in data))
+colors  = {"setosa": "cyan", "versicolor": "purple", "virginica": "pink"}
+plt.figure()
+plt.title("iris — petal length vs petal width")
+for sp in species:
+    xs = np.array([feats[2] for feats, lbl in data if lbl == sp])
+    ys = np.array([feats[3] for feats, lbl in data if lbl == sp])
+    plt.scatter(xs, ys, color=colors.get(sp, "white"), label=sp)
+plt.xlabel("petal length")
+plt.ylabel("petal width")
+plt.show()
+
+print("you just trained your first ML model. 18 lessons, 30 lines.")
+`,
+    hint: 'k-NN has <em>no training step</em> — the "model" is just the training set itself, and prediction is a search. Try k=1 (just the nearest neighbor) vs k=5 vs k=15. Bigger k smooths out noise but blurs decision boundaries. This is a "lazy learner" — fast to fit, slow to predict on large datasets.',
+  },
 ];
 
 // Group lessons by chapter
@@ -1324,6 +1795,8 @@ const CHAPTERS = [
   { id: 'foundations', label: 'Foundations' },
   { id: 'data',        label: 'Data Structures' },
   { id: 'algorithms',  label: 'Algorithms' },
+  { id: 'idioms',      label: 'Python Idioms' },
+  { id: 'real_ml',     label: 'Real ML' },
 ];
 
 // ═════════════════════ STATE ═════════════════════
@@ -1362,7 +1835,7 @@ const Viz = (() => {
   let stepIdx = 0;
   let playing = false;
   let timer = null;
-  let state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null };
+  let state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: 'binary' };
 
   function show() { wrap.classList.add('show'); }
   function hide() { wrap.classList.remove('show'); }
@@ -1373,7 +1846,7 @@ const Viz = (() => {
     stepIdx = 0;
     playing = false;
     if (timer) { clearTimeout(timer); timer = null; }
-    state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null };
+    state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode || 'binary' };
     barsEl.innerHTML = '';
     statusEl.innerHTML = 'click <strong>Run code</strong> above to watch the algorithm';
     playBtn.disabled = true;
@@ -1401,27 +1874,41 @@ const Viz = (() => {
   function applyStateToBars() {
     const bars = Array.from(barsEl.children);
     bars.forEach((b, i) => {
-      b.classList.remove('lo', 'hi', 'mid', 'found', 'out', 'show-label');
+      b.classList.remove('lo', 'hi', 'mid', 'found', 'out', 'visited', 'show-label');
       const label = b.querySelector('.viz-bar-label');
       label.textContent = '';
-      // Out of search range
-      if (i < state.lo || i > state.hi) {
+      // Binary search: out of range
+      if (state.mode === 'binary' && (i < state.lo || i > state.hi)) {
         if (state.found < 0) b.classList.add('out');
       }
     });
-    // Apply markers
-    if (state.lo >= 0 && state.lo < bars.length) {
-      bars[state.lo].classList.add('lo', 'show-label');
-      bars[state.lo].querySelector('.viz-bar-label').textContent = 'LO';
+    // Linear search trail (visited bars, dimmed but not eliminated)
+    if (state.mode === 'linear') {
+      state.visited.forEach(i => {
+        if (i >= 0 && i < bars.length && state.found !== i) bars[i].classList.add('visited');
+      });
     }
-    if (state.hi >= 0 && state.hi < bars.length) {
-      bars[state.hi].classList.add('hi', 'show-label');
-      bars[state.hi].querySelector('.viz-bar-label').textContent = 'HI';
+    // Binary-search markers
+    if (state.mode === 'binary') {
+      if (state.lo >= 0 && state.lo < bars.length) {
+        bars[state.lo].classList.add('lo', 'show-label');
+        bars[state.lo].querySelector('.viz-bar-label').textContent = 'LO';
+      }
+      if (state.hi >= 0 && state.hi < bars.length) {
+        bars[state.hi].classList.add('hi', 'show-label');
+        bars[state.hi].querySelector('.viz-bar-label').textContent = 'HI';
+      }
+      if (state.mid >= 0 && state.mid < bars.length) {
+        bars[state.mid].classList.add('mid', 'show-label');
+        bars[state.mid].querySelector('.viz-bar-label').textContent = 'MID';
+      }
     }
-    if (state.mid >= 0 && state.mid < bars.length) {
-      bars[state.mid].classList.add('mid', 'show-label');
-      bars[state.mid].querySelector('.viz-bar-label').textContent = 'MID';
+    // Linear-search current check
+    if (state.mode === 'linear' && state.checking >= 0 && state.checking < bars.length && state.found !== state.checking) {
+      bars[state.checking].classList.add('mid', 'show-label');
+      bars[state.checking].querySelector('.viz-bar-label').textContent = 'CHECK';
     }
+    // Found bar (both modes)
     if (state.found >= 0 && state.found < bars.length) {
       bars.forEach(b => b.classList.remove('lo', 'hi', 'mid', 'out'));
       bars[state.found].classList.add('found', 'show-label');
@@ -1432,11 +1919,16 @@ const Viz = (() => {
   function describeStep(ev) {
     if (!ev) return '';
     if (ev.kind === 'init') {
-      return `Searching for <span class="target">${target}</span> · range [${ev.lo}, ${ev.hi}] · 16 candidates`;
+      const count = ev.hi - ev.lo + 1;
+      return `Searching for <span class="target">${target}</span> · range [${ev.lo}, ${ev.hi}] · ${count} candidates`;
     }
     if (ev.kind === 'mid') {
       const v = arr[ev.i];
       return `mid = ${ev.i} → arr[mid] = ${v} · ${v === target ? '<span class="ok">match!</span>' : v < target ? `${v} &lt; ${target} → search the right half` : `${v} &gt; ${target} → search the left half`}`;
+    }
+    if (ev.kind === 'check') {
+      const v = arr[ev.i];
+      return `check index ${ev.i} → arr[${ev.i}] = ${v} · ${v === target ? '<span class="ok">match!</span>' : 'not it, keep going'}`;
     }
     if (ev.kind === 'lo')  return `lo ← ${ev.i} · range narrows to [${ev.i}, ${state.hi}]`;
     if (ev.kind === 'hi')  return `hi ← ${ev.i} · range narrows to [${state.lo}, ${ev.i}]`;
@@ -1447,12 +1939,16 @@ const Viz = (() => {
 
   function applyEvent(ev) {
     if (!ev) return;
-    if (ev.kind === 'init')      { state.lo = ev.lo; state.hi = ev.hi; state.mid = -1; state.found = -1; }
+    if (ev.kind === 'init')      { state.lo = ev.lo; state.hi = ev.hi; state.mid = -1; state.found = -1; state.visited = new Set(); state.checking = -1; }
     else if (ev.kind === 'mid')   { state.mid = ev.i; }
+    else if (ev.kind === 'check') {
+      if (state.checking >= 0) state.visited.add(state.checking);
+      state.checking = ev.i;
+    }
     else if (ev.kind === 'lo')    { state.lo = ev.i; state.mid = -1; }
     else if (ev.kind === 'hi')    { state.hi = ev.i; state.mid = -1; }
-    else if (ev.kind === 'found') { state.found = ev.i; state.ok = true; }
-    else if (ev.kind === 'not_found') { state.ok = false; state.mid = -1; }
+    else if (ev.kind === 'found') { state.found = ev.i; state.ok = true; state.checking = -1; state.mid = -1; }
+    else if (ev.kind === 'not_found') { state.ok = false; state.mid = -1; if (state.checking >= 0) state.visited.add(state.checking); state.checking = -1; }
     applyStateToBars();
     statusEl.innerHTML = describeStep(ev);
   }
@@ -1468,7 +1964,7 @@ const Viz = (() => {
     if (stepIdx <= 0) return;
     // Rewind by replaying from 0 up to stepIdx-1
     stepIdx--;
-    state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null };
+    state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode };
     applyStateToBars();
     for (let i = 0; i < stepIdx; i++) applyEvent(events[i]);
     if (stepIdx > 0) statusEl.innerHTML = describeStep(events[stepIdx - 1]);
@@ -1480,7 +1976,7 @@ const Viz = (() => {
     if (stepIdx >= events.length) {
       // Restart
       stepIdx = 0;
-      state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null };
+      state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode };
       applyStateToBars();
     }
     playing = true;
@@ -1507,23 +2003,26 @@ const Viz = (() => {
     resetBtn.disabled = stepIdx === 0;
   }
 
-  // Pyodide will call these via window.__viz
+  // Python-side viz hooks (called via Sk.builtins.viz module)
   function init(lo, hi) {
     if (!arr.length) return;
     events.push({ kind: 'init', lo, hi });
   }
-  function setLo(i) { events.push({ kind: 'lo', i }); }
-  function setHi(i) { events.push({ kind: 'hi', i }); }
-  function setMid(i) { events.push({ kind: 'mid', i }); }
+  function setLo(i)    { events.push({ kind: 'lo',    i }); }
+  function setHi(i)    { events.push({ kind: 'hi',    i }); }
+  function setMid(i)   { events.push({ kind: 'mid',   i }); }
+  function setCheck(i) { events.push({ kind: 'check', i }); }
   function setFound(i) { events.push({ kind: 'found', i }); }
-  function notFound() { events.push({ kind: 'not_found' }); }
+  function notFound()  { events.push({ kind: 'not_found' }); }
+  function setMode(m)  { state.mode = (m === 'linear') ? 'linear' : 'binary'; }
 
-  function loadFromCode(arrayValues, targetValue) {
+  function loadFromCode(arrayValues, targetValue, mode) {
     reset();
     arr = arrayValues;
     target = targetValue;
+    state.mode = mode || 'binary';
     renderBars(false);
-    state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null };
+    state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode };
     applyStateToBars();
     statusEl.innerHTML = `Ready to search for <span class="target">${target}</span> in the array above. Press ▶ to play.`;
   }
@@ -1531,7 +2030,7 @@ const Viz = (() => {
   function start() {
     if (!events.length) return;
     stepIdx = 0;
-    state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null };
+    state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode };
     applyStateToBars();
     playBtn.disabled = false;
     resetBtn.disabled = false;
@@ -1546,7 +2045,7 @@ const Viz = (() => {
   resetBtn.addEventListener('click', () => {
     pause();
     stepIdx = 0;
-    state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null };
+    state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode };
     applyStateToBars();
     statusEl.innerHTML = `Reset. Searching for <span class="target">${target}</span>. Press ▶ to play.`;
     updateButtons();
@@ -1554,8 +2053,8 @@ const Viz = (() => {
 
   return {
     show, hide, reset, loadFromCode, start,
-    init, setLo, setHi, setMid, setFound, notFound,
-    getState: () => ({ playing, stepIdx, total: events.length }),
+    init, setLo, setHi, setMid, setCheck, setFound, notFound, setMode,
+    getState: () => ({ playing, stepIdx, total: events.length, mode: state.mode }),
   };
 })();
 
@@ -1565,12 +2064,13 @@ const Viz = (() => {
 // after `Sk.configure(...)` in initPyodide(); keeping the JS-side mirror
 // for any non-Python callers.
 window.viz = {
-  init: (lo, hi)   => Viz.init(lo, hi),
-  lo:   (i)        => Viz.setLo(i),
-  hi:   (i)        => Viz.setHi(i),
-  mid:  (i)        => Viz.setMid(i),
-  found:(i)        => Viz.setFound(i),
-  not_found:()     => Viz.notFound(),
+  init:  (lo, hi)  => Viz.init(lo, hi),
+  lo:    (i)       => Viz.setLo(i),
+  hi:    (i)       => Viz.setHi(i),
+  mid:   (i)       => Viz.setMid(i),
+  check: (i)       => Viz.setCheck(i),
+  found: (i)       => Viz.setFound(i),
+  not_found: ()    => Viz.notFound(),
 };
 
 function installVizBuiltin() {
@@ -1584,10 +2084,495 @@ function installVizBuiltin() {
     lo:        new Sk.builtin.func((i)      => { Viz.setLo(toJs(i));           return none(); }),
     hi:        new Sk.builtin.func((i)      => { Viz.setHi(toJs(i));           return none(); }),
     mid:       new Sk.builtin.func((i)      => { Viz.setMid(toJs(i));          return none(); }),
+    check:     new Sk.builtin.func((i)      => { Viz.setCheck(toJs(i));        return none(); }),
     found:     new Sk.builtin.func((i)      => { Viz.setFound(toJs(i));        return none(); }),
     not_found: new Sk.builtin.func(()       => { Viz.notFound();               return none(); }),
   };
   Sk.builtins['viz'] = mod;
+}
+
+// ═════════════════════ VENDORED IRIS DATASET ═════════════════════
+// 90 rows from the classic UCI iris dataset — 30 per species — enough for k-NN.
+const IRIS_CSV = `sepal_length,sepal_width,petal_length,petal_width,species
+5.1,3.5,1.4,0.2,setosa
+4.9,3.0,1.4,0.2,setosa
+4.7,3.2,1.3,0.2,setosa
+4.6,3.1,1.5,0.2,setosa
+5.0,3.6,1.4,0.2,setosa
+5.4,3.9,1.7,0.4,setosa
+4.6,3.4,1.4,0.3,setosa
+5.0,3.4,1.5,0.2,setosa
+4.4,2.9,1.4,0.2,setosa
+4.9,3.1,1.5,0.1,setosa
+5.4,3.7,1.5,0.2,setosa
+4.8,3.4,1.6,0.2,setosa
+4.8,3.0,1.4,0.1,setosa
+4.3,3.0,1.1,0.1,setosa
+5.8,4.0,1.2,0.2,setosa
+5.7,4.4,1.5,0.4,setosa
+5.4,3.9,1.3,0.4,setosa
+5.1,3.5,1.4,0.3,setosa
+5.7,3.8,1.7,0.3,setosa
+5.1,3.8,1.5,0.3,setosa
+5.4,3.4,1.7,0.2,setosa
+5.1,3.7,1.5,0.4,setosa
+4.6,3.6,1.0,0.2,setosa
+5.1,3.3,1.7,0.5,setosa
+4.8,3.4,1.9,0.2,setosa
+5.0,3.0,1.6,0.2,setosa
+5.0,3.4,1.6,0.4,setosa
+5.2,3.5,1.5,0.2,setosa
+5.2,3.4,1.4,0.2,setosa
+4.7,3.2,1.6,0.2,setosa
+7.0,3.2,4.7,1.4,versicolor
+6.4,3.2,4.5,1.5,versicolor
+6.9,3.1,4.9,1.5,versicolor
+5.5,2.3,4.0,1.3,versicolor
+6.5,2.8,4.6,1.5,versicolor
+5.7,2.8,4.5,1.3,versicolor
+6.3,3.3,4.7,1.6,versicolor
+4.9,2.4,3.3,1.0,versicolor
+6.6,2.9,4.6,1.3,versicolor
+5.2,2.7,3.9,1.4,versicolor
+5.0,2.0,3.5,1.0,versicolor
+5.9,3.0,4.2,1.5,versicolor
+6.0,2.2,4.0,1.0,versicolor
+6.1,2.9,4.7,1.4,versicolor
+5.6,2.9,3.6,1.3,versicolor
+6.7,3.1,4.4,1.4,versicolor
+5.6,3.0,4.5,1.5,versicolor
+5.8,2.7,4.1,1.0,versicolor
+6.2,2.2,4.5,1.5,versicolor
+5.6,2.5,3.9,1.1,versicolor
+5.9,3.2,4.8,1.8,versicolor
+6.1,2.8,4.0,1.3,versicolor
+6.3,2.5,4.9,1.5,versicolor
+6.1,2.8,4.7,1.2,versicolor
+6.4,2.9,4.3,1.3,versicolor
+6.6,3.0,4.4,1.4,versicolor
+6.8,2.8,4.8,1.4,versicolor
+6.7,3.0,5.0,1.7,versicolor
+6.0,2.9,4.5,1.5,versicolor
+5.7,2.6,3.5,1.0,versicolor
+6.3,3.3,6.0,2.5,virginica
+5.8,2.7,5.1,1.9,virginica
+7.1,3.0,5.9,2.1,virginica
+6.3,2.9,5.6,1.8,virginica
+6.5,3.0,5.8,2.2,virginica
+7.6,3.0,6.6,2.1,virginica
+4.9,2.5,4.5,1.7,virginica
+7.3,2.9,6.3,1.8,virginica
+6.7,2.5,5.8,1.8,virginica
+7.2,3.6,6.1,2.5,virginica
+6.5,3.2,5.1,2.0,virginica
+6.4,2.7,5.3,1.9,virginica
+6.8,3.0,5.5,2.1,virginica
+5.7,2.5,5.0,2.0,virginica
+5.8,2.8,5.1,2.4,virginica
+6.4,3.2,5.3,2.3,virginica
+6.5,3.0,5.5,1.8,virginica
+7.7,3.8,6.7,2.2,virginica
+7.7,2.6,6.9,2.3,virginica
+6.0,2.2,5.0,1.5,virginica
+6.9,3.2,5.7,2.3,virginica
+5.6,2.8,4.9,2.0,virginica
+7.7,2.8,6.7,2.0,virginica
+6.3,2.7,4.9,1.8,virginica
+6.7,3.3,5.7,2.1,virginica
+7.2,3.2,6.0,1.8,virginica
+6.2,2.8,4.8,1.8,virginica
+6.1,3.0,4.9,1.8,virginica
+6.4,2.8,5.6,2.1,virginica
+7.2,3.0,5.8,1.6,virginica
+`;
+
+// ═════════════════════ NUMPY SHIM (pure-Python, teaching-grade) ═════════════════════
+const NUMPY_PY_SRC = `# Pure-Python NumPy shim — teaching grade.
+# Real NumPy: 'pip install numpy' — same syntax, way faster, full broadcasting.
+
+def _is_nested(data):
+    try:
+        return isinstance(data[0], (list, tuple))
+    except (TypeError, IndexError):
+        return False
+
+class array:
+    def __init__(self, data):
+        if isinstance(data, array):
+            self._data = list(data._data)
+            self.shape = data.shape
+        elif _is_nested(data):
+            rows = len(data)
+            cols = len(data[0]) if rows > 0 else 0
+            flat = []
+            for row in data:
+                flat.extend(row)
+            self._data = flat
+            self.shape = (rows, cols)
+        else:
+            self._data = list(data)
+            self.shape = (len(self._data),)
+
+    def _binop(self, other, op):
+        if isinstance(other, array):
+            if len(other._data) != len(self._data):
+                raise ValueError("shape mismatch")
+            out = [op(self._data[i], other._data[i]) for i in range(len(self._data))]
+        else:
+            out = [op(x, other) for x in self._data]
+        new_arr = array.__new__(array)
+        new_arr._data = out
+        new_arr.shape = self.shape
+        return new_arr
+
+    def __add__(self, o):     return self._binop(o, lambda a, b: a + b)
+    def __radd__(self, o):    return self._binop(o, lambda a, b: a + b)
+    def __sub__(self, o):     return self._binop(o, lambda a, b: a - b)
+    def __rsub__(self, o):    return self._binop(o, lambda a, b: b - a)
+    def __mul__(self, o):     return self._binop(o, lambda a, b: a * b)
+    def __rmul__(self, o):    return self._binop(o, lambda a, b: a * b)
+    def __truediv__(self, o): return self._binop(o, lambda a, b: a / b)
+    def __pow__(self, k):     return self._binop(k, lambda a, b: a ** b)
+
+    def sum(self):  return sum(self._data)
+    def mean(self): return sum(self._data) / len(self._data) if self._data else 0
+    def max(self):  return max(self._data)
+    def min(self):  return min(self._data)
+
+    def tolist(self):
+        if len(self.shape) == 2:
+            r, c = self.shape
+            return [self._data[i*c:(i+1)*c] for i in range(r)]
+        return list(self._data)
+
+    def __len__(self):      return len(self._data) if len(self.shape) == 1 else self.shape[0]
+    def __iter__(self):     return iter(self._data) if len(self.shape) == 1 else iter(self.tolist())
+    def __getitem__(self, i): return self._data[i]
+    def __repr__(self):     return "array(" + repr(self.tolist()) + ")"
+
+def zeros(shape):
+    if isinstance(shape, int):
+        return array([0.0] * shape)
+    r, c = shape
+    return array([[0.0] * c for _ in range(r)])
+
+def ones(shape):
+    if isinstance(shape, int):
+        return array([1.0] * shape)
+    r, c = shape
+    return array([[1.0] * c for _ in range(r)])
+
+def arange(n):
+    return array(list(range(n)))
+
+def dot(a, b):
+    a_data = a._data if isinstance(a, array) else list(a)
+    b_data = b._data if isinstance(b, array) else list(b)
+    return sum(x * y for x, y in zip(a_data, b_data))
+`;
+
+// ═════════════════════ PLT (matplotlib-shaped canvas renderer) ═════════════════════
+const Plt = (() => {
+  const wrap     = document.getElementById('pltWrap');
+  const chartsEl = document.getElementById('pltCharts');
+
+  let figures = [];          // accumulated figures across run() calls
+  let currentFig = null;     // figure being built
+
+  function show() { wrap.classList.add('show'); }
+  function hide() { wrap.classList.remove('show'); }
+
+  function reset() {
+    figures = [];
+    currentFig = null;
+    chartsEl.innerHTML = '';
+  }
+
+  function newFigure() {
+    currentFig = { title: '', xlabel: '', ylabel: '', series: [], showLegend: false };
+    figures.push(currentFig);
+  }
+
+  function ensureFigure() {
+    if (!currentFig) newFigure();
+  }
+
+  function setTitle(s)  { ensureFigure(); currentFig.title  = s; }
+  function setXlabel(s) { ensureFigure(); currentFig.xlabel = s; }
+  function setYlabel(s) { ensureFigure(); currentFig.ylabel = s; }
+  function enableLegend() { ensureFigure(); currentFig.showLegend = true; }
+
+  function addPlot(xs, ys, color, label) {
+    ensureFigure();
+    currentFig.series.push({ kind: 'line', xs, ys, color: color || '#00E5FF', label: label || '' });
+    if (label) currentFig.showLegend = true;
+  }
+  function addScatter(xs, ys, color, label) {
+    ensureFigure();
+    currentFig.series.push({ kind: 'scatter', xs, ys, color: color || '#FF4081', label: label || '' });
+    if (label) currentFig.showLegend = true;
+  }
+  function addBar(labels, values, color) {
+    ensureFigure();
+    currentFig.series.push({ kind: 'bar', labels, values, color: color || '#00E5FF', label: '' });
+  }
+
+  const COLOR_MAP = {
+    'cyan': '#00E5FF', 'purple': '#7C4DFF', 'pink': '#FF4081',
+    'green': '#00E676', 'gold': '#FFAB00', 'white': '#FFFFFF', 'orange': '#FFAB00',
+  };
+  function resolveColor(c) { return COLOR_MAP[c] || c || '#00E5FF'; }
+
+  function render() {
+    chartsEl.innerHTML = '';
+    figures.forEach((fig, i) => {
+      const figDiv = document.createElement('div');
+      figDiv.className = 'plt-figure';
+      if (fig.title) {
+        const t = document.createElement('div');
+        t.className = 'plt-figure-title';
+        t.textContent = fig.title;
+        figDiv.appendChild(t);
+      }
+      const cv = document.createElement('canvas');
+      cv.width = 760;
+      cv.height = 240;
+      figDiv.appendChild(cv);
+      chartsEl.appendChild(figDiv);
+      drawFigure(cv, fig);
+
+      if (fig.showLegend) {
+        const legend = document.createElement('div');
+        legend.className = 'plt-legend';
+        fig.series.filter(s => s.label).forEach(s => {
+          const item = document.createElement('span');
+          const swatch = document.createElement('span');
+          swatch.className = 'swatch';
+          swatch.style.background = resolveColor(s.color);
+          item.appendChild(swatch);
+          item.appendChild(document.createTextNode(s.label));
+          legend.appendChild(item);
+        });
+        figDiv.appendChild(legend);
+      }
+    });
+  }
+
+  function drawFigure(cv, fig) {
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    const margin = { l: 50, r: 20, t: 12, b: 36 };
+    const plotW = W - margin.l - margin.r;
+    const plotH = H - margin.t - margin.b;
+    ctx.clearRect(0, 0, W, H);
+
+    // Bar chart special-case
+    const barSeries = fig.series.find(s => s.kind === 'bar');
+    if (barSeries) {
+      drawBarChart(ctx, barSeries, margin, plotW, plotH, H);
+      drawAxes(ctx, margin, plotW, plotH, fig);
+      return;
+    }
+
+    // Auto-scale across all line / scatter series
+    let xs = [], ys = [];
+    fig.series.forEach(s => { xs = xs.concat(s.xs || []); ys = ys.concat(s.ys || []); });
+    if (xs.length === 0) {
+      ctx.fillStyle = '#666';
+      ctx.font = '13px JetBrains Mono, monospace';
+      ctx.fillText('(no data yet — call plt.plot / plt.scatter)', margin.l + 12, H / 2);
+      return;
+    }
+    const xmin = Math.min(...xs), xmax = Math.max(...xs);
+    const ymin = Math.min(...ys), ymax = Math.max(...ys);
+    const xPad = (xmax - xmin) * 0.05 || 1;
+    const yPad = (ymax - ymin) * 0.10 || 1;
+    const xLo = xmin - xPad, xHi = xmax + xPad;
+    const yLo = ymin - yPad, yHi = ymax + yPad;
+
+    function toPx(x, y) {
+      const px = margin.l + ((x - xLo) / (xHi - xLo)) * plotW;
+      const py = margin.t + plotH - ((y - yLo) / (yHi - yLo)) * plotH;
+      return [px, py];
+    }
+
+    drawGrid(ctx, margin, plotW, plotH, xLo, xHi, yLo, yHi);
+
+    fig.series.forEach(s => {
+      const color = resolveColor(s.color);
+      if (s.kind === 'line') {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        s.xs.forEach((x, i) => {
+          const [px, py] = toPx(x, s.ys[i]);
+          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        });
+        ctx.stroke();
+      } else if (s.kind === 'scatter') {
+        ctx.fillStyle = color;
+        s.xs.forEach((x, i) => {
+          const [px, py] = toPx(x, s.ys[i]);
+          ctx.beginPath();
+          ctx.arc(px, py, 4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+    });
+
+    drawAxes(ctx, margin, plotW, plotH, fig);
+  }
+
+  function drawGrid(ctx, m, w, h, xLo, xHi, yLo, yHi) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 1;
+    for (let i = 1; i < 5; i++) {
+      const y = m.t + (h / 5) * i;
+      ctx.beginPath(); ctx.moveTo(m.l, y); ctx.lineTo(m.l + w, y); ctx.stroke();
+      const x = m.l + (w / 5) * i;
+      ctx.beginPath(); ctx.moveTo(x, m.t); ctx.lineTo(x, m.t + h); ctx.stroke();
+    }
+    // Tick labels
+    ctx.fillStyle = '#6b6b80';
+    ctx.font = '10px JetBrains Mono, monospace';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let i = 0; i <= 5; i++) {
+      const v = yLo + ((yHi - yLo) * (5 - i) / 5);
+      const py = m.t + (h / 5) * i;
+      ctx.fillText(v.toFixed(2), m.l - 6, py);
+    }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let i = 0; i <= 5; i++) {
+      const v = xLo + ((xHi - xLo) * i / 5);
+      const px = m.l + (w / 5) * i;
+      ctx.fillText(v.toFixed(2), px, m.t + h + 6);
+    }
+  }
+
+  function drawBarChart(ctx, s, m, w, h, H) {
+    const labels = s.labels || [];
+    const values = s.values || [];
+    if (!values.length) return;
+    const maxV = Math.max(...values, 0);
+    const bw = w / Math.max(labels.length, 1) * 0.7;
+    const gap = w / Math.max(labels.length, 1) * 0.3;
+    const color = resolveColor(s.color);
+    labels.forEach((lbl, i) => {
+      const v = values[i] || 0;
+      const barH = (v / maxV) * h * 0.9;
+      const x = m.l + i * (bw + gap) + gap / 2;
+      const y = m.t + h - barH;
+      const grad = ctx.createLinearGradient(0, y, 0, m.t + h);
+      grad.addColorStop(0, color);
+      grad.addColorStop(1, 'rgba(0,0,0,0.4)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(x, y, bw, barH);
+      // Value above bar
+      ctx.fillStyle = '#cfcfdf';
+      ctx.font = '11px JetBrains Mono, monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillText(String(v), x + bw / 2, y - 3);
+      // Label below
+      ctx.fillStyle = '#9e9e9e';
+      ctx.textBaseline = 'top';
+      ctx.fillText(String(lbl), x + bw / 2, m.t + h + 6);
+    });
+  }
+
+  function drawAxes(ctx, m, w, h, fig) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(m.l, m.t); ctx.lineTo(m.l, m.t + h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(m.l, m.t + h); ctx.lineTo(m.l + w, m.t + h); ctx.stroke();
+    if (fig.xlabel) {
+      ctx.fillStyle = '#cfcfdf';
+      ctx.font = '11px JetBrains Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(fig.xlabel, m.l + w / 2, m.t + h + 26);
+    }
+    if (fig.ylabel) {
+      ctx.save();
+      ctx.translate(14, m.t + h / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = '#cfcfdf';
+      ctx.font = '11px JetBrains Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(fig.ylabel, 0, 0);
+      ctx.restore();
+    }
+  }
+
+  return { show, hide, reset, newFigure, setTitle, setXlabel, setYlabel, enableLegend, addPlot, addScatter, addBar, render };
+})();
+
+// ═════════════════════ PLT Python module ═════════════════════
+const PLT_PY_SRC = `# Matplotlib-shaped shim — teaching grade.
+# Real Matplotlib: 'pip install matplotlib' — same calls, full features.
+
+def figure():     _plt_new()
+def title(s):     _plt_title(str(s))
+def xlabel(s):    _plt_xlabel(str(s))
+def ylabel(s):    _plt_ylabel(str(s))
+def legend():     _plt_legend()
+def show():       _plt_show()
+
+def plot(x, y, color="cyan", label=""):
+    _plt_plot(list(x), list(y), str(color), str(label))
+
+def scatter(x, y, color="pink", label=""):
+    _plt_scatter(list(x), list(y), str(color), str(label))
+
+def bar(labels, values, color="cyan"):
+    _plt_bar([str(s) for s in labels], list(values), str(color))
+`;
+
+// ═════════════════════ INSTALL EXTRA BUILTINS / FILES ═════════════════════
+function installNumpyModule() {
+  if (typeof Sk === 'undefined' || !Sk.builtinFiles) return;
+  if (!Sk.builtinFiles.files) Sk.builtinFiles.files = {};
+  Sk.builtinFiles.files['src/lib/np.py'] = NUMPY_PY_SRC;
+  Sk.builtinFiles.files['src/lib/np/__init__.py'] = NUMPY_PY_SRC;
+  Sk.builtinFiles.files['np.py'] = NUMPY_PY_SRC;
+}
+
+function installPltModule() {
+  if (typeof Sk === 'undefined' || !Sk.builtin || !Sk.builtinFiles) return;
+  if (!Sk.builtinFiles.files) Sk.builtinFiles.files = {};
+  Sk.builtinFiles.files['src/lib/plt.py'] = PLT_PY_SRC;
+  Sk.builtinFiles.files['src/lib/plt/__init__.py'] = PLT_PY_SRC;
+  Sk.builtinFiles.files['plt.py'] = PLT_PY_SRC;
+
+  const none = () => Sk.builtin.none.none$;
+  const toJs = (v) => (v === undefined ? undefined : Sk.ffi.remapToJs(v));
+  Sk.builtins['_plt_new']     = new Sk.builtin.func(()              => { Plt.newFigure();                       return none(); });
+  Sk.builtins['_plt_title']   = new Sk.builtin.func((s)             => { Plt.setTitle(toJs(s));                 return none(); });
+  Sk.builtins['_plt_xlabel']  = new Sk.builtin.func((s)             => { Plt.setXlabel(toJs(s));                return none(); });
+  Sk.builtins['_plt_ylabel']  = new Sk.builtin.func((s)             => { Plt.setYlabel(toJs(s));                return none(); });
+  Sk.builtins['_plt_legend']  = new Sk.builtin.func(()              => { Plt.enableLegend();                    return none(); });
+  Sk.builtins['_plt_plot']    = new Sk.builtin.func((x,y,c,l)       => { Plt.addPlot(toJs(x), toJs(y), toJs(c), toJs(l)); return none(); });
+  Sk.builtins['_plt_scatter'] = new Sk.builtin.func((x,y,c,l)       => { Plt.addScatter(toJs(x), toJs(y), toJs(c), toJs(l)); return none(); });
+  Sk.builtins['_plt_bar']     = new Sk.builtin.func((labels,vals,c) => { Plt.addBar(toJs(labels), toJs(vals), toJs(c)); return none(); });
+  Sk.builtins['_plt_show']    = new Sk.builtin.func(()              => { Plt.render();                          return none(); });
+}
+
+function installVendoredFiles() {
+  if (typeof Sk === 'undefined' || !Sk.builtinFiles) return;
+  if (!Sk.builtinFiles.files) Sk.builtinFiles.files = {};
+  // iris.csv — also kept in builtinFiles for any non-browser caller
+  Sk.builtinFiles.files['iris.csv']   = IRIS_CSV;
+  Sk.builtinFiles.files['./iris.csv'] = IRIS_CSV;
+  Sk.builtinFiles.files['/iris.csv']  = IRIS_CSV;
+  // In a browser, Skulpt's open() does document.getElementById(name) and reads
+  // .value (textarea) or .textContent. Inject hidden textareas under those ids
+  // so open('iris.csv') resolves cleanly. Refs: skulpt.min.js Sk.builtin.file.
+  ['iris.csv', './iris.csv', '/iris.csv'].forEach(id => {
+    if (document.getElementById(id)) return;
+    const el = document.createElement('textarea');
+    el.id = id;
+    el.style.display = 'none';
+    el.value = IRIS_CSV;
+    document.body.appendChild(el);
+  });
 }
 
 // ═════════════════════ SIDEBAR ═════════════════════
@@ -1684,11 +2669,23 @@ function loadLesson(idx) {
   if (lesson.viz === 'binary_search') {
     Viz.show();
     document.getElementById('vizTitle').textContent = 'BINARY SEARCH · LIVE';
-    // Set up the initial array (matches the lesson code)
-    Viz.loadFromCode([1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31], 23);
+    Viz.loadFromCode([1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31], 23, 'binary');
+  } else if (lesson.viz === 'linear_search') {
+    Viz.show();
+    document.getElementById('vizTitle').textContent = 'LINEAR SEARCH · LIVE';
+    Viz.loadFromCode([4,8,15,16,42,7,11,19,25,34,50,3,9,12,23,21], 23, 'linear');
   } else {
     Viz.hide();
     Viz.reset();
+  }
+
+  // Plt panel — show for Real ML lessons that use plt
+  if (lesson.chapter === 'real_ml' && (lesson.id === 'plotting' || lesson.id === 'knn')) {
+    Plt.show();
+    Plt.reset();
+  } else {
+    Plt.hide();
+    Plt.reset();
   }
 
   // Mark-complete button state
@@ -1761,6 +2758,10 @@ function initPyodide() {
 
     // Make `viz` available as a Python global for the binary-search lesson.
     installVizBuiltin();
+    // Phase B additions — np shim, plt shim, vendored iris.csv
+    installNumpyModule();
+    installPltModule();
+    installVendoredFiles();
 
     pyEngine = true;
     document.getElementById('editorStatus').classList.add('ready');
@@ -1790,7 +2791,14 @@ async function runCode() {
   const lesson = LESSONS[currentLessonIdx];
   if (lesson.viz === 'binary_search') {
     Viz.reset();
-    Viz.loadFromCode([1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31], 23);
+    Viz.loadFromCode([1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31], 23, 'binary');
+  } else if (lesson.viz === 'linear_search') {
+    Viz.reset();
+    Viz.loadFromCode([4,8,15,16,42,7,11,19,25,34,50,3,9,12,23,21], 23, 'linear');
+  }
+  // Reset plt panel for Real ML lessons that use plt
+  if (lesson.chapter === 'real_ml' && (lesson.id === 'plotting' || lesson.id === 'knn')) {
+    Plt.reset();
   }
 
   try {
@@ -1800,7 +2808,7 @@ async function runCode() {
     if (!outputBuffer.trim()) {
       setOutput('// (no output)', 'idle');
     }
-    if (lesson.viz === 'binary_search') {
+    if (lesson.viz === 'binary_search' || lesson.viz === 'linear_search') {
       Viz.start();
     }
   } catch (e) {
