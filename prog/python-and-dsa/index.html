@@ -355,7 +355,9 @@ body::before {
 .editor-status.busy .dot { background: var(--cyan); animation: pulse-busy 0.8s ease-in-out infinite; }
 @keyframes pulse-busy { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 #editor {
-  height: 220px;
+  /* Height is driven by Ace's maxLines option (see initEditor) — let the
+     editor grow to fit each lesson's code instead of capping at 220px. */
+  min-height: 220px;
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 14px;
 }
@@ -2837,6 +2839,12 @@ function initEditor() {
     enableLiveAutocompletion: false,
     enableBasicAutocompletion: true,
     cursorStyle: 'smooth',
+    // Auto-fit to content. Editor grows from minLines to fit the whole
+    // lesson — no in-editor scrolling, the page scrolls instead. Long
+    // lessons (k-NN at ~60 lines) get a tall editor; the surrounding
+    // .main container handles overall scroll.
+    minLines: 12,
+    maxLines: Infinity,
   });
   editor.commands.addCommand({
     name: 'run',
