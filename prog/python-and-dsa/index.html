@@ -1631,7 +1631,7 @@ print(np.arange(10))
     intro: `
       <p>Every ML project starts the same way: <strong>load the data</strong>. The most common format is CSV — comma-separated values. A header row, then one row per example.</p>
       <p>We've vendored a tiny classic dataset (<code>iris.csv</code>) right inside the playground. Three flower species, four measurements each — the "Hello, World" of classification.</p>
-      <p>You'll parse it with plain Python first. In Lesson 18 you'll use it to train a classifier.</p>
+      <p>You'll parse it with plain Python first. In Lesson 19 you'll use it to train a classifier.</p>
     `,
     code: `# Read the CSV (vendored inside the playground, available as 'iris.csv')
 with open('iris.csv') as f:
@@ -1667,10 +1667,69 @@ print("class counts:", counts)
   },
 
   {
-    id: 'plotting',
+    id: 'error_handling',
     chapter: 'real_ml',
     chapterLabel: 'Real ML',
     num: '17',
+    title: 'When things <em>break</em>.',
+    timeLabel: '~7 min',
+    intro: `
+      <p>Last lesson assumed the file was there and every row was well-formed. Real data is messier than that. Files go missing. Columns have typos. Floats arrive as strings that won't parse.</p>
+      <p><strong>try / except</strong> is how Python lets a piece of code fail without taking the whole program down. You wrap the risky bit in <code>try</code>, then list the kinds of failure you're willing to handle in <code>except</code> blocks.</p>
+      <p>This is the bridge between code that runs once in a notebook and code that survives at 3 AM in production.</p>
+    `,
+    code: `# The naive version — try a file that isn't there.
+try:
+    with open('not_here.csv') as f:
+        data = f.read()
+    print(f"loaded {len(data)} bytes")
+except FileNotFoundError:
+    print("handled it — file was missing, program kept going")
+
+# A reusable loader. Catch the specific failures you expect,
+# let everything else bubble up so you actually notice it.
+def safe_load(path):
+    try:
+        with open(path) as f:
+            return f.read()
+    except FileNotFoundError:
+        print(f"  file not found: {path}")
+        return None
+    except Exception as e:
+        print(f"  unexpected {type(e).__name__}: {e}")
+        return None
+
+# Real file — works
+data = safe_load('iris.csv')
+print(f"iris.csv -> {len(data.splitlines())} lines\\n")
+
+# Wrong path — graceful failure
+data = safe_load('venus_flytrap.csv')
+print(f"got: {data}\\n")
+
+# The per-row pattern: skip bad rows, keep going.
+# Critical for real datasets — one corrupt row shouldn't kill the load.
+rows = ['1.0,2.0', '3.0,bogus', '5.0,6.0', 'missing']
+parsed = []
+errors = 0
+for line in rows:
+    try:
+        a, b = (float(x) for x in line.split(','))
+        parsed.append((a, b))
+    except (ValueError, IndexError) as e:
+        errors += 1
+        print(f"  skip bad row {line!r}: {e}")
+
+print(f"\\nparsed {len(parsed)} good rows, skipped {errors} bad ones")
+`,
+    hint: `Catch <em>specific</em> exceptions, not bare <code>except:</code>. <code>FileNotFoundError</code>, <code>ValueError</code>, <code>KeyError</code>, <code>IndexError</code> — these tell you what actually failed. A bare <code>except:</code> swallows everything including bugs in your own code. The per-row pattern (a <code>try</code> inside the loop) is the standard way to survive a CSV with one corrupt row in a million.`,
+  },
+
+  {
+    id: 'plotting',
+    chapter: 'real_ml',
+    chapterLabel: 'Real ML',
+    num: '18',
     title: 'Plot <em>something</em>.',
     timeLabel: '~6 min',
     intro: `
@@ -1718,11 +1777,11 @@ plt.show()
     id: 'knn',
     chapter: 'real_ml',
     chapterLabel: 'Real ML',
-    num: '18',
+    num: '19',
     title: 'Your first <em>classifier</em>.',
     timeLabel: '~12 min',
     intro: `
-      <p>Eighteen lessons in. Time to write actual ML.</p>
+      <p>Nineteen lessons in. Time to write actual ML.</p>
       <p><strong>k-nearest neighbors</strong> is the simplest classifier that works. Given a new flower, look at its closest <em>k</em> neighbors in the training set, and vote. Whichever class wins, predict that.</p>
       <p>No training. No gradients. No backprop. Just distance + voting. And on iris it gets ~95% accuracy. Welcome to ML.</p>
     `,
@@ -1786,7 +1845,7 @@ plt.xlabel("petal length")
 plt.ylabel("petal width")
 plt.show()
 
-print("you just trained your first ML model. 18 lessons, 30 lines.")
+print("you just trained your first ML model. 19 lessons, 30 lines.")
 `,
     hint: 'k-NN has <em>no training step</em> — the "model" is just the training set itself, and prediction is a search. Try k=1 (just the nearest neighbor) vs k=5 vs k=15. Bigger k smooths out noise but blurs decision boundaries. This is a "lazy learner" — fast to fit, slow to predict on large datasets.',
   },
@@ -2557,6 +2616,16 @@ function installPltModule() {
   Sk.builtins['_plt_show']    = new Sk.builtin.func(()              => { Plt.render();                          return none(); });
 }
 
+function installExceptionAliases() {
+  // Skulpt uses Python-2-style exception names. Alias the modern Python 3
+  // names so our lesson code reads like real Python — `except FileNotFoundError`
+  // resolves to the same thing as `except IOError`.
+  if (typeof Sk === 'undefined' || !Sk.builtins || !Sk.builtins.IOError) return;
+  if (!Sk.builtins.FileNotFoundError) Sk.builtins['FileNotFoundError'] = Sk.builtins.IOError;
+  if (!Sk.builtins.OSError)           Sk.builtins['OSError']           = Sk.builtins.IOError;
+  if (!Sk.builtins.PermissionError)   Sk.builtins['PermissionError']   = Sk.builtins.IOError;
+}
+
 function installVendoredFiles() {
   if (typeof Sk === 'undefined' || !Sk.builtinFiles) return;
   if (!Sk.builtinFiles.files) Sk.builtinFiles.files = {};
@@ -2764,6 +2833,8 @@ function initPyodide() {
     installNumpyModule();
     installPltModule();
     installVendoredFiles();
+    // Alias Python-3 exception names onto Skulpt's Python-2 set.
+    installExceptionAliases();
 
     pyEngine = true;
     document.getElementById('editorStatus').classList.add('ready');

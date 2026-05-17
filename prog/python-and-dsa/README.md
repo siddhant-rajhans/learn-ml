@@ -9,7 +9,7 @@ A self-contained learning playground that runs entirely in your browser. Clone t
 
 - **Python in the browser** via [Skulpt](https://skulpt.org) — a pure-JavaScript Python interpreter. ~500 KB, vendored locally, zero CDN dependency.
 - **A real code editor** (Ace) with syntax highlighting, auto-indent, and `Cmd/Ctrl + Enter` to run.
-- **18 lessons across 5 chapters** — from `print("Hello")` to a k-NN classifier on iris, each ~3–12 minutes.
+- **19 lessons across 5 chapters** — from `print("Hello")` to a k-NN classifier on iris, each ~3–12 minutes.
 - **Live algorithm visualizations.** Binary search narrows the search range bar by bar. Linear search marches one position at a time. Each algorithm has its own animated view.
 - **A canvas-based `plt`** shim for plotting — scatter, line, bar, all rendered inline.
 - **A pure-Python `np`** shim so `import np` works for arrays, broadcasting, and the operations you'll meet again in real NumPy.
@@ -35,7 +35,7 @@ python server.py
 
 ## Curriculum
 
-18 lessons across 5 chapters. Each one self-contained — open it, hit Run, edit, run again.
+19 lessons across 5 chapters. Each one self-contained — open it, hit Run, edit, run again.
 
 ### Foundations
 
@@ -67,8 +67,9 @@ python server.py
 
 15. **NumPy** — `array`, broadcasting, `shape`, `sum / mean / max`, `dot`, `zeros / ones / arange` (via teaching shim)
 16. **Load a dataset** — parse the vendored `iris.csv` with `open()` + comprehensions
-17. **Plotting** — `scatter`, `plot`, `bar` rendered to canvas (via teaching shim)
-18. **Your first classifier** — k-NN on iris, ~97% accuracy, ~30 lines of plain Python
+17. **When things break** — `try / except`, specific exception types, the per-row pattern for surviving messy CSVs
+18. **Plotting** — `scatter`, `plot`, `bar` rendered to canvas (via teaching shim)
+19. **Your first classifier** — k-NN on iris, ~97% accuracy, ~30 lines of plain Python
 
 ## Keyboard shortcuts
 
