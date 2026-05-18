@@ -39,6 +39,8 @@ Backprop becomes the chain rule. Embeddings become vectors in space. Loss functi
 - Multivariable integration
 - Automatic differentiation — theory
 
+> Playground: [calculus-playground/](./calculus-playground/) — five runnable Python scripts that go with the 5-episode calculus series. Change a number, rerun, watch what happens.
+
 ### Probability & Bayesian Thinking · 4–6 weeks
 *The Bayesian lens changes how you see everything.*
 
