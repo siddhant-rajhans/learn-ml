@@ -9,7 +9,7 @@ A self-contained learning playground that runs entirely in your browser. Clone t
 
 - **Python in the browser** via [Skulpt](https://skulpt.org) — a pure-JavaScript Python interpreter. ~500 KB, vendored locally, zero CDN dependency.
 - **A real code editor** (Ace) with syntax highlighting, auto-indent, and `Cmd/Ctrl + Enter` to run.
-- **19 lessons across 5 chapters** — from `print("Hello")` to a k-NN classifier on iris, each ~3–12 minutes.
+- **34 lessons across 6 chapters** — from the true-zero pre-foundations (datatypes, casting, operators, comprehensions) through to a k-NN classifier on iris. Each ~3–10 minutes.
 - **Live algorithm visualizations.** Binary search narrows the search range bar by bar. Linear search marches one position at a time. Each algorithm has its own animated view.
 - **A canvas-based `plt`** shim for plotting — scatter, line, bar, all rendered inline.
 - **A pure-Python `np`** shim so `import np` works for arrays, broadcasting, and the operations you'll meet again in real NumPy.
@@ -35,7 +35,27 @@ python server.py
 
 ## Curriculum
 
-19 lessons across 5 chapters. Each one self-contained — open it, hit Run, edit, run again.
+34 lessons across 6 chapters. Each one self-contained — open it, hit Run, edit, run again.
+
+### Pre-foundations *(new)*
+
+Runnable companions to the markdown chapters in [`../../pre-foundations/`](../../pre-foundations/). For people with no Python background — the layer below "Foundations."
+
+0. **Welcome** — the rhythm of run, change, run again
+1. **Variables, formally** — names, assignment, reassignment, swap
+2. **The datatype zoo** — int / float / str / bool / list / tuple / set / dict / None side by side, with `type()`
+3. **Truthy & falsy** — what counts as True in an `if` (and what doesn't)
+4. **Casting between types** — `int()`, `float()`, `str()`, `list()`, `set()` for dedup
+5. **Math operators with surprises** — `/` always returns float, `//` floors toward -∞, `**` is right-associative
+6. **Comparisons & logical operators** — chained comparisons, short-circuit `and` / `or`
+7. **Strings — indexing & slicing** — `s[0]`, `s[-1]`, `s[::-1]`, `.split()`, `.join()`
+8. **f-strings** — width, alignment, decimals, padding, percent, thousands separator
+9. **Lists** — append/pop/sort + the "b = a doesn't copy" gotcha
+10. **List comprehensions** — `[x**2 for x in range(10) if x % 2 == 0]`
+11. **Dictionaries** — `.get(key, default)`, `.items()`, the counter pattern
+12. **try / except** — catching `ValueError`, `KeyError`, `ZeroDivisionError`
+13. **A 20-line program that uses everything** — word frequency counter, the EXIT-CHECKLIST graduation exercise
+14. **You're ready** — what to do next
 
 ### Foundations
 

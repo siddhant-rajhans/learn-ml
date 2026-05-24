@@ -34,7 +34,7 @@ If those *don't* describe you — skip straight to [`../foundations/`](../founda
 
 1. **Read in order.** Each file assumes the previous ones. The structure compounds.
 2. **Type every code example.** Don't copy-paste. Typing forces you to notice the parentheses, colons, and indentation. The errors you make while typing are the curriculum.
-3. **Use the playground.** [`../prog/python-and-dsa/`](../prog/python-and-dsa/) runs Python in your browser — no installs. Open it on a second tab while you read.
+3. **Use the playground.** [`../prog/python-and-dsa/`](../prog/python-and-dsa/) runs Python in your browser — no installs. The first chapter, **"Pre-foundations"**, has 15 runnable lessons that mirror these chapters one-for-one. Open it on a second tab while you read.
 4. **Read w3schools alongside.** [w3schools Python tutorial](https://www.w3schools.com/python/) has a "Try It Yourself" editor for every concept. Tighter examples than this folder, no commentary. Use it as a reference card.
 5. **Don't memorize — recognize.** You're building familiarity, not knowledge. The goal is *"I've seen this word, I know roughly what it does"* — not *"I can write it from memory."* The recall comes later, from doing the foundations and prog tracks.
 

@@ -1015,6 +1015,639 @@ window.addEventListener('unhandledrejection', function(e) {
 <script>
 // ═════════════════════ LESSONS DATA ═════════════════════
 const LESSONS = [
+  // ─── PRE-FOUNDATIONS ───
+  // Companion to ../../pre-foundations/ markdown chapters.
+  // Each lesson is a focused exercise — the markdown is the deep reference.
+  {
+    id: 'pf-welcome',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '00',
+    title: 'Welcome to <em>pre-foundations</em>.',
+    timeLabel: '~3 min',
+    intro: `
+      <p>Pre-foundations is the layer <em>below</em> Foundations — for people who haven't written code before and want a calm ramp.</p>
+      <p>These 14 lessons are runnable companions to the long-form chapters in the <a href="https://github.com/siddhant-rajhans/learn-ml/tree/main/pre-foundations" target="_blank" style="color:var(--cyan); border-bottom:1px solid rgba(0,229,255,0.4);">pre-foundations folder</a>. Read the chapter, then practice here.</p>
+      <p>One ritual to start with: hit <strong>Run code</strong>. Read the output. Change something. Run again. That's the whole rhythm of learning Python.</p>
+    `,
+    code: `# A first program. Hit Run.
+print("Hi. You're learning Python.")
+print(f"2 + 2 is {2 + 2}.")
+
+# Change "Python" to your name. Run again.
+`,
+    hint: 'The <code>f</code> in <code>f"..."</code> is an f-string — anything in <code>{curly braces}</code> gets replaced with the value. We cover f-strings properly in lesson 9.',
+  },
+
+  {
+    id: 'pf-variables',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '01',
+    title: 'Variables, <em>formally</em>.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>A <strong>variable</strong> is a name you give to a value. Python doesn't care what kind of value — int, string, list, anything.</p>
+      <p>Three things to know:</p>
+      <p><strong>1.</strong> You assign with <code>=</code>. Left side is the name, right side is the value.<br>
+      <strong>2.</strong> You can reassign — the name now points at the new value, the old one is gone.<br>
+      <strong>3.</strong> You can assign multiple in one line — <code>x, y = 1, 2</code>.</p>
+      <p>Names must start with a letter or <code>_</code>, can contain letters/digits/underscores, and can't be Python keywords (<code>if</code>, <code>for</code>, <code>def</code>, etc.).</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/03-python-syntax-and-data.md" target="_blank" style="color:var(--cyan);">chapter 03 →</a></p>
+    `,
+    code: `# Assigning
+name = "Sid"
+age = 30
+print(name, age)
+
+# Reassigning — age is now a different value
+age = age + 1
+print(age)
+
+# Multiple assignment at once
+x, y, z = 1, 2, 3
+print(x, y, z)
+
+# Swap two variables — no temp needed, very Pythonic
+a, b = 10, 20
+a, b = b, a
+print(a, b)
+`,
+    hint: 'The swap pattern <code>a, b = b, a</code> works because Python evaluates the entire right side first (gets <code>(b, a)</code>), then unpacks into the left.',
+  },
+
+  {
+    id: 'pf-datatypes',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '02',
+    title: 'The <em>datatype zoo</em>.',
+    timeLabel: '~6 min',
+    intro: `
+      <p>Python ships with about 8 datatypes you'll meet in the first week. Here they all are, side by side.</p>
+      <p>Use <code>type(x)</code> to ask Python "what is this?" The answer comes back as <code>&lt;class 'int'&gt;</code>, <code>&lt;class 'str'&gt;</code>, etc.</p>
+      <p>The big distinction: <strong>mutable</strong> (you can change it in place — list, dict, set) vs <strong>immutable</strong> (you can't — int, float, str, tuple). We'll feel that distinction in later lessons.</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/03-python-syntax-and-data.md#33--the-built-in-datatypes" target="_blank" style="color:var(--cyan);">chapter 03 §3.3 →</a></p>
+    `,
+    code: `# The 8 you'll see most
+an_int     = 42
+a_float    = 3.14
+a_string   = "hello"
+a_bool     = True
+a_list     = [1, 2, 3]
+a_tuple    = (1, 2, 3)
+a_set      = {1, 2, 3}
+a_dict     = {"name": "Sid", "age": 30}
+nothing    = None
+
+# What is each?
+print(type(an_int))
+print(type(a_float))
+print(type(a_string))
+print(type(a_bool))
+print(type(a_list))
+print(type(a_tuple))
+print(type(a_set))
+print(type(a_dict))
+print(type(nothing))
+
+# A small surprise — bool is a subclass of int
+print(True + True)   # 2  (yes, really)
+`,
+    hint: 'Try adding <code>print(type(2 + 3))</code>, <code>print(type(2 / 3))</code>, <code>print(type(2 // 3))</code>. Notice that <code>/</code> always gives a float — even <code>4 / 2</code> gives <code>2.0</code>, not <code>2</code>.',
+  },
+
+  {
+    id: 'pf-truthy',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '03',
+    title: 'Truthy &amp; <em>falsy</em>.',
+    timeLabel: '~4 min',
+    intro: `
+      <p>In Python, <em>any</em> value can be used in an <code>if</code> — not just <code>True</code> and <code>False</code>. Each value is implicitly truthy or falsy.</p>
+      <p><strong>Falsy</strong> (treated as False): <code>False</code>, <code>None</code>, <code>0</code>, <code>0.0</code>, <code>""</code>, <code>[]</code>, <code>{}</code>, <code>set()</code> — any empty container.</p>
+      <p><strong>Truthy</strong> (treated as True): everything else.</p>
+      <p>This is why <code>if my_list:</code> reads as "if there's anything in my_list." Idiomatic Python.</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/03-python-syntax-and-data.md#truthy-and-falsy" target="_blank" style="color:var(--cyan);">chapter 03 §3.4 →</a></p>
+    `,
+    code: `# bool() shows you Python's truthy/falsy verdict
+for value in [True, False, 0, 1, 0.0, "", "hi", [], [0], {}, {"a":1}, None]:
+    print(f"{repr(value):<15}  ->  {bool(value)}")
+
+# Idiomatic check — "is this list non-empty?"
+items = []
+if items:
+    print("has stuff")
+else:
+    print("empty")
+
+items = [1, 2, 3]
+if items:
+    print(f"has {len(items)} items")
+`,
+    hint: 'A common gotcha: <code>bool([0])</code> is <code>True</code> — it\'s a list with one element (even though that element is <code>0</code>). Truthiness checks emptiness, not content.',
+  },
+
+  {
+    id: 'pf-casting',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '04',
+    title: '<em>Casting</em> between types.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>You'll constantly need to convert one type to another — a string from user input into an int, a float into a clean display string, a list into a set to dedupe.</p>
+      <p>The constructors do this: <code>int(x)</code>, <code>float(x)</code>, <code>str(x)</code>, <code>bool(x)</code>, <code>list(x)</code>, <code>tuple(x)</code>, <code>set(x)</code>, <code>dict(x)</code>.</p>
+      <p>Some conversions can fail — <code>int("hello")</code> raises <code>ValueError</code> because "hello" isn't parseable as a number. We'll handle that in lesson 12 (try/except).</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/03-python-syntax-and-data.md#34--checking-types-and-casting" target="_blank" style="color:var(--cyan);">chapter 03 §3.4 →</a></p>
+    `,
+    code: `# To int
+print(int(3.7))       # 3   — truncates toward zero, doesn't round
+print(int(-3.7))      # -3
+print(int("42"))      # 42
+print(int(True))      # 1
+
+# To float
+print(float(5))       # 5.0
+print(float("3.14"))  # 3.14
+
+# To str
+print(str(3.14))      # "3.14"
+print(str([1, 2]))    # "[1, 2]"
+
+# To list / set
+print(list("hello"))            # ['h', 'e', 'l', 'l', 'o']
+print(set([1, 1, 2, 2, 3]))     # {1, 2, 3}  — dedupes
+print(list(set([3, 1, 2, 1])))  # [1, 2, 3] (order may differ)
+
+# Quick dedup idiom
+words = ["apple", "banana", "apple", "cherry", "banana"]
+unique = list(set(words))
+print(unique)
+`,
+    hint: 'Try <code>int("3.14")</code> — it raises a ValueError. <code>int</code> only parses integer strings. To go from "3.14" to 3, you have to <code>int(float("3.14"))</code>.',
+  },
+
+  {
+    id: 'pf-math-ops',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '05',
+    title: 'Math operators with <em>surprises</em>.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>Most math operators do what you'd expect: <code>+ - * /</code>. The four worth slowing down on are <code>/</code>, <code>//</code>, <code>%</code>, and <code>**</code>.</p>
+      <p><code>/</code> is regular division — <em>always</em> returns a float. <code>10 / 2</code> is <code>5.0</code>, not <code>5</code>.<br>
+      <code>//</code> is floor division — drops the fractional part. <code>7 // 2</code> is <code>3</code>.<br>
+      <code>%</code> is modulo — the remainder. <code>7 % 2</code> is <code>1</code>. Incredibly useful: <code>n % 2 == 0</code> tests "is n even?".<br>
+      <code>**</code> is exponent. <code>2 ** 10</code> is <code>1024</code>.</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/03-python-syntax-and-data.md#arithmetic-operators" target="_blank" style="color:var(--cyan);">chapter 03 §3.5 →</a></p>
+    `,
+    code: `# Surprise 1: / always returns float
+print(10 / 2)         # 5.0  (not 5)
+print(type(10 / 2))   # <class 'float'>
+
+# Surprise 2: // floors toward negative infinity, not toward zero
+print(7 // 2)         # 3
+print(-7 // 2)        # -4   (not -3!)
+
+# Surprise 3: % works on floats too
+print(10.5 % 3)       # 1.5
+
+# ** chains right-to-left
+print(2 ** 3 ** 2)    # 512   (= 2 ** 9, not (2**3)**2 = 64)
+
+# A practical use of %
+for n in range(10):
+    if n % 2 == 0:
+        print(f"{n} is even")
+    else:
+        print(f"{n} is odd")
+`,
+    hint: 'The right-associativity of <code>**</code> is the one most people miss. <code>2 ** 3 ** 2</code> is <code>2 ** (3 ** 2)</code> = <code>2 ** 9</code> = 512. Use parentheses when in doubt.',
+  },
+
+  {
+    id: 'pf-comparisons',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '06',
+    title: 'Comparisons &amp; <em>logical</em> operators.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>Six comparison operators: <code>== != &lt; &gt; &lt;= &gt;=</code>. All return a <code>bool</code>.</p>
+      <p>Three logical operators: <code>and</code>, <code>or</code>, <code>not</code>. These are <strong>short-circuit</strong> — they stop evaluating as soon as the answer is known. That's why <code>x and x.method()</code> doesn't crash when <code>x</code> is None.</p>
+      <p>Python lets you <strong>chain comparisons</strong> — <code>0 &lt; x &lt; 100</code> reads exactly like math. Most other languages don't allow this.</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/03-python-syntax-and-data.md#comparison-operators" target="_blank" style="color:var(--cyan);">chapter 03 §3.5 →</a></p>
+    `,
+    code: `# All return booleans
+print(5 == 5)             # True
+print(5 != 4)             # True
+print("apple" == "Apple") # False — case-sensitive
+
+# Chained comparisons — Python superpower
+x = 42
+print(0 < x < 100)        # True
+print(0 < x < 10)         # False
+
+# Logical operators
+ready = True
+willing = False
+print(ready and willing)  # False
+print(ready or willing)   # True
+print(not ready)          # False
+
+# Short-circuit in action — no crash here
+result = None
+length = result and len(result)   # stops at None, returns None
+print(length)
+
+# Common idiom — default values
+name = "" or "anonymous"
+print(name)               # "anonymous"
+`,
+    hint: '<code>"" or "anonymous"</code> evaluates to "anonymous" because <code>""</code> is falsy. This is the most common Python idiom for "use this default if the value is empty."',
+  },
+
+  {
+    id: 'pf-strings',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '07',
+    title: 'Strings &mdash; <em>indexing &amp; slicing</em>.',
+    timeLabel: '~6 min',
+    intro: `
+      <p>Strings are sequences of characters. You can grab one character or a range of them with square brackets.</p>
+      <p>Indexing is <strong>zero-based</strong> — <code>s[0]</code> is the first character. Negative indices count from the end — <code>s[-1]</code> is the last.</p>
+      <p>Slicing uses <code>s[start:stop:step]</code> — half-open (includes <code>start</code>, excludes <code>stop</code>). Omit start for "from beginning", omit stop for "to end".</p>
+      <p>Same rules apply to lists and tuples. Learn it on strings, apply it everywhere.</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/03-python-syntax-and-data.md#36--strings--the-essentials" target="_blank" style="color:var(--cyan);">chapter 03 §3.6 →</a></p>
+    `,
+    code: `s = "Hello, World!"
+
+# Indexing
+print(s[0])         # 'H'
+print(s[7])         # 'W'
+print(s[-1])        # '!'
+print(s[-6])        # 'W'  (same as s[7])
+
+# Slicing
+print(s[0:5])       # 'Hello'
+print(s[:5])        # 'Hello'  (from start)
+print(s[7:])        # 'World!' (to end)
+print(s[7:12])      # 'World'
+
+# Step
+print(s[::2])       # 'Hlo ol!'  (every 2nd char)
+print(s[::-1])      # '!dlroW ,olleH'  (reversed — classic trick)
+
+# Useful string methods
+print(s.lower())             # 'hello, world!'
+print(s.upper())             # 'HELLO, WORLD!'
+print(s.replace("World", "Python"))
+print(s.split(", "))         # ['Hello', 'World!']
+print("-".join(["a", "b", "c"]))  # 'a-b-c'
+
+# Strings are immutable — this fails
+# s[0] = "h"   # TypeError
+`,
+    hint: '<code>s[::-1]</code> reverses any sequence. Try it on a list: <code>[1, 2, 3, 4][::-1]</code>. The slicing rules are universal.',
+  },
+
+  {
+    id: 'pf-fstrings',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '08',
+    title: '<em>f-strings</em> &mdash; formatting that just works.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>An <strong>f-string</strong> is a string prefixed with <code>f</code>, where anything in <code>{curly braces}</code> gets evaluated and substituted.</p>
+      <p>The cleanest, fastest, most readable way to interpolate values in modern Python. Use these — not <code>.format()</code>, not <code>%</code>.</p>
+      <p>The bit after a colon is the <strong>format spec</strong> — controls width, alignment, decimals, padding, scientific notation, percent, etc.</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/03-python-syntax-and-data.md#string-formatting--the-f-string" target="_blank" style="color:var(--cyan);">chapter 03 §3.6 →</a></p>
+    `,
+    code: `name = "Sid"
+age = 30
+pi = 3.14159265
+
+# Basic substitution
+print(f"Name: {name}, Age: {age}")
+
+# Expressions inside braces
+print(f"Doubled: {age * 2}")
+print(f"Squared: {age ** 2}")
+
+# Format spec — after the colon
+print(f"Pi to 2 decimals: {pi:.2f}")    # 3.14
+print(f"Pi to 4 decimals: {pi:.4f}")    # 3.1416
+print(f"Pi rounded:      {pi:.0f}")     # 3
+
+# Width + alignment
+print(f"|{name:>10}|")      # right-align in 10 chars
+print(f"|{name:<10}|")      # left-align
+print(f"|{name:^10}|")      # center
+
+# Padding
+print(f"|{age:05}|")         # zero-padded width 5  -> 00030
+
+# Other neat ones
+print(f"{1234567:,}")        # 1,234,567   thousands separator
+print(f"{0.875:.2%}")        # 87.50%      percentage
+print(f"{1.5e6:.2e}")        # 1.50e+06    scientific
+`,
+    hint: 'You can put anything that\'s an expression inside <code>{...}</code> — function calls, math, even other f-strings. Try <code>f"{f\'{age}\':>5}"</code> if you want to see that level of nesting.',
+  },
+
+  {
+    id: 'pf-lists',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '09',
+    title: 'Lists &mdash; <em>the workhorse</em>.',
+    timeLabel: '~6 min',
+    intro: `
+      <p>Lists are <em>ordered, mutable</em> sequences. The most-used container in Python. You'll touch a list every day.</p>
+      <p>Core methods you'll use forever: <code>append</code>, <code>pop</code>, <code>insert</code>, <code>remove</code>, <code>sort</code>, <code>reverse</code>.</p>
+      <p>The slicing rules from strings (lesson 7) apply identically.</p>
+      <p>The gotcha worth learning early: <code>b = a</code> does <em>not</em> copy a list — it makes <code>b</code> another name for the same list. To copy, use <code>a.copy()</code> or <code>list(a)</code>.</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/04-flow-and-collections.md#44--lists-in-depth" target="_blank" style="color:var(--cyan);">chapter 04 §4.4 →</a></p>
+    `,
+    code: `nums = [3, 1, 4, 1, 5, 9, 2, 6]
+print(nums)
+print(len(nums))
+
+# Indexing and slicing (same as strings)
+print(nums[0])
+print(nums[-1])
+print(nums[2:5])
+
+# Mutating
+nums.append(99)             # add to end
+print(nums)
+
+nums.insert(0, -1)          # insert at index
+print(nums)
+
+nums.pop()                  # remove last, returns it
+print(nums)
+
+nums.remove(1)              # remove first occurrence of value 1
+print(nums)
+
+# Sorting
+nums.sort()                 # IN PLACE
+print(nums)
+
+new = sorted(nums, reverse=True)  # returns a NEW list
+print(new)
+
+# THE COPY GOTCHA — try it!
+a = [1, 2, 3]
+b = a               # NOT a copy — b is the same list as a
+b.append(99)
+print("a is now:", a)   # also [1, 2, 3, 99] — surprised?
+
+# The right way
+c = a.copy()
+c.append(777)
+print("a:", a)
+print("c:", c)
+`,
+    hint: 'The "b = a doesn\'t copy" gotcha bites everyone exactly once. After that, you reach for <code>.copy()</code> automatically. Same rule applies to dicts and sets.',
+  },
+
+  {
+    id: 'pf-comprehensions',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '10',
+    title: 'List <em>comprehensions</em>.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>Comprehensions are Python's most distinctive feature — a compact way to build a list from another iterable.</p>
+      <p>The shape: <code>[expression for item in iterable if condition]</code>. The <code>if</code> is optional.</p>
+      <p>Same idea works for dicts and sets — <code>{k: v for ...}</code> and <code>{x for ...}</code>.</p>
+      <p>Rule of thumb: if the logic fits on one comfortable line, use a comprehension. If it needs nested ifs or multiple steps, write a regular for loop.</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/04-flow-and-collections.md#list-comprehensions" target="_blank" style="color:var(--cyan);">chapter 04 §4.4 →</a></p>
+    `,
+    code: `# Before — verbose
+squares = []
+for x in range(10):
+    squares.append(x ** 2)
+print(squares)
+
+# After — one line
+squares = [x ** 2 for x in range(10)]
+print(squares)
+
+# With a filter
+evens = [x for x in range(20) if x % 2 == 0]
+print(evens)
+
+# Filter + transform
+even_squares = [x ** 2 for x in range(20) if x % 2 == 0]
+print(even_squares)
+
+# Words longer than 4 chars, uppercased
+words = ["apple", "banana", "fig", "cherry", "kiwi"]
+long_upper = [w.upper() for w in words if len(w) > 4]
+print(long_upper)
+
+# Dict comprehension
+lengths = {w: len(w) for w in words}
+print(lengths)
+
+# Set comprehension — first letters
+first_letters = {w[0] for w in words}
+print(first_letters)
+`,
+    hint: 'Read comprehensions left-to-right as English: "give me x squared, for each x in the range 10, if x is even." If it doesn\'t read that cleanly, fall back to a regular for loop.',
+  },
+
+  {
+    id: 'pf-dicts',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '11',
+    title: 'Dictionaries &mdash; <em>key→value</em>.',
+    timeLabel: '~6 min',
+    intro: `
+      <p>A <strong>dict</strong> maps keys to values. The second most-used container after <code>list</code>.</p>
+      <p>Lookups are <em>fast</em> — O(1) — no matter how big the dict gets. That's why dicts are the right tool whenever you need to "look something up by some identifier."</p>
+      <p>Two methods you'll use forever:</p>
+      <p><code>.get(key, default)</code> — returns the value if present, the default otherwise. No <code>KeyError</code>.<br>
+      <code>.items()</code> — iterate (key, value) pairs together.</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/04-flow-and-collections.md#47--dictionaries-in-depth" target="_blank" style="color:var(--cyan);">chapter 04 §4.7 →</a></p>
+    `,
+    code: `person = {"name": "Sid", "age": 30, "city": "Hoboken"}
+
+# Lookups
+print(person["name"])
+print(person.get("age"))
+print(person.get("job"))                # None — no error
+print(person.get("job", "unemployed"))  # with a default
+
+# Adding / changing
+person["job"] = "ML student"
+print(person)
+
+# Iterate keys, values, or both
+print("KEYS:")
+for k in person:
+    print(" ", k)
+
+print("VALUES:")
+for v in person.values():
+    print(" ", v)
+
+print("ITEMS:")
+for k, v in person.items():
+    print(f"  {k}: {v}")
+
+# The most common dict pattern — counting things
+words = ["apple", "banana", "apple", "cherry", "banana", "apple"]
+counts = {}
+for w in words:
+    counts[w] = counts.get(w, 0) + 1
+print(counts)
+`,
+    hint: 'The <code>counts[w] = counts.get(w, 0) + 1</code> pattern is the manual version of <code>collections.Counter</code>. Once you know <code>Counter</code> exists you\'ll use it, but learning the manual version teaches you what <code>get</code> with a default is for.',
+  },
+
+  {
+    id: 'pf-try-except',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '12',
+    title: '<em>try / except</em> &mdash; failing gracefully.',
+    timeLabel: '~5 min',
+    intro: `
+      <p>Some code can fail at runtime — bad user input, missing files, division by zero. <code>try / except</code> is how you catch a failure and keep going.</p>
+      <p>Be <strong>specific</strong> about what you catch — <code>except ValueError</code>, not bare <code>except:</code>. The bare version swallows every error including ones you didn't mean to (like Ctrl+C).</p>
+      <p>The exception types you'll meet most often: <code>ValueError</code>, <code>KeyError</code>, <code>IndexError</code>, <code>TypeError</code>, <code>ZeroDivisionError</code>, <code>FileNotFoundError</code>.</p>
+      <p>Read more: <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/06-everyday-essentials.md#61--exceptions--try--except" target="_blank" style="color:var(--cyan);">chapter 06 §6.1 →</a></p>
+    `,
+    code: `# Without try/except — crashes
+# value = int("hello")   # ValueError: invalid literal
+
+# With try/except — handles it
+try:
+    value = int("hello")
+    print(value)
+except ValueError:
+    print("That wasn't a number.")
+
+# Catch multiple types
+def safe_divide(a, b):
+    try:
+        return a / b
+    except ZeroDivisionError:
+        return "can't divide by zero"
+    except TypeError:
+        return "those aren't numbers"
+
+print(safe_divide(10, 2))
+print(safe_divide(10, 0))
+print(safe_divide("a", "b"))
+
+# Get the actual error message
+try:
+    d = {"name": "Sid"}
+    print(d["job"])
+except KeyError as e:
+    print(f"Missing key: {e}")
+
+# Parsing user-ish input with a fallback
+def parse_int(text, default=0):
+    try:
+        return int(text)
+    except (ValueError, TypeError):
+        return default
+
+print(parse_int("42"))         # 42
+print(parse_int("hello"))      # 0
+print(parse_int(None))         # 0
+print(parse_int("3.14"))       # 0   (because int() rejects "3.14")
+`,
+    hint: 'A common mistake: catching <code>Exception</code> (or worse, bare <code>except:</code>) hides bugs. Always catch the most specific type that you actually know how to recover from.',
+  },
+
+  {
+    id: 'pf-everything',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '13',
+    title: 'A 20-line program that uses <em>everything</em>.',
+    timeLabel: '~10 min',
+    intro: `
+      <p>The graduation exercise from the <a href="https://github.com/siddhant-rajhans/learn-ml/blob/main/pre-foundations/EXIT-CHECKLIST.md" target="_blank" style="color:var(--cyan);">EXIT-CHECKLIST</a> — a word frequency counter, in real Python.</p>
+      <p>This little program uses: <em>strings</em> (lesson 7), <em>f-strings</em> (8), <em>lists</em> (9), <em>dicts</em> (11), <em>sorting with a key</em>, <em>list comprehensions</em> (10), <em>try / except</em> (12), and a tiny bit of <em>file-style</em> data.</p>
+      <p>Read it. Run it. Change the text. Add your own words. Then look at how few lines it took.</p>
+    `,
+    code: `# A pretend "file" — in lesson 13 of foundations you'll read real files
+text = """
+Backprop is the chain rule applied backwards.
+The chain rule says slopes of stacked functions multiply.
+Backprop runs the chain rule recursively, layer by layer.
+Every neural network ever trained runs this exact loop.
+"""
+
+# Tokenize: split into words, lowercase, strip punctuation
+counts = {}
+for word in text.split():
+    clean = word.lower().strip(".,!?;:\\"'()")
+    if not clean:
+        continue
+    counts[clean] = counts.get(clean, 0) + 1
+
+# Sort by count, descending
+ranked = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)
+
+# Top 10
+print("WORD              COUNT")
+print("─" * 24)
+for word, count in ranked[:10]:
+    print(f"{word:<16}{count:>5}")
+
+# Quick stats with f-strings
+total_words = sum(counts.values())
+unique_words = len(counts)
+print()
+print(f"Total words:  {total_words}")
+print(f"Unique words: {unique_words}")
+print(f"Repeat rate:  {(1 - unique_words/total_words):.1%}")
+`,
+    hint: 'If this whole program makes sense to you — every line — you\'re done with pre-foundations. The next stop is <a href="https://github.com/siddhant-rajhans/learn-ml/tree/main/foundations" target="_blank" style="color:var(--cyan);">foundations/</a>, which adds git, math refresh, and three small projects.',
+  },
+
+  {
+    id: 'pf-ready',
+    chapter: 'pre_foundations',
+    chapterLabel: 'Pre-foundations',
+    num: '14',
+    title: 'You\'re <em>ready</em>.',
+    timeLabel: '~2 min',
+    intro: `
+      <p>You can read Python code. You can write Python code. You can debug Python errors. You know <em>what types exist</em> and <em>what operators do</em> and <em>how to pick a container</em>.</p>
+      <p>That's the floor the rest of the curriculum stands on.</p>
+      <p><strong>Where to next:</strong></p>
+      <p>→ <a href="https://github.com/siddhant-rajhans/learn-ml/tree/main/foundations" target="_blank" style="color:var(--cyan);">foundations/</a> — math refresh (algebra, logs, trig, sets) + three small Python projects + git workflow.</p>
+      <p>→ Or keep going in this playground — chapters Foundations / Data Structures / Algorithms / Python Idioms / Real ML are right below. By the end you'll be classifying iris with k-NN.</p>
+      <p>→ Or read the <a href="https://github.com/siddhant-rajhans/learn-ml/tree/main/pre-foundations" target="_blank" style="color:var(--cyan);">pre-foundations markdown chapters</a> as reference whenever you need to look something up.</p>
+      <p>Welcome to the curriculum proper. You earned it.</p>
+    `,
+    code: `# A final ritual.
+print("I can read Python.")
+print("I can write Python.")
+print("I can debug Python.")
+print()
+print("Onward.")
+`,
+    hint: 'There is no hint. You\'ve got this.',
+  },
+
   // ─── FOUNDATIONS ───
   {
     id: 'hello',
@@ -1853,6 +2486,7 @@ print("you just trained your first ML model. 19 lessons, 30 lines.")
 
 // Group lessons by chapter
 const CHAPTERS = [
+  { id: 'pre_foundations', label: 'Pre-foundations' },
   { id: 'foundations', label: 'Foundations' },
   { id: 'data',        label: 'Data Structures' },
   { id: 'algorithms',  label: 'Algorithms' },
