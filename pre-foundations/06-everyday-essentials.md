@@ -1,20 +1,12 @@
 # 06 · Everyday essentials
 
-> *"Six small things that aren't in the language tutorial but show up in week one of any real project."*
-
 ← previous: [05-functions-modules-files.md](05-functions-modules-files.md) · next: [EXIT-CHECKLIST.md](EXIT-CHECKLIST.md)
 
----
+Six small things that aren't in the language tutorial but show up in week one of any real project.
 
-## What you'll know by the end
+When user input is bad and your program shouldn't crash, that's `try / except`. When you talk to an API the data comes back as JSON. When you compare dates or measure how long something took, that's `datetime` and `time`. When you want to find a pattern in a string, that's regex. When you have an API key that shouldn't be in your code, that's an environment variable. When `print()` isn't cutting it for debugging anymore, that's `logging`.
 
-- `try` / `except` and the exception types you'll actually catch.
-- JSON — what it is, how to read and write it.
-- Dates and time — the bits that bite you.
-- The `math` and `random` modules — the most common ones.
-- Regex (regular expressions) — enough to recognize and use simple patterns.
-- Environment variables and command-line arguments.
-- Logging — better than `print` for real programs.
+None of these need deep treatment. You just need to know they exist so you can reach for them.
 
 ---
 

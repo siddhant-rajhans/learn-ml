@@ -1,19 +1,12 @@
 # 01 · Computer literacy
 
-> *"Almost every tutorial assumes you know what a 'file path' is. This file explains it."*
-
 ← [back to pre-foundations](README.md) · next: [02-math-zero.md](02-math-zero.md)
 
----
+Tutorials say "open a terminal" the way they say "open a window." If you've never done it, that's a wall.
 
-## What you'll know by the end
+This chapter knocks down the wall. By the end you'll know what a file actually is, what a path means, how a terminal works, how to install Python, how to run a script, and roughly what RAM and URL and HTTP mean when they show up in conversation.
 
-- What a file, folder, path, and extension actually are.
-- What a terminal is and the ~12 commands you'll use forever.
-- How to install Python and run a script.
-- How to use a text editor like a tool, not a Word doc.
-- What the browser's "developer tools" are and why you'd ever open them.
-- A small vocabulary of words that show up everywhere: process, RAM, encoding, URL.
+The whole thing is maybe four hours of reading. None of it is hard. It just isn't taught.
 
 ---
 

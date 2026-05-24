@@ -1,12 +1,10 @@
-# Exit checklist — are you done with pre-foundations?
+# Are you done with pre-foundations?
 
 ← back to [pre-foundations index](README.md)
 
----
+No certificate. No quiz. Just an honest checklist.
 
-You don't need a certificate. You need to honestly check these boxes. If all of them are ✓ — congrats, head to [`../foundations/`](../foundations/) or your chosen [`../paths/`](../paths/).
-
-If even one is shaky, *don't* move on. Go back to the chapter that covers it and do the practice exercises. The whole curriculum gets harder if these aren't reflexive.
+Read each box. If you can do the thing without looking it up, check it. If you'd need to peek, leave it blank and go back to the chapter that covers it. Foundations gets harder if any of this isn't reflexive yet.
 
 ---
 
@@ -135,12 +133,10 @@ Other solutions exist (using `collections.Counter`, regex for splitting, etc.). 
 
 ## What's next
 
-You graduate to:
+You can go a few directions from here.
 
-→ **[`../foundations/`](../foundations/)** — the math refresh you might still need (algebra fluency, logs/exponents in depth, trig, sets/logic for probability), fluency with git, and three small Python projects to consolidate.
+The path most people take: [`../foundations/`](../foundations/) for the math refresh (logs, trig, set notation), git fluency, and three small projects. Then [`../paths/`](../paths/) to pick a track — Literacy, Builder, or Researcher.
 
-OR straight to **[`../paths/`](../paths/)** if you want to pick a learning route (Literacy / Builder / Researcher) and start.
+Or keep practicing in [`../prog/python-and-dsa/`](../prog/python-and-dsa/). 34 runnable lessons including the 15 Pre-foundations ones you've already seen. The other 19 walk through data structures, search algorithms with live animations, and a working k-NN classifier.
 
-OR straight to **[`../prog/python-and-dsa/`](../prog/python-and-dsa/)** to keep practicing Python with runnable lessons + algorithm visualizations.
-
-Welcome to the curriculum proper. You earned it.
+That's the whole curriculum from here. Pick something and start.

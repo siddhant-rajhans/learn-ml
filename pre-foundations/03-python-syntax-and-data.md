@@ -1,22 +1,10 @@
-# 03 · Python syntax & data
-
-> *"Every datatype Python has, every operator Python has. Pinned in one file so you stop forgetting which is which."*
+# 03 · Python syntax and data
 
 ← previous: [02-math-zero.md](02-math-zero.md) · next: [04-flow-and-collections.md](04-flow-and-collections.md)
 
----
+Every Python datatype, every Python operator, every common error, pinned in one place. Open this when you forget whether `/` or `//` is the one that drops the decimal. (`//`.)
 
-## What you'll know by the end
-
-- The 5 rules of Python syntax you have to actually follow.
-- **Every** built-in datatype Python ships with — int, float, complex, str, bool, list, tuple, set, frozenset, dict, NoneType, bytes.
-- How to check what type a value is and how to convert between them (**casting**).
-- **Every** operator category — arithmetic, comparison, logical, assignment, identity, membership, bitwise.
-- `print()` and `input()`.
-- Three ways to format strings — and which one to actually use (spoiler: f-strings).
-- The errors you'll meet in week one and what they mean.
-
-This is the chapter you'll reference forever. Read it twice.
+This is the longest chapter in pre-foundations. It's also the one you'll come back to most.
 
 ---
 

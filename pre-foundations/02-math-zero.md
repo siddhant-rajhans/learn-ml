@@ -1,21 +1,12 @@
 # 02 · Math from zero
 
-> *"You don't need to be a mathematician to do ML. You need to stop being scared of three dozen symbols."*
-
 ← previous: [01-computer-literacy.md](01-computer-literacy.md) · next: [03-python-syntax-and-data.md](03-python-syntax-and-data.md)
 
----
+You don't need to be a mathematician to do ML. You need to stop flinching when notation shows up.
 
-## What you'll know by the end
+This is the refresh. Arithmetic that creeps back into ML in weird ways (every time floats don't add up cleanly, every time someone says "learning rate of 0.001" and means something specific). Algebra you might have forgotten. The handful of symbols (Σ, Π, ∈, ∇) that look intimidating until someone tells you what they actually mean.
 
-- Arithmetic that doesn't trip you up — fractions, decimals, percents, negatives, exponents, scientific notation.
-- The **order of operations** without having to look it up.
-- What a **variable** is (mathematical sense) and what a **function** is.
-- The coordinate plane and how to read a graph.
-- The math notation that shows up everywhere in ML papers and tutorials: Σ, Π, ∈, ⊂, →, ≈, ≪, ≫.
-- A small toolkit of identities you'll use over and over (logs, exponents, basic algebra rules).
-
-You don't need to compute anything fast. You need to *recognize* it when you see it and know roughly what it means.
+You're not learning to do proofs. You're learning to read.
 
 ---
 

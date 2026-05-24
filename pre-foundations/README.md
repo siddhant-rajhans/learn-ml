@@ -1,65 +1,55 @@
-# Pre-Foundations — *True Zero*
+# Pre-foundations
 
-> *"Before the foundation, the ground."*
+A friend tried `foundations/` and bounced on the first paragraph. They didn't know what a terminal was, and foundations didn't slow down enough to say.
 
-This folder is for people whose floor isn't yet **"comfortable with a computer + remembers middle-school math."** Once you can answer the [exit checklist](EXIT-CHECKLIST.md) without help, you graduate to [`../foundations/`](../foundations/).
+This folder is the layer below. The stuff foundations assumes you already have.
 
-## Who this is for
+## Is this for you?
 
-If any of these describes you, **start here**:
+If you've never opened a terminal, if "file path" is fuzzy, if it's been long enough since math class that Σ looks foreign — yes.
 
-- You've never opened a terminal.
-- You're not sure what a "file path" actually is.
-- The last time you did long division was a while ago, and you've never seen `Σ` or `∈` in writing.
-- You've never written `print("hello")` in any language.
-- You've heard the words "ML" and "Python" and want a calm, walked-through ramp instead of a course that throws you at NumPy in week one.
+If none of that lands, jump to [`../foundations/`](../foundations/) and skip me.
 
-If those *don't* describe you — skip straight to [`../foundations/`](../foundations/) (math refresh + Python from scratch + git) or to your chosen [`../paths/`](../paths/) entry point.
+## What's here
 
-## What's in here
+Six chapters and a self-test.
 
 | # | File | What it covers | Time |
 |---|------|----------------|------|
-| 1 | [01-computer-literacy.md](01-computer-literacy.md) | Files & folders & paths. The terminal. Installing Python. Editors. Browser dev tools. Keyboard literacy. | 3–5 hrs |
-| 2 | [02-math-zero.md](02-math-zero.md) | Arithmetic that creeps back into ML. Fractions, decimals, percents, scientific notation. Order of operations. Negative numbers. Exponents. Basic algebra. Functions. Coordinate plane. Notation you'll meet later (Σ, Π, ∈, ⊂). | 5–8 hrs |
-| 3 | [03-python-syntax-and-data.md](03-python-syntax-and-data.md) | Python syntax rules. Variables. **All** the built-in datatypes (int, float, complex, str, bool, list, tuple, set, dict, NoneType). Casting. **Every** operator category. `input()` / `print()`. String formatting. | 6–10 hrs |
-| 4 | [04-flow-and-collections.md](04-flow-and-collections.md) | `if` / `elif` / `else`. `while` and `for`. `range`, `enumerate`, `zip`. `break` / `continue`. Lists, tuples, sets, dictionaries — operations + when to use which + comprehensions. | 6–10 hrs |
-| 5 | [05-functions-modules-files.md](05-functions-modules-files.md) | `def`, parameters, `*args` / `**kwargs`, return. Scope. `lambda`. Modules. `import`. `pip install`. Virtual environments. Files — open / read / write / `with`. | 5–8 hrs |
-| 6 | [06-everyday-essentials.md](06-everyday-essentials.md) | `try` / `except` and the common exceptions. JSON. Dates & time. `math` and `random` modules. Regex (intro). Environment variables. Command-line arguments. | 4–6 hrs |
-| ✓ | [EXIT-CHECKLIST.md](EXIT-CHECKLIST.md) | The honest test. If you check every box, you're done with pre-foundations. | 1 hr to self-test |
+| 1 | [01-computer-literacy.md](01-computer-literacy.md) | Files, paths, terminals, installing Python, editors, the vocabulary tutorials assume you know | 3–5 hrs |
+| 2 | [02-math-zero.md](02-math-zero.md) | Arithmetic, algebra basics, exponents and logs, function notation, the symbols you'll meet later (Σ, Π, ∈, ∇) | 5–8 hrs |
+| 3 | [03-python-syntax-and-data.md](03-python-syntax-and-data.md) | Every Python datatype, every operator, casting, f-strings, the errors you'll meet on day one | 6–10 hrs |
+| 4 | [04-flow-and-collections.md](04-flow-and-collections.md) | if/else, loops, lists and tuples and sets and dicts, comprehensions | 6–10 hrs |
+| 5 | [05-functions-modules-files.md](05-functions-modules-files.md) | Functions, modules, pip, virtual envs, reading and writing files | 5–8 hrs |
+| 6 | [06-everyday-essentials.md](06-everyday-essentials.md) | try/except, JSON, dates, regex intro, env vars, command-line args | 4–6 hrs |
+| ✓ | [EXIT-CHECKLIST.md](EXIT-CHECKLIST.md) | The honest test. Check every box, you're done. | 1 hr |
 
-**Total time:** 30–48 hours of focused work. About 4–6 weeks at 8 hrs/week. Faster if you've coded in *anything* before — even spreadsheet formulas count.
+Plan on 4 to 6 weeks at 8 hours a week. Less if you've coded in anything before. Spreadsheet formulas count.
 
-## How to use this folder
+## How to read this
 
-1. **Read in order.** Each file assumes the previous ones. The structure compounds.
-2. **Type every code example.** Don't copy-paste. Typing forces you to notice the parentheses, colons, and indentation. The errors you make while typing are the curriculum.
-3. **Use the playground.** [`../prog/python-and-dsa/`](../prog/python-and-dsa/) runs Python in your browser — no installs. The first chapter, **"Pre-foundations"**, has 15 runnable lessons that mirror these chapters one-for-one. Open it on a second tab while you read.
-4. **Read w3schools alongside.** [w3schools Python tutorial](https://www.w3schools.com/python/) has a "Try It Yourself" editor for every concept. Tighter examples than this folder, no commentary. Use it as a reference card.
-5. **Don't memorize — recognize.** You're building familiarity, not knowledge. The goal is *"I've seen this word, I know roughly what it does"* — not *"I can write it from memory."* The recall comes later, from doing the foundations and prog tracks.
+Read in order. Each chapter assumes the previous ones.
 
-## Why we made this
+Type every code example yourself. Don't copy-paste. The errors you make from your own typos are part of the curriculum.
 
-The original `foundations/` folder said *"6–10 weeks at 10 hrs/week, refresh math + Python + git."* That's correct for the median ML-curious adult who took some math in college and once installed something.
+Open [the playground](../prog/python-and-dsa/) on a second tab. Its first chapter is also called Pre-foundations and has 15 short runnable lessons that match these chapters one-for-one. Read here, practice there.
 
-It's not correct for the person who literally just decided to learn ML and has never opened a code editor. They need the layer below — what's a `.py` file? Why does pressing Enter in a terminal do something different than pressing Enter in a text document? What does it mean when a tutorial says *"open a terminal and run `python script.py`"*? That layer is this folder.
+When you want a tighter version of any concept, [w3schools](https://www.w3schools.com/python/) has it. Clean examples, no commentary, a "Try It" button on every page.
 
-We don't want to lose that audience. ML doesn't have a citizenship test — anyone who wants in should get in.
+Don't try to memorize. You're building familiarity. Recall comes later, when you actually use this stuff in foundations and prog.
 
-## What's NOT in here
+## What's not here
 
-These belong in `foundations/` or later, not pre-foundations:
+These belong in other folders:
 
-- **Calculus, linear algebra, probability** — covered in [`../foundations/`](../foundations/) (refresh) and [`../math/`](../math/) (depth).
-- **Object-oriented programming, decorators, generators** — covered in [`../prog/`](../prog/) (Python Mastery section).
-- **NumPy / Pandas / PyTorch** — covered in [`../prog/`](../prog/).
-- **Git in depth** — basics get a mention in 01-computer-literacy.md; the workflow is in [`../foundations/`](../foundations/).
-- **Data structures + algorithms** — there's a runnable playground at [`../prog/python-and-dsa/`](../prog/python-and-dsa/). Pre-foundations only gives you the conceptual basics of lists/dicts/sets/tuples.
+Calculus, linear algebra, probability are in [`../math/`](../math/) (and the YouTube calculus series). Object-oriented programming, decorators, generators, async are in [`../prog/`](../prog/). NumPy, Pandas, PyTorch are also in [`../prog/`](../prog/). Git workflow is in [`../foundations/`](../foundations/). Data structures and algorithms with live animations are the [`../prog/python-and-dsa/`](../prog/python-and-dsa/) playground itself.
 
-## After you finish
+Pre-foundations is the layer under all of that.
 
-You'll be ready for [`../foundations/`](../foundations/) — which covers the math refresh you might still need (algebra fluency, logs/exponents, trig, sets/logic for probability), gets you fluent with git, and puts you through three small Python projects.
+## Why this exists
 
-After foundations, you pick a [`../paths/`](../paths/) entry — Literacy, Builder, or Researcher — and start building.
+Plenty of people open an ML tutorial, see "create a virtual environment," and close the tab. ML doesn't need to filter people at the door. This folder is what should have been there when it did.
 
-Welcome. Take your time.
+## What's next
+
+[`../foundations/`](../foundations/) — math refresh, three small Python projects, git workflow.

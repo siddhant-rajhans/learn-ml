@@ -1,20 +1,14 @@
 # 05 · Functions, modules, files
 
-> *"Three things that turn 'I can write code' into 'I can build programs.'"*
-
 ← previous: [04-flow-and-collections.md](04-flow-and-collections.md) · next: [06-everyday-essentials.md](06-everyday-essentials.md)
 
----
+A program is a few functions calling each other.
 
-## What you'll know by the end
+A library is a file full of functions you can `import` into your program.
 
-- `def`, parameters, return values, scope.
-- Default parameters, keyword arguments, `*args`, `**kwargs`.
-- `lambda` — anonymous functions.
-- Type hints — what they look like, why they help.
-- Modules and `import`.
-- `pip install` and why virtual environments exist.
-- Files — opening, reading, writing, the `with` statement.
+A real project has some files of your own functions, some libraries installed from PyPI into a virtual environment, and some files it reads from and writes to.
+
+This chapter is those three things.
 
 ---
 

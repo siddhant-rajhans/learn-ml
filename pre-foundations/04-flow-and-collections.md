@@ -1,22 +1,12 @@
-# 04 · Flow & collections
-
-> *"Loops, branches, and the four containers you'll spend the rest of your career picking between."*
+# 04 · Flow and collections
 
 ← previous: [03-python-syntax-and-data.md](03-python-syntax-and-data.md) · next: [05-functions-modules-files.md](05-functions-modules-files.md)
 
----
+This is where Python starts feeling like Python.
 
-## What you'll know by the end
+`if`, `else`, `while`, `for`. Lists, tuples, sets, dictionaries. List comprehensions, which are the thing Python programmers like to show off about. By the end you can write programs that loop over data and make decisions about it. Most programs are that.
 
-- `if` / `elif` / `else` — branching, including the bits that trip beginners.
-- `while` and `for` loops, when to use which, when to use neither.
-- `range`, `enumerate`, `zip` — the iteration toolkit.
-- `break`, `continue`, the `else` on loops, `pass`.
-- Lists in depth — methods, slicing, list comprehensions.
-- Tuples in depth — when they beat lists.
-- Sets in depth — fast membership and set operations.
-- Dictionaries in depth — the workhorse of Python.
-- The match statement (Python 3.10+) — Python's switch.
+Picking a container is a habit you build. Lists most of the time. Dicts more than you'd think. Tuples for fixed-shape things. Sets when you need to dedupe or check "is this in there?" fast. That's the heuristic. The rest is detail.
 
 ---
 
