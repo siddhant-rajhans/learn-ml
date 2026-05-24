@@ -4,6 +4,8 @@
 
 This isn't a category in the main map. It's the **entry door** for anyone whose floor isn't yet high-school math + basic Python. Once you can answer "yes" to the skip checks below, you don't need this folder — head to [`math/`](../math/).
 
+> **Newer to this than that?** If you've never opened a terminal, never written `print("hello")`, or it's been a decade since you saw `Σ` — start at [`../pre-foundations/`](../pre-foundations/) instead. Foundations assumes you have *that* layer already.
+
 ## Skip this folder if…
 
 You can answer **all** of these without looking anything up:

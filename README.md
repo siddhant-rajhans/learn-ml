@@ -28,7 +28,8 @@ Drag to orbit. Click any node to drill in. Three audience paths.
 
 | Folder | What it covers | Typical time |
 |---|---|---|
-| [`foundations/`](foundations/) | *True-zero entry.* HS math + Python from scratch + terminal/git. **Satellite to the map, not a category.** | 6–10 weeks |
+| [`pre-foundations/`](pre-foundations/) | *Below "true zero."* What a file is, what a terminal is, every Python datatype, every operator, basic math notation. For people with no coding or recent math at all. | 4–6 weeks |
+| [`foundations/`](foundations/) | *True-zero entry.* HS math refresh + Python from scratch + terminal/git. Sits on top of pre-foundations. | 6–10 weeks |
 | [`math/`](math/) | Linear algebra · calculus · probability · statistics · info theory · optimization | 3–5 months |
 | [`prog/`](prog/) | Python · NumPy · PyTorch · data stack · GPU/systems · HuggingFace · MLOps | 3–5 months |
 | [`data/`](data/) | Collection · labeling · quality · feature engineering · data-centric AI | 2–3 months |
@@ -48,8 +49,10 @@ cd learn-ml
 ```
 
 1. **Open the interactive map** at [siddhant-rajhans.github.io/ml-roadmap/roadmap.html](https://siddhant-rajhans.github.io/ml-roadmap/roadmap.html).
-2. **New to all this?** Start with [`foundations/`](foundations/). Otherwise pick a path.
-3. **Read the category README** for whichever bucket your path enters first (usually `math/`).
+2. **Never coded? Forgot algebra?** Start with [`pre-foundations/`](pre-foundations/).
+3. **Comfortable with a terminal but rusty on math/Python?** Start with [`foundations/`](foundations/).
+4. **Already past both?** Pick a [`path`](paths/).
+5. **Read the category README** for whichever bucket your path enters first (usually `math/`).
 4. **Notebooks, exercises, and worked solutions** ship per topic as I write them. Tracked in issues.
 
 ## Companion content
