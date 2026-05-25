@@ -586,30 +586,32 @@ for path in Path("data").glob("*.csv"):
 
 ---
 
-## 5.8 · Practice — three things to do before moving on
+## 5.8 · Do these before moving on
 
-1. **Open the python-and-dsa playground**, do Lesson 7 (Functions) if you haven't. Then write a function called `is_palindrome(s)` that returns True if a string reads the same forwards and backwards. Test it on `"racecar"`, `"hello"`, `""`.
+Write a function called `is_palindrome(s)` that returns True if a string reads the same forwards and backwards. Test it on `"racecar"`, `"hello"`, and `""`. Eight lines max.
 
-2. **Make a real project folder.** From the terminal:
-   ```
-   mkdir my-first-project
-   cd my-first-project
-   uv venv                       # or python -m venv .venv
-   source .venv/bin/activate     # .venv\Scripts\activate on Windows
-   uv pip install requests       # or pip install requests
-   ```
-   Then create `main.py` with:
-   ```python
-   import requests
-   r = requests.get("https://api.github.com")
-   print(r.status_code)
-   print(r.json()["current_user_url"])
-   ```
-   Run `python main.py`. You just installed a third-party package and made an API call.
+Then make your first real project folder. From the terminal:
 
-3. **Read and write a file.** Create `notes.txt` with three lines. Write a script that reads it, prints each line numbered, and writes a new file `notes_uppercased.txt` with each line uppercased.
+```
+mkdir my-first-project
+cd my-first-project
+uv venv                       # or python -m venv .venv
+source .venv/bin/activate     # .venv\Scripts\activate on Windows
+uv pip install requests       # or pip install requests
+```
 
-   Don't look at the solution — just do it. If you get stuck, the techniques are all in section 5.7.
+Then create `main.py` with this in it:
+
+```python
+import requests
+r = requests.get("https://api.github.com")
+print(r.status_code)
+print(r.json()["current_user_url"])
+```
+
+Run `python main.py`. You just installed a third-party package and made an API call. That's the actual shape of every Python project from here on.
+
+Last: file I/O. Create `notes.txt` with three lines of anything. Write a script that reads it, prints each line numbered, and writes a new file `notes_uppercased.txt` with each line uppercased. Don't look anything up — every technique you need is in section 5.7.
 
 ---
 

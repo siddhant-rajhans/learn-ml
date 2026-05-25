@@ -370,11 +370,11 @@ log(2) ≈ 0.693         (natural log of 2)
 
 ---
 
-## 2.9 · Practice — three things to do before moving on
+## 2.9 · Do these before moving on
 
-1. **Convert between forms.** Take ten random percentages (`23%`, `0.5%`, `150%`, etc.) and write each as a decimal and a fraction. Then take ten random decimals and do the reverse. Should take 5 minutes total. Should be boring. Boring is the goal.
+Convert ten random percentages to decimals and fractions. Then convert ten random decimals back. Five minutes. Should be boring. Boring is the goal.
 
-2. **Compute these in your head** (or on paper, but not in a calculator):
+Compute these in your head (or on paper, but not in a calculator):
    - `2^10` = ?
    - `log₁₀(1000)` = ?
    - `(-3) × (-4)` = ?
@@ -383,9 +383,9 @@ log(2) ≈ 0.693         (natural log of 2)
    - In `2 + 3 × 4`, what's the answer?
    - If `f(x) = x² + 1`, what's `f(-2)`?
 
-   Answers below — but try first. If any of these is genuinely hard, slow down and re-read the relevant section.
+Answers in the dropdown below. Try first. If any of those was genuinely hard, slow down and re-read the relevant section.
 
-3. **Skim** [3Blue1Brown — Essence of Calculus, episode 1](https://www.youtube.com/watch?v=WUvTyaaNkzM) (15 minutes). You don't need to understand all of it. You're checking whether the math vocabulary in this file lets you follow along. If it does, you're set for the foundations track.
+Then go watch [3Blue1Brown — Essence of Calculus, episode 1](https://www.youtube.com/watch?v=WUvTyaaNkzM). Fifteen minutes. You don't have to understand all of it. You're checking whether the vocabulary in this chapter lets you follow along. If it does, you're set for the foundations track.
 
 <details>
 <summary>Answers</summary>

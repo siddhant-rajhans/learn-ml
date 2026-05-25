@@ -545,18 +545,13 @@ Pre-foundations: know it exists. The prog/ track teaches it properly.
 
 ---
 
-## 6.8 · Practice — three things to do before moving on
+## 6.8 · Do these before moving on
 
-1. **Make a script that handles bad input gracefully.** Write a program that asks the user for a number, computes the square root, and prints it. Handle: not a number, negative number, user hits Ctrl+C. Use `try` / `except` for each.
+Write a program that asks the user for a number, computes the square root, and prints it. Make it handle three cases without crashing: the user types something that isn't a number, the user types a negative, and the user hits Ctrl+C. Each one is a different exception.
 
-2. **Save and load a config.** Make a Python dict with your name, age, and a list of favorite languages. Save it to `config.json`. Then write a separate script that reads it back and prints each field on its own line. Verify the round-trip works.
+Then make a config round-trip. Build a Python dict with your name, age, and a list of favorite languages. Save it to `config.json` with `json.dump`. Then write a separate script that reads it back with `json.load` and prints each field. Verify the round-trip preserves the data exactly.
 
-3. **Time something.** Write code that creates a list of 1 million numbers, then measures (with `time.time()`) how long it takes to:
-   - Iterate and sum with a for loop.
-   - Sum with the built-in `sum()`.
-   - Convert to a NumPy array (you'll need `pip install numpy`) and `.sum()`.
-
-   You'll see why people use NumPy — usually 10–100× faster for the same work. Worth seeing once before you reach the [`../prog/`](../prog/) track.
+Then time something. Create a list of one million numbers and measure (with `time.time()`) how long it takes to sum them three ways: a for-loop with `total += x`, the built-in `sum()`, and a NumPy array's `.sum()` (you'll need `pip install numpy`). The NumPy version is usually 10 to 100× faster. Worth seeing the gap with your own eyes before you hit the `prog/` track.
 
 ---
 

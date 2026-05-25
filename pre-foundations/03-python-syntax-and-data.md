@@ -305,7 +305,7 @@ empty = ()
 single = (5,)                  # ⚠ trailing comma needed — (5) is just 5 in parens
 ```
 
-Used for: data that shouldn't change (coordinates, colors, dict keys), returning multiple values from a function, fixed-size records.
+Tuples are for things that shouldn't change shape — coordinates, RGB triples, returning multiple values from a function, anything you want as a dict key.
 
 ### `set` — unordered, unique, mutable
 
@@ -318,7 +318,7 @@ fruits.add("apple")            # already there — no effect
 empty_set = set()              # ⚠ {} is an empty DICT, not set
 ```
 
-Useful for: membership tests (very fast), removing duplicates, set operations (union, intersection).
+Sets are what you reach for when you need to check membership fast or strip duplicates from a list.
 
 ### `frozenset` — unordered, unique, immutable
 
@@ -811,11 +811,11 @@ Every error message also gives you a **traceback** — the chain of function cal
 
 ---
 
-## 3.9 · Practice — three things to do before moving on
+## 3.9 · Do these before moving on
 
-1. **Open the python-and-dsa playground** ([`../prog/python-and-dsa/`](../prog/python-and-dsa/)) and do Lessons 1-4 (Hello World, Variables, Numbers & Math, Strings). About 30 minutes. You're applying everything in this chapter.
+Open the [python-and-dsa playground](../prog/python-and-dsa/) and work through the Pre-foundations chapter there. The lessons mirror this chapter and take about half an hour total.
 
-2. **In the REPL, type these and predict the output before pressing Enter.** Then check. Each one tests one concept from this chapter.
+Then, in the REPL, type each of these and predict the output before pressing Enter. Then check.
 
 ```python
 type(3 / 2)
@@ -832,14 +832,15 @@ list("hello")
 f"{1/3:.2f}"
 ```
 
-3. **Make every error happen at least once.** Open the REPL and deliberately trigger:
-   - A `SyntaxError` (forget a colon)
-   - A `TypeError` (try `"5" + 3`)
-   - A `NameError` (use a variable you never defined)
-   - A `ZeroDivisionError`
-   - An `IndexError`
+Then deliberately make each of these errors happen at least once:
 
-   You'll start seeing errors as data, not as failure.
+- `SyntaxError` (forget a colon at the end of an `if`)
+- `TypeError` (try `"5" + 3`)
+- `NameError` (use a variable you never defined)
+- `ZeroDivisionError`
+- `IndexError`
+
+Once you've caused them on purpose, they stop feeling like failure. They're just Python telling you what's wrong.
 
 <details>
 <summary>Predicted outputs</summary>

@@ -392,19 +392,24 @@ point[0] = 5         # TypeError — tuples are immutable
 
 ### Why use tuples?
 
-1. **Signal that a sequence is fixed.** Coordinates `(x, y)`, RGB `(r, g, b)`, a date `(year, month, day)`.
-2. **Multiple return values.** A common Python pattern:
-   ```python
-   def min_max(nums):
-       return min(nums), max(nums)        # returns a tuple
+Mostly to signal that a sequence is fixed in shape. A 2D point is always `(x, y)`. An RGB color is always `(r, g, b)`. A date might be `(year, month, day)`. Using a tuple instead of a list makes that contract visible.
 
-   lo, hi = min_max([3, 1, 4, 1, 5])      # unpacking — lo = 1, hi = 5
-   ```
-3. **Dict keys.** Tuples are hashable (because immutable), so they can be dict keys. Lists can't.
-   ```python
-   distances = {("New York", "LA"): 2451, ("NY", "Chicago"): 711}
-   ```
-4. **Faster and smaller than lists.** Marginal, but real for large datasets.
+The other big use is returning multiple values from a function:
+
+```python
+def min_max(nums):
+    return min(nums), max(nums)        # returns a tuple
+
+lo, hi = min_max([3, 1, 4, 1, 5])      # unpacking — lo = 1, hi = 5
+```
+
+A nice side benefit: tuples are hashable (because immutable), so they can be used as dictionary keys where lists can't:
+
+```python
+distances = {("New York", "LA"): 2451, ("NY", "Chicago"): 711}
+```
+
+Tuples are also slightly faster and smaller than lists. That doesn't matter for normal code, but it can matter for big datasets.
 
 ### Unpacking
 
@@ -471,9 +476,11 @@ a.isdisjoint({99, 100})     # True
 
 ### When to use a set
 
-1. **Fast membership checks.** `x in my_set` is O(1) — instant, regardless of size. `x in my_list` is O(n) — scans through.
-2. **Removing duplicates.** `unique = set(my_list)` then back to list if order matters: `unique = list(set(my_list))` (but order is lost).
-3. **Set math.** Comparing two collections — what's shared, what's different.
+Three situations come up most. First: when you need to check "is X in this collection" a lot. `x in my_set` is O(1) regardless of size, while `x in my_list` is O(n) — it scans. If you find yourself doing many `in` checks on a list, convert to a set first.
+
+Second: removing duplicates. `set(my_list)` strips them. If you need order back, `list(set(my_list))` — but you lose the original order.
+
+Third: comparing two collections. The set operators give you what's shared, what's unique to each, all in one expression:
 
 ```python
 visitors_jan = {"alice", "bob", "carol"}
@@ -637,15 +644,15 @@ Use sparingly — for many cases a chain of `if/elif` is clearer. `match` shines
 
 ---
 
-## 4.10 · Practice — four things to do before moving on
+## 4.10 · Do these before moving on
 
-1. **Open the python-and-dsa playground** and do Lessons 5-8 (If/else, Loops, Functions, Lists). About 45 minutes.
+Open the [python-and-dsa playground](../prog/python-and-dsa/) and do the Pre-foundations lessons on if/else, comprehensions, lists, and dicts (about 45 minutes).
 
-2. **Write a histogram.** Given a list like `["apple", "banana", "apple", "cherry", "banana", "apple"]`, build a dict that counts each word. Try it with a regular for-loop first, then with `dict.get(key, 0) + 1`, then look up `collections.Counter` (the cheating way).
+Then write a word histogram. Given a list like `["apple", "banana", "apple", "cherry", "banana", "apple"]`, build a dict that counts each word. Try it with a regular for-loop first. Then with `dict.get(key, 0) + 1`. Then look up `collections.Counter` and feel slightly cheated.
 
-3. **Convert these forms back and forth.** Take a list of names. Make a set of unique names. Make a dict mapping each name to its length. Iterate, sort, slice. Twenty minutes of playing with the four containers does more than reading them.
+Then play with the four containers for twenty minutes. Take a list of names. Make a set of unique names. Make a dict mapping each name to its length. Iterate. Sort. Slice. The reps matter more than the reading.
 
-4. **Predict the output:**
+Last one — predict the output of each block before checking the answers:
 
 ```python
 # A

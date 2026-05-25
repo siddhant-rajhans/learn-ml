@@ -54,11 +54,13 @@ The terminal (aka *shell*, *command line*, *console*) is a text interface to you
 
 ### Opening one
 
-- **Mac:** ⌘ + Space → type `Terminal` → Enter. Or use [iTerm2](https://iterm2.com).
-- **Windows:** Win key → type `Terminal` → Enter. (Use *Windows Terminal*, not the older `cmd.exe`.) Or install [Git Bash](https://git-scm.com/downloads) for a Mac-like experience.
-- **Linux:** ctrl + alt + T usually works. Otherwise look for "Terminal" in your apps.
+On a Mac: ⌘ + Space, type `Terminal`, hit Enter. ([iTerm2](https://iterm2.com) is a nicer drop-in replacement once you care.)
 
-When it opens, you see a **prompt** — something like `sid@laptop:~$ ` or `PS C:\Users\sid>`. The `~` (tilde) means *your home folder*.
+On Windows: Win key, type `Terminal`, hit Enter. Use the new Windows Terminal app, not the older `cmd.exe` — they look similar but the new one is much better. If you'd rather have a Mac-style shell, install [Git Bash](https://git-scm.com/downloads).
+
+On Linux: ctrl + alt + T usually works. If not, the app menu has "Terminal" somewhere.
+
+When it opens, you see a prompt — something like `sid@laptop:~$ ` or `PS C:\Users\sid>`. The `~` (tilde) is shorthand for your home folder.
 
 ### The commands you'll actually use
 
@@ -198,11 +200,9 @@ A **text editor** is software for writing plain-text files (`.py`, `.md`, `.csv`
 
 ### Pick one
 
-- **[VS Code](https://code.visualstudio.com/)** — free, popular, works on every OS. Has good Python support out of the box. This is the default we recommend.
-- **[Cursor](https://www.cursor.com/)** — VS Code with built-in AI. Same interface, drops in.
-- **[PyCharm Community](https://www.jetbrains.com/pycharm/download/)** — heavier, more "IDE-like." Free for personal use.
+[VS Code](https://code.visualstudio.com/) is the default. Free, runs on every OS, Python support is built in. If you'd rather have AI baked into the editor, [Cursor](https://www.cursor.com/) is the same interface with Claude/GPT integrated. If you want something heavier and more IDE-like, [PyCharm Community](https://www.jetbrains.com/pycharm/download/) is free for personal use. Any of these works.
 
-Install VS Code. Open it. Use **File → Open Folder** to open your `hello-python` folder. Notice the file tree on the left — that's your folder's contents.
+Install VS Code (or whichever you picked). Open it. Use File → Open Folder to open your `hello-python` folder. The file tree on the left is your folder's contents.
 
 ### The 8 keyboard shortcuts worth memorizing
 
@@ -285,13 +285,13 @@ To make a GitHub account: go to [github.com](https://github.com), click Sign Up,
 
 ---
 
-## 1.9 · Practice — the 3 things to do before moving on
+## 1.9 · Do these before moving on
 
-1. **Make a folder, make a file, run a Python script.** Don't proceed until you can do all three from the terminal without referencing this file. The muscle memory matters.
+Make a folder. Make a file in it. Run a Python script from the terminal. Don't move on until you can do all three without looking back at this file. The muscle memory matters more than the knowledge.
 
-2. **Open the REPL and play for 10 minutes.** Type `2 + 2`. Type `"hello" * 5`. Type `[1, 2, 3] + [4, 5, 6]`. Be curious. Try things that *shouldn't* work and see what error you get. The errors are how you learn what the rules are.
+Then open the REPL and play for ten minutes. Type `2 + 2`. Type `"hello" * 5`. Type `[1, 2, 3] + [4, 5, 6]`. Be curious. Try things that shouldn't work and see what error you get. The errors are how you learn what the rules are.
 
-3. **Open the python-and-dsa playground** at [`../prog/python-and-dsa/`](../prog/python-and-dsa/). It runs Python in your browser — no installs. Do Lesson 1 (Hello World) and Lesson 2 (Variables). 10 minutes total. You're now a Python programmer.
+Last: open the [python-and-dsa playground](../prog/python-and-dsa/) and do the first two lessons (Welcome, Variables). Ten minutes. It runs Python in your browser, no installs required.
 
 ---
 
