@@ -52,11 +52,11 @@ Then `jupyter notebook` or `jupyter lab` from this directory.
 
 ## What each notebook covers
 
-### 01 — Linear Regression  (16 chapters · 112 cells · ~37 code cells)
+### 01 — Linear Regression  (17 chapters · 116 cells · ~37 code cells)
 
 Companion to **Eps 19–23** of the Linear Regression series.
 
-Built like Google's ML Crash Course — one concept per cell, a worked numeric example for every formula. The 16 chapters walk through:
+Built like Google's ML Crash Course — one concept per cell, a worked numeric example for every formula. The 17 chapters walk through:
 
 1. Setup
 2. The dataset (7 cars, weight → MPG)
@@ -72,16 +72,17 @@ Built like Google's ML Crash Course — one concept per cell, a worked numeric e
 12. The fitted line vs the starting guess
 13. The same thing in PyTorch (5-line loop with Adam)
 14. The same thing in sklearn (3 lines)
-15. More features (multi-feature extension)
-16. Recap
+15. **Bonus — sklearn's algorithm roadmap** (embedded SVG + walked path)
+16. More features (multi-feature extension)
+17. Recap
 
 All three approaches (by-hand, PyTorch, sklearn) converge to the same `w ≈ -5.14, b ≈ 35.89`.
 
-### 02 — Logistic Regression  (12 chapters · 98 cells · ~35 code cells)
+### 02 — Logistic Regression  (13 chapters · 102 cells · ~35 code cells)
 
 Companion to **Eps 24–28** of the Logistic Regression series.
 
-Same fine-grained chapter-by-chapter rhythm. The 12 chapters:
+Same fine-grained chapter-by-chapter rhythm. The 13 chapters:
 
 1. Setup
 2. The dataset (synthetic 2D spam)
@@ -93,8 +94,9 @@ Same fine-grained chapter-by-chapter rhythm. The 12 chapters:
 8. The decision boundary
 9. The same thing in PyTorch (5-line loop · `BCEWithLogitsLoss`)
 10. The same thing in sklearn (3 lines)
-11. Read the trained coefficients as multiplicative effects on the odds
-12. Recap
+11. **Bonus — sklearn's algorithm roadmap** (embedded SVG + walked path)
+12. Read the trained coefficients as multiplicative effects on the odds
+13. Recap
 
 By-hand and PyTorch agree on `W ≈ [0.71, 0.89], b ≈ -3.97`. Sklearn gets different values because it defaults to L2 regularization (noted in the notebook).
 

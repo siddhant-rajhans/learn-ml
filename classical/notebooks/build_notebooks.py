@@ -488,8 +488,36 @@ lr_cells = [
     ),
     md("About 17.9 MPG. Reasonable — it sits right in the middle of our training data range."),
 
-    # ════════════════ CHAPTER 15: MORE FEATURES ════════════════
-    md("## Chapter 15 · More features"),
+    # ════════════════ CHAPTER 15: SKLEARN'S ALGORITHM MAP ════════════════
+    md("## Chapter 15 · Bonus — sklearn's algorithm roadmap"),
+    md(
+        "Sklearn ships with an [infamous algorithm cheat sheet](https://scikit-learn.org/stable/machine_learning_map.html) — answer a few questions about your data, it routes you to a starting model.",
+        "",
+        "![sklearn algorithm map](https://scikit-learn.org/stable/_static/ml_map.svg)",
+    ),
+    md(
+        "**Walking the chart for our MPG problem:**",
+        "",
+        "1. 50+ samples? *Pretend yes for the exercise (we actually only have 7).*",
+        "2. Predicting a category? **No** — we're predicting a number (MPG).",
+        "3. Predicting a quantity? **Yes** → regression branch.",
+        "4. Few features? **Yes** → `LinearRegression` ← we are here ✓",
+        "",
+        "If we had 100,000+ samples, the chart routes us to `SGDRegressor`. With many noisy features, to `Lasso` or `Ridge` (regularized variants). Same `.fit(X, y)` interface — different sub-algorithm under the hood.",
+    ),
+    md(
+        "**The chart isn't gospel.** It's a sane starting point. The real workflow:",
+        "",
+        "1. Pick a baseline from the chart.",
+        "2. Train it.",
+        "3. Look at the errors.",
+        "4. Iterate to a better model.",
+        "",
+        "Linear regression is rarely the final model. But it's almost always a good first one — fast, interpretable, no hyperparameters to tune. If you can't beat it, you don't need anything fancier.",
+    ),
+
+    # ════════════════ CHAPTER 16: MORE FEATURES ════════════════
+    md("## Chapter 16 · More features"),
     md("Real cars have more than just weight. Let's add horsepower and engine displacement."),
     code(
         "# Synthetic features correlated with weight, plus noise",
@@ -523,8 +551,8 @@ lr_cells = [
         "All three are negative — heavier, more powerful, larger-engined cars get fewer MPG. Matches intuition.",
     ),
 
-    # ════════════════ CHAPTER 16: RECAP ════════════════
-    md("## Chapter 16 · What we did"),
+    # ════════════════ CHAPTER 17: RECAP ════════════════
+    md("## Chapter 17 · What we did"),
     md(
         "1. Loaded a dataset and plotted it.",
         "2. Defined a model `y = wx + b` and a loss `MSE`.",
@@ -906,8 +934,40 @@ log_cells = [
     ),
     md("Real probabilities now. All between 0 and 1. **That's what we built sigmoid for.**"),
 
-    # ════════════════ CHAPTER 11: READ THE MODEL ════════════════
-    md("## Chapter 11 · Read the trained model"),
+    # ════════════════ CHAPTER 11: SKLEARN'S ALGORITHM MAP ════════════════
+    md("## Chapter 11 · Bonus — sklearn's algorithm roadmap"),
+    md(
+        "Sklearn ships with an [infamous algorithm cheat sheet](https://scikit-learn.org/stable/machine_learning_map.html) — answer a few questions about your data, it routes you to a starting model.",
+        "",
+        "![sklearn algorithm map](https://scikit-learn.org/stable/_static/ml_map.svg)",
+    ),
+    md(
+        "**Walking the chart for our spam problem:**",
+        "",
+        "1. 50+ samples? **Yes** (120 emails).",
+        "2. Predicting a category? **Yes** → classification branch.",
+        "3. Labeled data? **Yes** → supervised classification.",
+        "4. <100K samples? **Yes** → small-classifier zone: `LinearSVC`, `KNeighborsClassifier`, `SVC`.",
+        "",
+        "We used `LogisticRegression` — which sits next door in sklearn's mental map. The chart's default for small-data classification is `LinearSVC` (a margin-based classifier), but `LogisticRegression` is what most people actually reach for first because:",
+        "",
+        "- It outputs **probabilities**, not just labels. (We need these in the classification series — threshold, ROC, precision/recall all start from probabilities.)",
+        "- The decision boundary and coefficients are **interpretable** — you can read what the model learned.",
+        "- It's the **simplest classifier** that has a real probabilistic interpretation.",
+    ),
+    md(
+        "**The chart isn't gospel.** It's a starting point. The workflow:",
+        "",
+        "1. Pick a baseline from the chart.",
+        "2. Train it.",
+        "3. Look at the errors.",
+        "4. Iterate to a better model (random forest, gradient boosting, neural net…).",
+        "",
+        "Logistic regression rarely wins competitions. But it's almost always the first thing to try — fast, interpretable, well-understood. If your fancy 50M-parameter neural net only marginally beats logistic regression, that's a sign your problem doesn't need 50M parameters.",
+    ),
+
+    # ════════════════ CHAPTER 12: READ THE MODEL ════════════════
+    md("## Chapter 12 · Read the trained model"),
     md(
         "Coefficients in logistic regression have a clean interpretation — they're effects on the **log-odds**. Exponentiating a coefficient gives the multiplicative effect on the odds.",
     ),
@@ -928,8 +988,8 @@ log_cells = [
     ),
     md("**That's a real model you can interpret.** Each feature has a clear, multiplicative effect on the odds of spam. Not a black box."),
 
-    # ════════════════ CHAPTER 12: RECAP ════════════════
-    md("## Chapter 12 · What we did"),
+    # ════════════════ CHAPTER 13: RECAP ════════════════
+    md("## Chapter 13 · What we did"),
     md(
         "1. Built a synthetic spam dataset (two features, two classes).",
         "2. Tried linear regression — saw it produce probabilities below 0 and above 1. Broken.",
