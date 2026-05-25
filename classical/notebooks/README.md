@@ -52,23 +52,51 @@ Then `jupyter notebook` or `jupyter lab` from this directory.
 
 ## What each notebook covers
 
-### 01 — Linear Regression
+### 01 — Linear Regression  (16 chapters · 112 cells · ~37 code cells)
 
 Companion to **Eps 19–23** of the Linear Regression series.
 
-One dataset (7 cars, weight → MPG). One model (`y = wx + b`). One loss (MSE). One algorithm (gradient descent). Trained three ways: by hand, in PyTorch, in sklearn. All three agree.
+Built like Google's ML Crash Course — one concept per cell, a worked numeric example for every formula. The 16 chapters walk through:
 
-Visualizations along the way: scatter + line, squared-distance squares, 3D loss surface, descent path on the bowl, fitted line over data.
+1. Setup
+2. The dataset (7 cars, weight → MPG)
+3. The model `y = wx + b`
+4. How wrong is it? (errors → squared errors → MSE)
+5. MSE has a picture (squared-distance squares)
+6. Better guesses (manual table of MSEs)
+7. The loss surface (3D bowl)
+8. The gradient (formula + compute at one point)
+9. One step (literal before / after)
+10. The full descent loop (with a loss curve)
+11. The descent path on the bowl (3D)
+12. The fitted line vs the starting guess
+13. The same thing in PyTorch (5-line loop with Adam)
+14. The same thing in sklearn (3 lines)
+15. More features (multi-feature extension)
+16. Recap
 
-Closes with the multi-feature extension (one extra weight per feature, same training loop).
+All three approaches (by-hand, PyTorch, sklearn) converge to the same `w ≈ -5.14, b ≈ 35.89`.
 
-### 02 — Logistic Regression
+### 02 — Logistic Regression  (12 chapters · 98 cells · ~35 code cells)
 
 Companion to **Eps 24–28** of the Logistic Regression series.
 
-Synthetic 2D spam dataset. Show why linear regression fails. Introduce sigmoid. Introduce log loss (with the two-curves visualization). Train by hand, in PyTorch, in sklearn. All three agree. Plot the decision boundary. Read the trained coefficients as multiplicative effects on the odds.
+Same fine-grained chapter-by-chapter rhythm. The 12 chapters:
 
-Same five-line training loop as the LR notebook — two substitutions (sigmoid in the forward pass, BCE for the loss). The pattern is made visible.
+1. Setup
+2. The dataset (synthetic 2D spam)
+3. Try linear regression first — watch it predict `-0.14` and `+2.06` (broken)
+4. The sigmoid function (5 worked numeric examples: σ(0), σ(1), σ(5), σ(-5), then plot)
+5. Logistic regression = linear + sigmoid (worked example)
+6. Log loss (3 worked examples: confident right, uncertain, confident wrong)
+7. Train it by hand (one step + the full loop)
+8. The decision boundary
+9. The same thing in PyTorch (5-line loop · `BCEWithLogitsLoss`)
+10. The same thing in sklearn (3 lines)
+11. Read the trained coefficients as multiplicative effects on the odds
+12. Recap
+
+By-hand and PyTorch agree on `W ≈ [0.71, 0.89], b ≈ -3.97`. Sklearn gets different values because it defaults to L2 regularization (noted in the notebook).
 
 ## Why notebooks instead of slides
 
