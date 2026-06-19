@@ -12,8 +12,8 @@ Thanks for considering a contribution. A few ground rules to keep the curriculum
 
 ## What's out of scope
 
-- **Restructuring the curriculum order.** The phase order is opinionated; debates belong in an issue, not a PR.
-- **Adding new specializations to Phase 5** without prior discussion. Phase 5 is the easiest place to bloat.
+- **Restructuring the curriculum order.** The category order is opinionated; debates belong in an issue, not a PR.
+- **Adding new specializations to `frontier/`** without prior discussion. `frontier/` is the easiest place to bloat.
 - **Marketing changes** (logos, taglines, repo descriptions).
 
 ## PR checklist

@@ -53,7 +53,7 @@ cd learn-ml
 3. **Comfortable with a terminal but rusty on math/Python?** Start with [`foundations/`](foundations/).
 4. **Already past both?** Pick a [`path`](paths/).
 5. **Read the category README** for whichever bucket your path enters first (usually `math/`).
-4. **Notebooks, exercises, and worked solutions** ship per topic as I write them. Tracked in issues.
+6. **Notebooks, exercises, and worked solutions** ship per topic as I write them. Tracked in issues.
 
 ## Companion content
 

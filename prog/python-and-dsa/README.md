@@ -89,7 +89,7 @@ Runnable companions to the markdown chapters in [`../../pre-foundations/`](../..
 16. **Load a dataset** — parse the vendored `iris.csv` with `open()` + comprehensions
 17. **When things break** — `try / except`, specific exception types, the per-row pattern for surviving messy CSVs
 18. **Plotting** — `scatter`, `plot`, `bar` rendered to canvas (via teaching shim)
-19. **Your first classifier** — k-NN on iris, ~97% accuracy, ~30 lines of plain Python
+19. **Your first classifier** — k-NN on iris, ~95% accuracy, ~30 lines of plain Python
 
 ## Keyboard shortcuts
 

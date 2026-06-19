@@ -98,7 +98,7 @@ Same fine-grained chapter-by-chapter rhythm. The 13 chapters:
 12. Read the trained coefficients as multiplicative effects on the odds
 13. Recap
 
-By-hand and PyTorch agree on `W ≈ [0.71, 0.89], b ≈ -3.97`. Sklearn gets different values because it defaults to L2 regularization (noted in the notebook).
+By-hand and PyTorch land in the same place — `W ≈ [0.7, 0.9]`, `b ≈ -4`. Sklearn gets different magnitudes because it defaults to L2 regularization (noted in the notebook).
 
 ## Why notebooks instead of slides
 

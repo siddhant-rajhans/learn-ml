@@ -26,7 +26,7 @@ def f(x):  return 0.5 * x**2
 def fp(x): return x          # derivative of (1/2)x² is x
 
 # %% pick a point — change this and rerun
-X_POINT = 1.5
+X_POINT = 3.0
 
 # %% set up the curve
 xs = np.linspace(-3, 3, 400)

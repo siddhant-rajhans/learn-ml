@@ -87,4 +87,4 @@ Backprop becomes the chain rule. Embeddings become vectors in space. Loss functi
 
 ## Where to go next
 
-If math is mostly solid, parallel-track **[prog/](../prog/)** (you'll write code that uses these ideas) and **[classical/](../classical/)** (the simplest place to see them in action). If you came here straight from Phase 0, do math fully before classical.
+If math is mostly solid, parallel-track **[prog/](../prog/)** (you'll write code that uses these ideas) and **[classical/](../classical/)** (the simplest place to see them in action). If you came here straight from foundations, do math fully before classical.

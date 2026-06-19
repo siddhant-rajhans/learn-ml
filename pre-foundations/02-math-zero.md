@@ -48,7 +48,7 @@ You'll see *"the model is 87% confident"* a lot. That's a probability dressed up
 
 Numbers less than zero. The rules:
 
-- `+ + +` and `+ - −` give positive results.
+- `+ × +` gives a positive. `3 × 4 = 12`.
 - `− × −` gives a positive. `(-3) × (-4) = 12`.
 - `− × +` gives a negative. `(-3) × 4 = -12`.
 
