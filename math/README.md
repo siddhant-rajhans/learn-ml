@@ -9,10 +9,24 @@
 
 Backprop becomes the chain rule. Embeddings become vectors in space. Loss functions stop being magic and become information-theoretic objects. Every architecture in this curriculum derives its existence from these five topics.
 
+## Chapters
+
+Each chapter is a guided path: the intuition, the ML payoff, the best external resource to go deep, and exercises with answers. Read the chapter, watch the matching episode where one exists, run the playground, then test yourself.
+
+| # | Chapter | Pairs with |
+|---|---------|------------|
+| 1 | [01-linear-algebra.md](01-linear-algebra.md) | the vector + 3D-engine episodes (9–13) |
+| 2 | [02-calculus.md](02-calculus.md) | the calculus series (14–18) + [calculus-playground](./calculus-playground/) |
+| 3 | [03-probability.md](03-probability.md) | Seeing Theory (no episode yet) |
+| 4 | [04-information-theory.md](04-information-theory.md) | the cross-entropy in the classification series |
+| 5 | [05-optimization.md](05-optimization.md) | episode 17 + the notebooks' Adam switch |
+
 ## Topics
 
 ### Linear Algebra · 3–4 weeks
 *Understand how embeddings work, why PCA reduces dimensions, what a neural network weight matrix actually does to data.*
+
+→ Chapter: [01-linear-algebra.md](01-linear-algebra.md)
 
 - Vectors & vector spaces
 - Basis, span, linear independence
@@ -30,6 +44,8 @@ Backprop becomes the chain rule. Embeddings become vectors in space. Loss functi
 ### Calculus & Analysis · 3–4 weeks
 *Derive backpropagation from scratch. Understand why gradient descent works. Read any ML paper with confidence.*
 
+→ Chapter: [02-calculus.md](02-calculus.md)
+
 - Functions, limits, continuity
 - Derivatives & chain rule
 - Partial derivatives
@@ -44,6 +60,8 @@ Backprop becomes the chain rule. Embeddings become vectors in space. Loss functi
 ### Probability & Bayesian Thinking · 4–6 weeks
 *The Bayesian lens changes how you see everything.*
 
+→ Chapter: [03-probability.md](03-probability.md)
+
 - Probability axioms & rules
 - Random variables & distributions
 - Bayes' theorem — deeply
@@ -57,6 +75,8 @@ Backprop becomes the chain rule. Embeddings become vectors in space. Loss functi
 ### Information Theory · 2 weeks
 *Understand why cross-entropy is the right loss. What KL divergence measures. How VAEs and diffusion models minimize information-theoretic quantities.*
 
+→ Chapter: [04-information-theory.md](04-information-theory.md)
+
 - Entropy & self-information
 - KL divergence
 - Mutual information
@@ -68,6 +88,8 @@ Backprop becomes the chain rule. Embeddings become vectors in space. Loss functi
 
 ### Optimization Theory · 2–3 weeks
 *Why Adam beats SGD in some settings. How to derive learning rate schedules. Why non-convex loss landscapes are still tractable.*
+
+→ Chapter: [05-optimization.md](05-optimization.md)
 
 - Convex vs non-convex landscapes
 - Gradient descent — convergence theory
