@@ -719,11 +719,11 @@ log_cells = [
         "",
         "$$\\hat{y} = \\sigma(b + w_1 x_1 + w_2 x_2)$$",
     ),
-    md("Worked example. Bias `b=1`, weights `w₁=2, w₂=-1`. New email features `x₁=3, x₂=2`."),
+    md("Worked example. Bias `b=1`, weights `w₁=2, w₂=-1`. New email features `x₁=2, x₂=2`."),
     code(
         "b_eg = 1",
         "w_eg = np.array([2, -1])",
-        "x_eg = np.array([3, 2])",
+        "x_eg = np.array([2, 2])",
         "",
         "z = b_eg + (w_eg * x_eg).sum()",
         "print(f'  z = {z}')",
@@ -828,13 +828,17 @@ log_cells = [
         "",
         "print(f'after:   W={W.round(3)}  b={b:.3f}  loss={log_loss(y, predict_prob(W, b, X)):.4f}')",
     ),
-    md("Loss went down. Now run the full loop."),
+    md(
+        "Loss went down. Now run the full loop.",
+        "",
+        "We run **10,000 iterations** — a lot for three parameters. Same reason as the linear-regression notebook: the features aren't normalized (word counts run 0–10, caps ratio 0–8), so plain gradient descent takes many small steps to get there.",
+    ),
     code(
         "W = np.zeros(2)",
         "b = 0.0",
         "history = []",
         "",
-        "for step in range(500):",
+        "for step in range(10000):",
         "    dW, db = grad_log(W, b, X, y)",
         "    W -= lr * dW",
         "    b -= lr * db",
@@ -846,7 +850,7 @@ log_cells = [
     code(
         "plt.plot(history, color='#FF4081', linewidth=2)",
         "plt.xlabel('step'); plt.ylabel('log loss')",
-        "plt.title('Training — loss going down over 500 iterations')",
+        "plt.title('Training — loss going down over 10,000 iterations')",
         "plt.show()",
     ),
 
@@ -866,7 +870,7 @@ log_cells = [
         "plt.xlabel('suspicious-word count'); plt.ylabel('capitalization ratio')",
         "plt.title('Trained logistic regression — boundary at p = 0.5'); plt.legend(); plt.show()",
     ),
-    md("Yellow line splits spam from not-spam. **A handful of points are on the wrong side** — those are the ambiguous emails the model isn't sure about. Tightening the threshold (next series, classification) is how you trade precision for recall."),
+    md("Yellow line splits spam from not-spam. On this dataset the two clusters barely overlap, so the trained boundary separates them cleanly — every point on its own side. Real inboxes are messier: spam and ham blur together, points land on the wrong side, and *where* you draw the threshold (next series, classification) is the precision/recall trade-off."),
 
     # ════════════════ CHAPTER 9: PYTORCH ════════════════
     md("## Chapter 9 · The same thing in PyTorch — 5-line loop, two changes from LR"),
@@ -888,12 +892,13 @@ log_cells = [
     md("Set up model + optimizer + loss."),
     code(
         "model = nn.Linear(2, 1)        # 2 features in, 1 logit out",
+        "nn.init.zeros_(model.weight); nn.init.zeros_(model.bias)   # start from zeros, like the by-hand run",
         "optimizer = torch.optim.SGD(model.parameters(), lr=0.1)",
         "loss_fn = nn.BCEWithLogitsLoss()",
     ),
     md("The five lines."),
     code(
-        "for step in range(500):",
+        "for step in range(10000):",
         "    logits = model(X_t)        # forward — no sigmoid here; BCEWithLogitsLoss adds it",
         "    loss = loss_fn(logits, y_t)",
         "    loss.backward()",
@@ -924,7 +929,7 @@ log_cells = [
         "print(f'  sklearn intercept:     {model_sk.intercept_[0]:.3f}')",
     ),
     md(
-        "Sklearn's coefficients differ from ours because **sklearn defaults to L2 regularization** (shrinks weights toward zero to prevent overfitting). Our by-hand version had no regularization. Both predict the same boundary direction; sklearn's weights are just smaller in magnitude.",
+        "Sklearn's coefficients differ from ours because **sklearn applies mild L2 regularization by default** — it keeps the weights from drifting too large. Our by-hand fit has none, and because these two clusters are nearly separable, its weights keep creeping upward the longer it trains. So ours land a bit *larger* than sklearn's here. Same boundary direction either way, and the predictions agree.",
     ),
     md("Predict probabilities for a few example emails."),
     code(
@@ -993,7 +998,7 @@ log_cells = [
     md(
         "1. Built a synthetic spam dataset (two features, two classes).",
         "2. Tried linear regression — saw it produce probabilities below 0 and above 1. Broken.",
-        "3. Introduced the sigmoid function. Worked through five numeric examples to feel it.",
+        "3. Introduced the sigmoid function. Worked through four numeric examples to feel it.",
         "4. Combined linear + sigmoid into logistic regression. Worked example.",
         "5. Introduced log loss. Three worked examples to feel why it's the right loss.",
         "6. Trained the model by hand. One step, then the full loop.",
