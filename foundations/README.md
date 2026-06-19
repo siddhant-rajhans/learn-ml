@@ -37,11 +37,25 @@ flowchart LR
     M --> N[Three Mini Projects]
 ```
 
+## What's here
+
+Three chapters, one per track. Each is short explainers plus the best external resources plus exercises — read here, practice with the linked material, check yourself at the end.
+
+| # | File | Track | Time |
+|---|------|-------|------|
+| 1 | [01-math-refresh.md](01-math-refresh.md) | Solving, the function zoo, light trig, counting for probability | 6–10 hrs |
+| 2 | [02-coding-projects.md](02-coding-projects.md) | Three real programs that turn syntax into skill | 6–10 hrs |
+| 3 | [03-dev-tools-and-git.md](03-dev-tools-and-git.md) | Terminal fluency, Git, GitHub, VS Code | 4–6 hrs |
+
+> **On overlap with pre-foundations:** if you came up through [`../pre-foundations/`](../pre-foundations/), you already have basic arithmetic, the symbols, and Python syntax. Foundations doesn't repeat those — chapter 1 picks up at *using* the math, and chapter 2 jumps straight to building programs. Skim what you know, slow down where it's new.
+
 ## Time budget
 
 6–10 weeks at ~10 hrs/week. Closer to 4 weeks if one of the three tracks (math, coding, tools) is already comfortable.
 
 ## Track 1 — Math refresh (4–6 weeks)
+
+→ Chapter: [01-math-refresh.md](01-math-refresh.md)
 
 - **Arithmetic intuition** — place value, fractions, percent, ratios. The boring kind that creeps back later as "why is my softmax giving NaN."
 - **Algebra** — equations, inequalities, factoring.
@@ -51,6 +65,8 @@ flowchart LR
 - **Sets, logic, basic combinatorics** — for probability later.
 
 ## Track 2 — Coding from zero (4 weeks)
+
+→ Chapter: [02-coding-projects.md](02-coding-projects.md) (the syntax below is in [pre-foundations](../pre-foundations/); the chapter focuses on building with it)
 
 - Install Python (use `uv` — modern, fast), VS Code, set up your terminal.
 - Variables, types, expressions.
@@ -64,6 +80,8 @@ flowchart LR
   3. Word counter (any text file, top-N words)
 
 ## Track 3 — Dev tools (1–2 weeks)
+
+→ Chapter: [03-dev-tools-and-git.md](03-dev-tools-and-git.md)
 
 - Terminal navigation (cd, ls, mkdir, mv, cp).
 - Git basics (init, add, commit, push). Branches can wait.
