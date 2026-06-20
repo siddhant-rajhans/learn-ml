@@ -611,6 +611,38 @@ body::before {
 .viz-bar.mid .viz-bar-label { color: var(--cyan); }
 .viz-bar.found .viz-bar-label { color: var(--green); }
 
+/* ── Sorting mode — bars sized by value, sitting on a shared baseline ── */
+.viz-bars.sort { align-items: flex-end; }
+.viz-bars.sort .viz-bar {
+  width: 42px;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+  color: var(--ink-dim);
+}
+.viz-bar.sorted {
+  background: rgba(0, 230, 118, 0.26);
+  box-shadow: inset 0 0 0 1px var(--green);
+  color: var(--ink);
+}
+.viz-bar.pivot {
+  background: rgba(255, 210, 127, 0.30);
+  box-shadow: inset 0 0 0 2px var(--gold);
+  color: var(--ink);
+}
+.viz-bar.compare {
+  background: rgba(0, 229, 255, 0.28);
+  box-shadow: inset 0 0 0 2px var(--cyan);
+  transform: translateY(-6px);
+  color: var(--ink);
+}
+.viz-bar.swap {
+  background: rgba(255, 64, 129, 0.65);
+  color: var(--bg);
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 0 22px rgba(255, 64, 129, 0.5), inset 0 0 0 2px var(--pink);
+}
+
 .viz-status {
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
@@ -2482,6 +2514,86 @@ print("you just trained your first ML model. 19 lessons, 30 lines.")
 `,
     hint: 'k-NN has <em>no training step</em> — the "model" is just the training set itself, and prediction is a search. Try k=1 (just the nearest neighbor) vs k=5 vs k=15. Bigger k smooths out noise but blurs decision boundaries. This is a "lazy learner" — fast to fit, slow to predict on large datasets.',
   },
+
+  // ─── SORTING ───
+  {
+    id: 'bubble_sort',
+    chapter: 'sorting',
+    chapterLabel: 'Sorting',
+    num: '20',
+    title: 'Bubble <em>sort</em>.',
+    timeLabel: '~8 min',
+    intro: `
+      <p>Searching was about <em>finding</em> a value. Sorting is about <em>arranging</em> them — and almost everything downstream (binary search itself, deduping, ranking a model's top-k predictions) assumes sorted data.</p>
+      <p><strong>Bubble sort</strong> is the simplest sort to picture: walk the list, and whenever two neighbours are out of order, swap them. The biggest value "bubbles" to the end on each pass. Repeat until everything's in place.</p>
+      <p>It's also the <em>slowest</em> useful sort — O(n²). Watch the bars below: each comparison lights up cyan, each swap flashes pink, and every value locks green once it reaches its final home.</p>
+    `,
+    code: `# The bars below show this exact list.
+arr = [5, 1, 6, 2, 4, 3]
+n = len(arr)
+swaps = 0
+
+for i in range(n):
+    for j in range(n - 1 - i):
+        viz.compare(j, j + 1)          # look at two neighbours
+        if arr[j] > arr[j + 1]:
+            arr[j], arr[j + 1] = arr[j + 1], arr[j]
+            viz.swap(j, j + 1)         # out of order -> swap them
+            swaps += 1
+    viz.sorted(n - 1 - i)              # the largest has bubbled to the end
+
+print(f"sorted in {swaps} swaps")
+print(arr)
+`,
+    hint: 'The inner loop shrinks every pass (<code>n - 1 - i</code>) because the tail is already sorted — no point re-checking it. Try an already-sorted list <code>[1,2,3,4,5,6]</code>: bubble still makes every comparison but zero swaps. That gap — comparisons vs swaps — is exactly why "number of swaps" alone is a misleading measure of cost.',
+    viz: 'bubble_sort',
+  },
+  {
+    id: 'quick_sort',
+    chapter: 'sorting',
+    chapterLabel: 'Sorting',
+    num: '21',
+    title: 'Quick <em>sort</em>.',
+    timeLabel: '~12 min',
+    intro: `
+      <p>Bubble sort is O(n²) — fine for six bars, hopeless for six million. <strong>Quick sort</strong> is the one real software reaches for, averaging O(n log n) and powering many standard-library sorts.</p>
+      <p>The idea is <em>divide and conquer</em>: pick a <span style="color:var(--gold)">pivot</span>, push everything smaller to its left and larger to its right, then recursively sort each side. After a single partition the pivot already sits in its final place — it turns green.</p>
+      <p>Watch the gold pivot anchor each partition. Same compare/swap moves as bubble sort, but arranged so the problem <em>halves</em> at each level instead of crawling one swap at a time.</p>
+    `,
+    code: `# The bars below show this exact list.
+arr = [7, 2, 6, 1, 8, 4, 3, 5]
+
+def partition(lo, hi):
+    pivot = arr[hi]            # use the last element as the pivot
+    viz.pivot(hi)
+    i = lo
+    for j in range(lo, hi):
+        viz.compare(j, hi)     # compare arr[j] against the pivot
+        if arr[j] < pivot:
+            arr[i], arr[j] = arr[j], arr[i]
+            viz.swap(i, j)
+            i += 1
+    arr[i], arr[hi] = arr[hi], arr[i]   # drop the pivot into place
+    viz.swap(i, hi)
+    viz.sorted(i)              # pivot is now in its final position
+    return i
+
+def quicksort(lo, hi):
+    if lo > hi:
+        return
+    if lo == hi:
+        viz.sorted(lo)         # a single element is already sorted
+        return
+    p = partition(lo, hi)
+    quicksort(lo, p - 1)       # sort the left side
+    quicksort(p + 1, hi)       # sort the right side
+
+quicksort(0, len(arr) - 1)
+print("sorted:", arr)
+`,
+    hint: 'The pivot choice decides everything. On already-sorted data, "last element as pivot" hits the <em>worst</em> case — O(n²), peeling off one element at a time. Real libraries dodge this with a random or median-of-three pivot. Change the list to <code>[1,2,3,4,5,6,7,8]</code> and watch how many more comparisons it takes.',
+    viz: 'quick_sort',
+  },
 ];
 
 // Group lessons by chapter
@@ -2492,6 +2604,7 @@ const CHAPTERS = [
   { id: 'algorithms',  label: 'Algorithms' },
   { id: 'idioms',      label: 'Python Idioms' },
   { id: 'real_ml',     label: 'Real ML' },
+  { id: 'sorting',     label: 'Sorting' },
 ];
 
 // ═════════════════════ STATE ═════════════════════
@@ -2526,6 +2639,8 @@ const Viz = (() => {
 
   let events = [];
   let arr = [];
+  let originalArr = [];
+  let sortVariant = 'bubble';
   let target = null;
   let stepIdx = 0;
   let playing = false;
@@ -2543,6 +2658,7 @@ const Viz = (() => {
     if (timer) { clearTimeout(timer); timer = null; }
     state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode || 'binary' };
     barsEl.innerHTML = '';
+    barsEl.classList.remove('sort');
     statusEl.innerHTML = 'click <strong>Run code</strong> above to watch the algorithm';
     playBtn.disabled = true;
     prevBtn.disabled = true;
@@ -2557,6 +2673,7 @@ const Viz = (() => {
       const bar = document.createElement('div');
       bar.className = 'viz-bar';
       bar.textContent = v;
+      if (state.mode === 'sort') bar.style.height = sortHeight(v) + 'px';
       bar.dataset.idx = String(i);
       const label = document.createElement('span');
       label.className = 'viz-bar-label';
@@ -2567,6 +2684,7 @@ const Viz = (() => {
   }
 
   function applyStateToBars() {
+    if (state.mode === 'sort') { applySortToBars(); return; }
     const bars = Array.from(barsEl.children);
     bars.forEach((b, i) => {
       b.classList.remove('lo', 'hi', 'mid', 'found', 'out', 'visited', 'show-label');
@@ -2611,6 +2729,30 @@ const Viz = (() => {
     }
   }
 
+  // ── Sorting render: bars sized by value; compare/swap/pivot/sorted states ──
+  function sortHeight(v) {
+    const maxV = Math.max(1, ...originalArr);
+    return Math.round(26 + (v / maxV) * 96);
+  }
+
+  function applySortToBars() {
+    const bars = Array.from(barsEl.children);
+    if (!state.sorted) state.sorted = new Set();
+    const cmp = state.compare || [];
+    const swp = state.swap || [];
+    bars.forEach((b, i) => {
+      b.className = 'viz-bar';
+      // update the value text node in place (don't clobber the label span)
+      if (b.firstChild && b.firstChild.nodeType === 3) b.firstChild.nodeValue = String(arr[i]);
+      else b.insertBefore(document.createTextNode(String(arr[i])), b.firstChild);
+      b.style.height = sortHeight(arr[i]) + 'px';
+      if (state.sorted.has(i))  b.classList.add('sorted');
+      if (i === state.pivot)    b.classList.add('pivot');
+      if (cmp.includes(i))      b.classList.add('compare');
+      if (swp.includes(i))      b.classList.add('swap');
+    });
+  }
+
   function describeStep(ev) {
     if (!ev) return '';
     if (ev.kind === 'init') {
@@ -2629,6 +2771,10 @@ const Viz = (() => {
     if (ev.kind === 'hi')  return `hi ← ${ev.i} · range narrows to [${state.lo}, ${ev.i}]`;
     if (ev.kind === 'found') return `<span class="ok">Found ${target} at index ${ev.i}</span>`;
     if (ev.kind === 'not_found') return `<span class="err">${target} not in array</span>`;
+    if (ev.kind === 'compare') return `comparing <b>${arr[ev.i]}</b> and <b>${arr[ev.j]}</b>`;
+    if (ev.kind === 'swap')    return `<span class="ok">swap</span> · <b>${arr[ev.i]}</b> and <b>${arr[ev.j]}</b> trade places`;
+    if (ev.kind === 'pivot')   return `pivot = <b>${arr[ev.i]}</b> · smaller goes left, larger goes right`;
+    if (ev.kind === 'sorted')  return `<span class="ok"><b>${arr[ev.i]}</b> is in its final position</span>`;
     return '';
   }
 
@@ -2644,6 +2790,10 @@ const Viz = (() => {
     else if (ev.kind === 'hi')    { state.hi = ev.i; state.mid = -1; }
     else if (ev.kind === 'found') { state.found = ev.i; state.ok = true; state.checking = -1; state.mid = -1; }
     else if (ev.kind === 'not_found') { state.ok = false; state.mid = -1; if (state.checking >= 0) state.visited.add(state.checking); state.checking = -1; }
+    else if (ev.kind === 'compare') { state.compare = [ev.i, ev.j]; state.swap = []; }
+    else if (ev.kind === 'swap')    { if (ev.i !== ev.j) { const t = arr[ev.i]; arr[ev.i] = arr[ev.j]; arr[ev.j] = t; } state.swap = [ev.i, ev.j]; state.compare = []; }
+    else if (ev.kind === 'pivot')   { state.pivot = ev.i; state.compare = []; state.swap = []; }
+    else if (ev.kind === 'sorted')  { if (!state.sorted) state.sorted = new Set(); state.sorted.add(ev.i); if (state.pivot === ev.i) state.pivot = -1; state.compare = []; state.swap = []; }
     applyStateToBars();
     statusEl.innerHTML = describeStep(ev);
   }
@@ -2660,6 +2810,7 @@ const Viz = (() => {
     // Rewind by replaying from 0 up to stepIdx-1
     stepIdx--;
     state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode };
+    if (state.mode === 'sort') arr = originalArr.slice();
     applyStateToBars();
     for (let i = 0; i < stepIdx; i++) applyEvent(events[i]);
     if (stepIdx > 0) statusEl.innerHTML = describeStep(events[stepIdx - 1]);
@@ -2672,6 +2823,7 @@ const Viz = (() => {
       // Restart
       stepIdx = 0;
       state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode };
+      if (state.mode === 'sort') arr = originalArr.slice();
       applyStateToBars();
     }
     playing = true;
@@ -2710,6 +2862,10 @@ const Viz = (() => {
   function setFound(i) { events.push({ kind: 'found', i }); }
   function notFound()  { events.push({ kind: 'not_found' }); }
   function setMode(m)  { state.mode = (m === 'linear') ? 'linear' : 'binary'; }
+  function pushCompare(i, j) { events.push({ kind: 'compare', i, j }); }
+  function pushSwap(i, j)    { events.push({ kind: 'swap', i, j }); }
+  function pushPivot(i)      { events.push({ kind: 'pivot', i }); }
+  function pushSorted(i)     { events.push({ kind: 'sorted', i }); }
 
   function loadFromCode(arrayValues, targetValue, mode) {
     reset();
@@ -2722,10 +2878,25 @@ const Viz = (() => {
     statusEl.innerHTML = `Ready to search for <span class="target">${target}</span> in the array above. Press ▶ to play.`;
   }
 
+  function loadSort(values, variant) {
+    reset();
+    arr = values.slice();
+    originalArr = values.slice();
+    target = null;
+    sortVariant = variant || 'bubble';
+    state.mode = 'sort';
+    state.compare = []; state.swap = []; state.pivot = -1; state.sorted = new Set();
+    barsEl.classList.add('sort');
+    renderBars(false);
+    applySortToBars();
+    statusEl.innerHTML = `Ready to sort ${values.length} bars. Press ▶ to watch <strong>${sortVariant} sort</strong> work.`;
+  }
+
   function start() {
     if (!events.length) return;
     stepIdx = 0;
     state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode };
+    if (state.mode === 'sort') arr = originalArr.slice();
     applyStateToBars();
     playBtn.disabled = false;
     resetBtn.disabled = false;
@@ -2741,14 +2912,18 @@ const Viz = (() => {
     pause();
     stepIdx = 0;
     state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode };
+    if (state.mode === 'sort') arr = originalArr.slice();
     applyStateToBars();
-    statusEl.innerHTML = `Reset. Searching for <span class="target">${target}</span>. Press ▶ to play.`;
+    statusEl.innerHTML = state.mode === 'sort'
+      ? `Reset. Press ▶ to watch <strong>${sortVariant} sort</strong> again.`
+      : `Reset. Searching for <span class="target">${target}</span>. Press ▶ to play.`;
     updateButtons();
   });
 
   return {
-    show, hide, reset, loadFromCode, start,
+    show, hide, reset, loadFromCode, loadSort, start,
     init, setLo, setHi, setMid, setCheck, setFound, notFound, setMode,
+    compare: pushCompare, swap: pushSwap, pivot: pushPivot, sorted: pushSorted,
     getState: () => ({ playing, stepIdx, total: events.length, mode: state.mode }),
   };
 })();
@@ -2766,6 +2941,10 @@ window.viz = {
   check: (i)       => Viz.setCheck(i),
   found: (i)       => Viz.setFound(i),
   not_found: ()    => Viz.notFound(),
+  compare: (i, j)  => Viz.compare(i, j),
+  swap:    (i, j)  => Viz.swap(i, j),
+  pivot:   (i)     => Viz.pivot(i),
+  sorted:  (i)     => Viz.sorted(i),
 };
 
 function installVizBuiltin() {
@@ -2782,6 +2961,10 @@ function installVizBuiltin() {
     check:     new Sk.builtin.func((i)      => { Viz.setCheck(toJs(i));        return none(); }),
     found:     new Sk.builtin.func((i)      => { Viz.setFound(toJs(i));        return none(); }),
     not_found: new Sk.builtin.func(()       => { Viz.notFound();               return none(); }),
+    compare:   new Sk.builtin.func((i, j)   => { Viz.compare(toJs(i), toJs(j)); return none(); }),
+    swap:      new Sk.builtin.func((i, j)   => { Viz.swap(toJs(i), toJs(j));    return none(); }),
+    pivot:     new Sk.builtin.func((i)      => { Viz.pivot(toJs(i));            return none(); }),
+    sorted:    new Sk.builtin.func((i)      => { Viz.sorted(toJs(i));           return none(); }),
   };
   Sk.builtins['viz'] = mod;
 }
@@ -3379,6 +3562,14 @@ function loadLesson(idx) {
     Viz.show();
     document.getElementById('vizTitle').textContent = 'LINEAR SEARCH · LIVE';
     Viz.loadFromCode([4,8,15,16,42,7,11,19,25,34,50,3,9,12,23,21], 23, 'linear');
+  } else if (lesson.viz === 'bubble_sort') {
+    Viz.show();
+    document.getElementById('vizTitle').textContent = 'BUBBLE SORT · LIVE';
+    Viz.loadSort([5, 1, 6, 2, 4, 3], 'bubble');
+  } else if (lesson.viz === 'quick_sort') {
+    Viz.show();
+    document.getElementById('vizTitle').textContent = 'QUICK SORT · LIVE';
+    Viz.loadSort([7, 2, 6, 1, 8, 4, 3, 5], 'quick');
   } else {
     Viz.hide();
     Viz.reset();
@@ -3502,6 +3693,12 @@ async function runCode() {
   } else if (lesson.viz === 'linear_search') {
     Viz.reset();
     Viz.loadFromCode([4,8,15,16,42,7,11,19,25,34,50,3,9,12,23,21], 23, 'linear');
+  } else if (lesson.viz === 'bubble_sort') {
+    Viz.reset();
+    Viz.loadSort([5, 1, 6, 2, 4, 3], 'bubble');
+  } else if (lesson.viz === 'quick_sort') {
+    Viz.reset();
+    Viz.loadSort([7, 2, 6, 1, 8, 4, 3, 5], 'quick');
   }
   // Reset plt panel for Real ML lessons that use plt
   if (lesson.chapter === 'real_ml' && (lesson.id === 'plotting' || lesson.id === 'knn')) {
@@ -3515,7 +3712,8 @@ async function runCode() {
     if (!outputBuffer.trim()) {
       setOutput('// (no output)', 'idle');
     }
-    if (lesson.viz === 'binary_search' || lesson.viz === 'linear_search') {
+    if (lesson.viz === 'binary_search' || lesson.viz === 'linear_search' ||
+        lesson.viz === 'bubble_sort' || lesson.viz === 'quick_sort') {
       Viz.start();
     }
   } catch (e) {
