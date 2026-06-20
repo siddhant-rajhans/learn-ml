@@ -2767,6 +2767,7 @@ def dfs(start):
             if nb not in seen:
                 seen.add(nb)
                 stack.append(nb)
+    viz.frontier([])
     return order
 
 print(" -> ".join(dfs('A')))

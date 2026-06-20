@@ -9,8 +9,8 @@ A self-contained learning playground that runs entirely in your browser. Clone t
 
 - **Python in the browser** via [Skulpt](https://skulpt.org) — a pure-JavaScript Python interpreter. ~500 KB, vendored locally, zero CDN dependency.
 - **A real code editor** (Ace) with syntax highlighting, auto-indent, and `Cmd/Ctrl + Enter` to run.
-- **34 lessons across 6 chapters** — from the true-zero pre-foundations (datatypes, casting, operators, comprehensions) through to a k-NN classifier on iris. Each ~3–10 minutes.
-- **Live algorithm visualizations.** Binary search narrows the search range bar by bar. Linear search marches one position at a time. Each algorithm has its own animated view.
+- **40 lessons across 9 chapters** — from the true-zero pre-foundations (datatypes, casting, operators, comprehensions) through a k-NN classifier on iris, then on to animated sorting, recursion, and graph traversal. Each ~3–12 minutes.
+- **Live algorithm visualizations.** Binary vs linear search; bubble vs quick sort (bars sized by value, every comparison and swap lit up); the recursion call stack growing and unwinding; BFS vs DFS exploring a graph with a live queue/stack panel. Every algorithm drives its own animation from the Python you actually run.
 - **A canvas-based `plt`** shim for plotting — scatter, line, bar, all rendered inline.
 - **A pure-Python `np`** shim so `import np` works for arrays, broadcasting, and the operations you'll meet again in real NumPy.
 - **A vendored `iris.csv`** so `open('iris.csv')` works inside the playground for the dataset / classifier lessons.
@@ -35,7 +35,7 @@ python server.py
 
 ## Curriculum
 
-34 lessons across 6 chapters. Each one self-contained — open it, hit Run, edit, run again.
+40 lessons across 9 chapters. Each one self-contained — open it, hit Run, edit, run again.
 
 ### Pre-foundations *(new)*
 
@@ -91,6 +91,21 @@ Runnable companions to the markdown chapters in [`../../pre-foundations/`](../..
 18. **Plotting** — `scatter`, `plot`, `bar` rendered to canvas (via teaching shim)
 19. **Your first classifier** — k-NN on iris, ~95% accuracy, ~30 lines of plain Python
 
+### Sorting (animated)
+
+20. **Bubble sort** — O(n²) compare-and-swap; the biggest value bubbles to the end each pass
+21. **Quick sort** — O(n log n) divide-and-conquer with a live gold pivot and partitions
+
+### Recursion (call-stack viz)
+
+22. **Recursion — the call stack** — factorial; frames push down to the base case, then unwind
+23. **Recursion that branches** — fibonacci; the stack pulses, and the repeated work motivates memoization
+
+### Graphs (animated traversal)
+
+24. **Breadth-first search** — a FIFO queue explores ring by ring (the reason BFS finds shortest paths)
+25. **Depth-first search** — a LIFO stack dives deep first; same graph, a completely different journey
+
 ## Keyboard shortcuts
 
 | Shortcut | What it does |
@@ -115,8 +130,8 @@ Lessons that use the shims flag it at the top. Your code transfers unmodified to
 
 Tracked in [issues](https://github.com/siddhant-rajhans/learn-ml/issues). The short list:
 
-- Bubble sort, merge sort, quick sort — each animated
-- Recursion (call-stack viz), BFS, DFS, dynamic programming
+- Merge sort and heap sort — animated, alongside the existing bubble & quick
+- Dynamic programming — memoized Fibonacci, then the classic DP grid
 - Classes (`nn.Module` shape), exception handling, file-I/O patterns
 - Exercise sets per chapter with hint reveals + solution checks
 - Per-chapter cheat sheets
