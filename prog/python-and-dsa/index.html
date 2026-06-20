@@ -643,6 +643,26 @@ body::before {
   box-shadow: 0 0 22px rgba(255, 64, 129, 0.5), inset 0 0 0 2px var(--pink);
 }
 
+/* ── Recursion mode — vertical call-stack frames ── */
+.viz-bars.stack { flex-direction: column; align-items: stretch; gap: 5px; min-width: 300px; }
+.viz-frame {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 11px 16px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+.viz-frame.active {
+  background: rgba(0, 229, 255, 0.16);
+  border-color: var(--cyan);
+  color: var(--ink);
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.18);
+}
+.viz-frame.empty { color: var(--ink-faint); border-style: dashed; text-align: center; }
+
 .viz-status {
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
@@ -2594,6 +2614,62 @@ print("sorted:", arr)
     hint: 'The pivot choice decides everything. On already-sorted data, "last element as pivot" hits the <em>worst</em> case — O(n²), peeling off one element at a time. Real libraries dodge this with a random or median-of-three pivot. Change the list to <code>[1,2,3,4,5,6,7,8]</code> and watch how many more comparisons it takes.',
     viz: 'quick_sort',
   },
+
+  // ─── RECURSION ───
+  {
+    id: 'factorial',
+    chapter: 'recursion',
+    chapterLabel: 'Recursion',
+    num: '22',
+    title: 'Recursion — the <em>call stack</em>.',
+    timeLabel: '~9 min',
+    intro: `
+      <p>A <strong>recursive</strong> function calls itself on a smaller problem until it hits a <em>base case</em> simple enough to answer outright. The classic is factorial: <code>4! = 4 × 3 × 2 × 1</code>.</p>
+      <p>The magic — and the danger — lives in the <strong>call stack</strong>. Every call that hasn't returned yet sits there waiting: <code>factorial(4)</code> can't finish until <code>factorial(3)</code> does, which waits on <code>factorial(2)</code>… Watch the stack grow down to the base case, then <em>unwind</em>, each frame handing its answer to the one below.</p>
+      <p>This is exactly why runaway recursion throws <code>RecursionError</code> — the stack is finite. It's also the mental model behind backprop's reverse pass and every tree or graph traversal you'll write.</p>
+    `,
+    code: `# Watch the call stack grow, then unwind.
+def factorial(n):
+    viz.enter(f"factorial({n})")  # push a frame
+    if n <= 1:                    # base case
+        viz.ret(1)
+        return 1
+    result = n * factorial(n - 1) # recursive call
+    viz.ret(result)               # this frame returns
+    return result
+
+print(factorial(4))
+`,
+    hint: 'Every recursion needs two things: a <strong>base case</strong> that stops it, and a step that moves <em>toward</em> that base case. Delete the <code>if n &lt;= 1</code> and you get infinite recursion — a stack overflow. Try <code>factorial(6)</code> and watch the stack get two frames deeper.',
+    viz: 'factorial',
+  },
+  {
+    id: 'fibonacci',
+    chapter: 'recursion',
+    chapterLabel: 'Recursion',
+    num: '23',
+    title: 'Recursion that <em>branches</em>.',
+    timeLabel: '~10 min',
+    intro: `
+      <p>Factorial recursed in a straight line. <strong>Fibonacci</strong> branches: <code>fib(n) = fib(n-1) + fib(n-2)</code>, so each call spawns <em>two</em> more. The stack now grows and shrinks in waves as a whole tree of calls is explored depth-first.</p>
+      <p>Watch closely and you'll spot the flaw: <code>fib(2)</code> gets computed again and again, from scratch, in different branches. That repeated work is why naïve Fibonacci is <em>exponential</em> — O(2ⁿ).</p>
+      <p>The fix is <strong>memoization</strong> — remember answers you've already computed — and it's the gateway to dynamic programming. But first, feel the pain.</p>
+    `,
+    code: `# Each call spawns two more — watch the stack pulse.
+def fib(n):
+    viz.enter(f"fib({n})")
+    if n < 2:                 # base cases: fib(0)=0, fib(1)=1
+        viz.ret(n)
+        return n
+    result = fib(n - 1) + fib(n - 2)
+    viz.ret(result)
+    return result
+
+print(fib(5))
+`,
+    hint: 'Count the calls: <code>fib(5)</code> makes 15 of them, and <code>fib(2)</code> alone is recomputed three times. Try caching results in a dict — <code>memo = {}</code>, return early <code>if n in memo</code>. The call count collapses from exponential to linear. That one trick is the heart of dynamic programming.',
+    viz: 'fibonacci',
+  },
 ];
 
 // Group lessons by chapter
@@ -2605,6 +2681,7 @@ const CHAPTERS = [
   { id: 'idioms',      label: 'Python Idioms' },
   { id: 'real_ml',     label: 'Real ML' },
   { id: 'sorting',     label: 'Sorting' },
+  { id: 'recursion',   label: 'Recursion' },
 ];
 
 // ═════════════════════ STATE ═════════════════════
@@ -2658,7 +2735,7 @@ const Viz = (() => {
     if (timer) { clearTimeout(timer); timer = null; }
     state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode || 'binary' };
     barsEl.innerHTML = '';
-    barsEl.classList.remove('sort');
+    barsEl.classList.remove('sort', 'stack');
     statusEl.innerHTML = 'click <strong>Run code</strong> above to watch the algorithm';
     playBtn.disabled = true;
     prevBtn.disabled = true;
@@ -2685,6 +2762,7 @@ const Viz = (() => {
 
   function applyStateToBars() {
     if (state.mode === 'sort') { applySortToBars(); return; }
+    if (state.mode === 'callstack') { renderStack(); return; }
     const bars = Array.from(barsEl.children);
     bars.forEach((b, i) => {
       b.classList.remove('lo', 'hi', 'mid', 'found', 'out', 'visited', 'show-label');
@@ -2753,6 +2831,25 @@ const Viz = (() => {
     });
   }
 
+  // ── Recursion render: a vertical stack of call frames (deepest on top) ──
+  function renderStack() {
+    barsEl.innerHTML = '';
+    const frames = state.frames || [];
+    if (!frames.length) {
+      const el = document.createElement('div');
+      el.className = 'viz-frame empty';
+      el.textContent = 'call stack empty';
+      barsEl.appendChild(el);
+      return;
+    }
+    for (let k = frames.length - 1; k >= 0; k--) {
+      const el = document.createElement('div');
+      el.className = 'viz-frame' + (k === frames.length - 1 ? ' active' : '');
+      el.textContent = frames[k].label;
+      barsEl.appendChild(el);
+    }
+  }
+
   function describeStep(ev) {
     if (!ev) return '';
     if (ev.kind === 'init') {
@@ -2775,6 +2872,8 @@ const Viz = (() => {
     if (ev.kind === 'swap')    return `<span class="ok">swap</span> · <b>${arr[ev.i]}</b> and <b>${arr[ev.j]}</b> trade places`;
     if (ev.kind === 'pivot')   return `pivot = <b>${arr[ev.i]}</b> · smaller goes left, larger goes right`;
     if (ev.kind === 'sorted')  return `<span class="ok"><b>${arr[ev.i]}</b> is in its final position</span>`;
+    if (ev.kind === 'enter')   return `<span style="color:var(--cyan)">call</span> <b>${ev.label}</b> — pushed onto the stack`;
+    if (ev.kind === 'exit')    return `<span class="ok"><b>${state.lastReturn ? state.lastReturn.label : ''}</b> returns <b>${state.lastReturn ? state.lastReturn.value : ev.value}</b></span>`;
     return '';
   }
 
@@ -2794,6 +2893,8 @@ const Viz = (() => {
     else if (ev.kind === 'swap')    { if (ev.i !== ev.j) { const t = arr[ev.i]; arr[ev.i] = arr[ev.j]; arr[ev.j] = t; } state.swap = [ev.i, ev.j]; state.compare = []; }
     else if (ev.kind === 'pivot')   { state.pivot = ev.i; state.compare = []; state.swap = []; }
     else if (ev.kind === 'sorted')  { if (!state.sorted) state.sorted = new Set(); state.sorted.add(ev.i); if (state.pivot === ev.i) state.pivot = -1; state.compare = []; state.swap = []; }
+    else if (ev.kind === 'enter')   { if (!state.frames) state.frames = []; state.frames.push({ label: ev.label }); }
+    else if (ev.kind === 'exit')    { if (!state.frames) state.frames = []; const f = state.frames.pop(); state.lastReturn = { label: f ? f.label : '', value: ev.value }; }
     applyStateToBars();
     statusEl.innerHTML = describeStep(ev);
   }
@@ -2866,6 +2967,8 @@ const Viz = (() => {
   function pushSwap(i, j)    { events.push({ kind: 'swap', i, j }); }
   function pushPivot(i)      { events.push({ kind: 'pivot', i }); }
   function pushSorted(i)     { events.push({ kind: 'sorted', i }); }
+  function pushEnter(label)  { events.push({ kind: 'enter', label }); }
+  function pushExit(value)   { events.push({ kind: 'exit', value }); }
 
   function loadFromCode(arrayValues, targetValue, mode) {
     reset();
@@ -2892,6 +2995,19 @@ const Viz = (() => {
     statusEl.innerHTML = `Ready to sort ${values.length} bars. Press ▶ to watch <strong>${sortVariant} sort</strong> work.`;
   }
 
+  function loadCallstack() {
+    reset();
+    arr = [];
+    originalArr = [];
+    target = null;
+    state.mode = 'callstack';
+    state.frames = [];
+    state.lastReturn = null;
+    barsEl.classList.add('stack');
+    renderStack();
+    statusEl.innerHTML = `Ready. Press ▶ to watch the call stack grow, then unwind.`;
+  }
+
   function start() {
     if (!events.length) return;
     stepIdx = 0;
@@ -2914,16 +3030,18 @@ const Viz = (() => {
     state = { lo: 0, hi: arr.length - 1, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode };
     if (state.mode === 'sort') arr = originalArr.slice();
     applyStateToBars();
-    statusEl.innerHTML = state.mode === 'sort'
-      ? `Reset. Press ▶ to watch <strong>${sortVariant} sort</strong> again.`
+    statusEl.innerHTML =
+      state.mode === 'sort' ? `Reset. Press ▶ to watch <strong>${sortVariant} sort</strong> again.`
+      : state.mode === 'callstack' ? `Reset. Press ▶ to watch the call stack again.`
       : `Reset. Searching for <span class="target">${target}</span>. Press ▶ to play.`;
     updateButtons();
   });
 
   return {
-    show, hide, reset, loadFromCode, loadSort, start,
+    show, hide, reset, loadFromCode, loadSort, loadCallstack, start,
     init, setLo, setHi, setMid, setCheck, setFound, notFound, setMode,
     compare: pushCompare, swap: pushSwap, pivot: pushPivot, sorted: pushSorted,
+    enter: pushEnter, ret: pushExit,
     getState: () => ({ playing, stepIdx, total: events.length, mode: state.mode }),
   };
 })();
@@ -2945,6 +3063,8 @@ window.viz = {
   swap:    (i, j)  => Viz.swap(i, j),
   pivot:   (i)     => Viz.pivot(i),
   sorted:  (i)     => Viz.sorted(i),
+  enter:   (label) => Viz.enter(label),
+  ret:     (value) => Viz.ret(value),
 };
 
 function installVizBuiltin() {
@@ -2965,6 +3085,8 @@ function installVizBuiltin() {
     swap:      new Sk.builtin.func((i, j)   => { Viz.swap(toJs(i), toJs(j));    return none(); }),
     pivot:     new Sk.builtin.func((i)      => { Viz.pivot(toJs(i));            return none(); }),
     sorted:    new Sk.builtin.func((i)      => { Viz.sorted(toJs(i));           return none(); }),
+    enter:     new Sk.builtin.func((label)  => { Viz.enter(toJs(label));        return none(); }),
+    ret:       new Sk.builtin.func((value)  => { Viz.ret(toJs(value));          return none(); }),
   };
   Sk.builtins['viz'] = mod;
 }
@@ -3570,6 +3692,14 @@ function loadLesson(idx) {
     Viz.show();
     document.getElementById('vizTitle').textContent = 'QUICK SORT · LIVE';
     Viz.loadSort([7, 2, 6, 1, 8, 4, 3, 5], 'quick');
+  } else if (lesson.viz === 'factorial') {
+    Viz.show();
+    document.getElementById('vizTitle').textContent = 'CALL STACK · LIVE';
+    Viz.loadCallstack();
+  } else if (lesson.viz === 'fibonacci') {
+    Viz.show();
+    document.getElementById('vizTitle').textContent = 'CALL STACK · LIVE';
+    Viz.loadCallstack();
   } else {
     Viz.hide();
     Viz.reset();
@@ -3699,6 +3829,9 @@ async function runCode() {
   } else if (lesson.viz === 'quick_sort') {
     Viz.reset();
     Viz.loadSort([7, 2, 6, 1, 8, 4, 3, 5], 'quick');
+  } else if (lesson.viz === 'factorial' || lesson.viz === 'fibonacci') {
+    Viz.reset();
+    Viz.loadCallstack();
   }
   // Reset plt panel for Real ML lessons that use plt
   if (lesson.chapter === 'real_ml' && (lesson.id === 'plotting' || lesson.id === 'knn')) {
@@ -3713,7 +3846,8 @@ async function runCode() {
       setOutput('// (no output)', 'idle');
     }
     if (lesson.viz === 'binary_search' || lesson.viz === 'linear_search' ||
-        lesson.viz === 'bubble_sort' || lesson.viz === 'quick_sort') {
+        lesson.viz === 'bubble_sort' || lesson.viz === 'quick_sort' ||
+        lesson.viz === 'factorial' || lesson.viz === 'fibonacci') {
       Viz.start();
     }
   } catch (e) {
