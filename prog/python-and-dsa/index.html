@@ -663,6 +663,23 @@ body::before {
 }
 .viz-frame.empty { color: var(--ink-faint); border-style: dashed; text-align: center; }
 
+/* ── Graph mode — SVG nodes & edges, with the frontier (queue / stack) ── */
+.viz-bars.graph { display: block; }
+.graph-viz { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+.graph-viz svg { width: 100%; max-width: 360px; height: auto; overflow: visible; }
+.graph-edge { stroke: var(--line-2); stroke-width: 2; transition: stroke 0.3s ease; }
+.graph-node circle { fill: var(--bg-2); stroke: var(--line-2); stroke-width: 2; transition: fill 0.3s ease, stroke 0.3s ease, filter 0.3s ease; }
+.graph-node text { fill: var(--ink-dim); font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; text-anchor: middle; dominant-baseline: central; transition: fill 0.3s ease; }
+.graph-node.frontier circle { stroke: var(--gold); }
+.graph-node.visited circle { fill: rgba(0, 230, 118, 0.18); stroke: var(--green); }
+.graph-node.visited text { fill: var(--ink); }
+.graph-node.current circle { fill: rgba(0, 229, 255, 0.5); stroke: var(--cyan); filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.55)); }
+.graph-node.current text { fill: var(--bg); }
+.graph-frontier { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; min-height: 30px; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.graph-frontier .flabel { letter-spacing: 0.2em; color: var(--ink-dim); }
+.graph-frontier .fnode { padding: 4px 11px; border: 1px solid var(--gold); border-radius: 5px; color: var(--gold); background: rgba(255, 210, 127, 0.08); }
+.graph-frontier .fempty { color: var(--ink-faint); font-style: italic; }
+
 .viz-status {
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
@@ -2670,6 +2687,93 @@ print(fib(5))
     hint: 'Count the calls: <code>fib(5)</code> makes 15 of them, and <code>fib(2)</code> alone is recomputed three times. Try caching results in a dict — <code>memo = {}</code>, return early <code>if n in memo</code>. The call count collapses from exponential to linear. That one trick is the heart of dynamic programming.',
     viz: 'fibonacci',
   },
+
+  // ─── GRAPHS ───
+  {
+    id: 'bfs',
+    chapter: 'graphs',
+    chapterLabel: 'Graphs',
+    num: '24',
+    title: 'Graphs — <em>breadth-first</em>.',
+    timeLabel: '~10 min',
+    intro: `
+      <p>A <strong>graph</strong> is just nodes joined by edges — friend networks, road maps, web links, the layers of a neural net. The first thing you ever do with one is <em>traverse</em> it: visit every node reachable from a start.</p>
+      <p><strong>Breadth-first search</strong> explores in rings — all the neighbours first, then <em>their</em> neighbours, outward. Its engine is a <strong>queue</strong> (first in, first out); watch it fill on the right. That ring-by-ring order is exactly why BFS finds the <em>shortest path</em> in an unweighted graph.</p>
+      <p>Below: the current node glows cyan, visited nodes turn green, and the queue shows who's waiting.</p>
+    `,
+    code: `# The graph drawn below, as an adjacency list.
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': [],
+}
+
+def bfs(start):
+    order = []
+    queue = [start]              # a FIFO queue
+    seen = {start}
+    while queue:
+        viz.frontier(queue[:])   # show the queue
+        node = queue.pop(0)      # dequeue from the FRONT
+        viz.visit(node)
+        order.append(node)
+        for nb in graph[node]:
+            if nb not in seen:
+                seen.add(nb)
+                queue.append(nb) # enqueue at the BACK
+    viz.frontier([])
+    return order
+
+print(" -> ".join(bfs('A')))
+`,
+    hint: 'The only thing separating BFS from DFS is the data structure: a <strong>queue</strong> (pop the front) gives breadth-first order; a <strong>stack</strong> (pop the back) gives depth-first. Change <code>queue.pop(0)</code> to <code>queue.pop()</code> and the traversal order flips — that\'s the next lesson.',
+    viz: 'bfs',
+  },
+  {
+    id: 'dfs',
+    chapter: 'graphs',
+    chapterLabel: 'Graphs',
+    num: '25',
+    title: 'Graphs — <em>depth-first</em>.',
+    timeLabel: '~10 min',
+    intro: `
+      <p><strong>Depth-first search</strong> is BFS's opposite: it dives as deep as it can down one path before backing up. Swap the queue for a <strong>stack</strong> (last in, first out) and the same handful of lines explores the graph in a completely different order.</p>
+      <p>DFS is the backbone of cycle detection, topological sort, maze-solving — and the recursion you just met. A recursive DFS <em>is</em> the call stack doing this bookkeeping for you.</p>
+      <p>Watch the stack on the right: the most recently discovered node is always the next one visited.</p>
+    `,
+    code: `# Same graph — but a stack instead of a queue.
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': [],
+}
+
+def dfs(start):
+    order = []
+    stack = [start]              # a LIFO stack
+    seen = {start}
+    while stack:
+        viz.frontier(stack[:])   # show the stack
+        node = stack.pop()       # pop from the TOP
+        viz.visit(node)
+        order.append(node)
+        for nb in reversed(graph[node]):
+            if nb not in seen:
+                seen.add(nb)
+                stack.append(nb)
+    return order
+
+print(" -> ".join(dfs('A')))
+`,
+    hint: 'We loop over <code>reversed(graph[node])</code> so that pushing then popping visits neighbours in their natural left-to-right order. Drop the <code>reversed()</code> and DFS still works — it just explores branches in mirror order. Compare the printed path with BFS: same six nodes, a totally different journey.',
+    viz: 'dfs',
+  },
 ];
 
 // Group lessons by chapter
@@ -2682,6 +2786,7 @@ const CHAPTERS = [
   { id: 'real_ml',     label: 'Real ML' },
   { id: 'sorting',     label: 'Sorting' },
   { id: 'recursion',   label: 'Recursion' },
+  { id: 'graphs',      label: 'Graphs' },
 ];
 
 // ═════════════════════ STATE ═════════════════════
@@ -2718,7 +2823,13 @@ const Viz = (() => {
   let arr = [];
   let originalArr = [];
   let sortVariant = 'bubble';
+  let graphVariant = 'bfs';
   let target = null;
+
+  const GRAPH_DEF = {
+    nodes: { A:{x:180,y:38}, B:{x:90,y:120}, C:{x:270,y:120}, D:{x:50,y:210}, E:{x:160,y:210}, F:{x:270,y:210} },
+    edges: [['A','B'],['A','C'],['B','D'],['B','E'],['C','F'],['E','F']],
+  };
   let stepIdx = 0;
   let playing = false;
   let timer = null;
@@ -2735,7 +2846,7 @@ const Viz = (() => {
     if (timer) { clearTimeout(timer); timer = null; }
     state = { lo: 0, hi: 0, mid: -1, found: -1, ok: null, visited: new Set(), checking: -1, mode: state.mode || 'binary' };
     barsEl.innerHTML = '';
-    barsEl.classList.remove('sort', 'stack');
+    barsEl.classList.remove('sort', 'stack', 'graph');
     statusEl.innerHTML = 'click <strong>Run code</strong> above to watch the algorithm';
     playBtn.disabled = true;
     prevBtn.disabled = true;
@@ -2763,6 +2874,7 @@ const Viz = (() => {
   function applyStateToBars() {
     if (state.mode === 'sort') { applySortToBars(); return; }
     if (state.mode === 'callstack') { renderStack(); return; }
+    if (state.mode === 'graph') { renderGraph(); return; }
     const bars = Array.from(barsEl.children);
     bars.forEach((b, i) => {
       b.classList.remove('lo', 'hi', 'mid', 'found', 'out', 'visited', 'show-label');
@@ -2850,6 +2962,34 @@ const Viz = (() => {
     }
   }
 
+  // ── Graph render: SVG nodes + edges, with the frontier (queue/stack) below ──
+  function renderGraph() {
+    const visited = state.gVisited || new Set();
+    const current = state.gCurrent;
+    const frontier = state.gFrontier || [];
+    const fset = new Set(frontier);
+    const edges = GRAPH_DEF.edges.map(([a, b]) => {
+      const na = GRAPH_DEF.nodes[a], nb = GRAPH_DEF.nodes[b];
+      return `<line class="graph-edge" x1="${na.x}" y1="${na.y}" x2="${nb.x}" y2="${nb.y}"></line>`;
+    }).join('');
+    const nodes = Object.keys(GRAPH_DEF.nodes).map(id => {
+      const n = GRAPH_DEF.nodes[id];
+      let cls = 'graph-node';
+      if (id === current) cls += ' current';
+      else if (visited.has(id)) cls += ' visited';
+      else if (fset.has(id)) cls += ' frontier';
+      return `<g class="${cls}"><circle cx="${n.x}" cy="${n.y}" r="20"></circle><text x="${n.x}" y="${n.y}">${id}</text></g>`;
+    }).join('');
+    const flabel = graphVariant === 'dfs' ? 'STACK' : 'QUEUE';
+    const fhtml = frontier.length
+      ? frontier.map(id => `<span class="fnode">${id}</span>`).join('')
+      : '<span class="fempty">empty</span>';
+    barsEl.innerHTML = `<div class="graph-viz">`
+      + `<svg viewBox="0 0 360 258">${edges}${nodes}</svg>`
+      + `<div class="graph-frontier"><span class="flabel">${flabel}</span>${fhtml}</div>`
+      + `</div>`;
+  }
+
   function describeStep(ev) {
     if (!ev) return '';
     if (ev.kind === 'init') {
@@ -2874,6 +3014,8 @@ const Viz = (() => {
     if (ev.kind === 'sorted')  return `<span class="ok"><b>${arr[ev.i]}</b> is in its final position</span>`;
     if (ev.kind === 'enter')   return `<span style="color:var(--cyan)">call</span> <b>${ev.label}</b> — pushed onto the stack`;
     if (ev.kind === 'exit')    return `<span class="ok"><b>${state.lastReturn ? state.lastReturn.label : ''}</b> returns <b>${state.lastReturn ? state.lastReturn.value : ev.value}</b></span>`;
+    if (ev.kind === 'visit')    return `visiting <b>${ev.node}</b>`;
+    if (ev.kind === 'frontier') return (ev.nodes && ev.nodes.length) ? `${graphVariant === 'dfs' ? 'stack' : 'queue'}: [${ev.nodes.join(', ')}]` : `${graphVariant === 'dfs' ? 'stack' : 'queue'} is empty`;
     return '';
   }
 
@@ -2895,6 +3037,8 @@ const Viz = (() => {
     else if (ev.kind === 'sorted')  { if (!state.sorted) state.sorted = new Set(); state.sorted.add(ev.i); if (state.pivot === ev.i) state.pivot = -1; state.compare = []; state.swap = []; }
     else if (ev.kind === 'enter')   { if (!state.frames) state.frames = []; state.frames.push({ label: ev.label }); }
     else if (ev.kind === 'exit')    { if (!state.frames) state.frames = []; const f = state.frames.pop(); state.lastReturn = { label: f ? f.label : '', value: ev.value }; }
+    else if (ev.kind === 'visit')    { if (!state.gVisited) state.gVisited = new Set(); state.gCurrent = ev.node; state.gVisited.add(ev.node); }
+    else if (ev.kind === 'frontier') { state.gFrontier = ev.nodes || []; }
     applyStateToBars();
     statusEl.innerHTML = describeStep(ev);
   }
@@ -2969,6 +3113,8 @@ const Viz = (() => {
   function pushSorted(i)     { events.push({ kind: 'sorted', i }); }
   function pushEnter(label)  { events.push({ kind: 'enter', label }); }
   function pushExit(value)   { events.push({ kind: 'exit', value }); }
+  function pushVisit(node)     { events.push({ kind: 'visit', node }); }
+  function pushFrontier(nodes) { events.push({ kind: 'frontier', nodes }); }
 
   function loadFromCode(arrayValues, targetValue, mode) {
     reset();
@@ -3008,6 +3154,21 @@ const Viz = (() => {
     statusEl.innerHTML = `Ready. Press ▶ to watch the call stack grow, then unwind.`;
   }
 
+  function loadGraph(variant) {
+    reset();
+    arr = [];
+    originalArr = [];
+    target = null;
+    state.mode = 'graph';
+    graphVariant = variant || 'bfs';
+    state.gVisited = new Set();
+    state.gCurrent = null;
+    state.gFrontier = [];
+    barsEl.classList.add('graph');
+    renderGraph();
+    statusEl.innerHTML = `Ready. Press ▶ to watch <strong>${graphVariant.toUpperCase()}</strong> explore the graph.`;
+  }
+
   function start() {
     if (!events.length) return;
     stepIdx = 0;
@@ -3038,10 +3199,11 @@ const Viz = (() => {
   });
 
   return {
-    show, hide, reset, loadFromCode, loadSort, loadCallstack, start,
+    show, hide, reset, loadFromCode, loadSort, loadCallstack, loadGraph, start,
     init, setLo, setHi, setMid, setCheck, setFound, notFound, setMode,
     compare: pushCompare, swap: pushSwap, pivot: pushPivot, sorted: pushSorted,
     enter: pushEnter, ret: pushExit,
+    visit: pushVisit, frontier: pushFrontier,
     getState: () => ({ playing, stepIdx, total: events.length, mode: state.mode }),
   };
 })();
@@ -3065,6 +3227,8 @@ window.viz = {
   sorted:  (i)     => Viz.sorted(i),
   enter:   (label) => Viz.enter(label),
   ret:     (value) => Viz.ret(value),
+  visit:   (node)  => Viz.visit(node),
+  frontier:(nodes) => Viz.frontier(nodes),
 };
 
 function installVizBuiltin() {
@@ -3087,6 +3251,8 @@ function installVizBuiltin() {
     sorted:    new Sk.builtin.func((i)      => { Viz.sorted(toJs(i));           return none(); }),
     enter:     new Sk.builtin.func((label)  => { Viz.enter(toJs(label));        return none(); }),
     ret:       new Sk.builtin.func((value)  => { Viz.ret(toJs(value));          return none(); }),
+    visit:     new Sk.builtin.func((node)   => { Viz.visit(toJs(node));         return none(); }),
+    frontier:  new Sk.builtin.func((nodes)  => { Viz.frontier(toJs(nodes));     return none(); }),
   };
   Sk.builtins['viz'] = mod;
 }
@@ -3700,6 +3866,14 @@ function loadLesson(idx) {
     Viz.show();
     document.getElementById('vizTitle').textContent = 'CALL STACK · LIVE';
     Viz.loadCallstack();
+  } else if (lesson.viz === 'bfs') {
+    Viz.show();
+    document.getElementById('vizTitle').textContent = 'BREADTH-FIRST SEARCH · LIVE';
+    Viz.loadGraph('bfs');
+  } else if (lesson.viz === 'dfs') {
+    Viz.show();
+    document.getElementById('vizTitle').textContent = 'DEPTH-FIRST SEARCH · LIVE';
+    Viz.loadGraph('dfs');
   } else {
     Viz.hide();
     Viz.reset();
@@ -3832,6 +4006,12 @@ async function runCode() {
   } else if (lesson.viz === 'factorial' || lesson.viz === 'fibonacci') {
     Viz.reset();
     Viz.loadCallstack();
+  } else if (lesson.viz === 'bfs') {
+    Viz.reset();
+    Viz.loadGraph('bfs');
+  } else if (lesson.viz === 'dfs') {
+    Viz.reset();
+    Viz.loadGraph('dfs');
   }
   // Reset plt panel for Real ML lessons that use plt
   if (lesson.chapter === 'real_ml' && (lesson.id === 'plotting' || lesson.id === 'knn')) {
@@ -3847,7 +4027,8 @@ async function runCode() {
     }
     if (lesson.viz === 'binary_search' || lesson.viz === 'linear_search' ||
         lesson.viz === 'bubble_sort' || lesson.viz === 'quick_sort' ||
-        lesson.viz === 'factorial' || lesson.viz === 'fibonacci') {
+        lesson.viz === 'factorial' || lesson.viz === 'fibonacci' ||
+        lesson.viz === 'bfs' || lesson.viz === 'dfs') {
       Viz.start();
     }
   } catch (e) {
